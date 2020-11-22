@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class AppProgressService {
 
   //TODO: set this to 0 later
-  appProgress : number = 3;
+  appProgress : number = 1;
   maxProgress : number = 5;
   selectedFunctor : String;
 

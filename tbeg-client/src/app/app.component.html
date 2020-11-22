@@ -6,7 +6,13 @@
   <body>
     <div class="main">
       <div class="title">
-        {{appName | uppercase}}
+        {{title | uppercase}}
+      </div>
+      <div [ngSwitch]="progress.appProgress">
+        <div *ngSwitchCase="0" id="loading">
+          Loading ...
+        </div>
+        <app-start [text]="'START'" *ngSwitchCase="1"></app-start>
       </div>
     </div>
   </body>

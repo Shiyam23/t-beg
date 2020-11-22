@@ -1,5 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AppProgressService } from './services/app-progress.service';
 import { SignalRService } from './services/signal-r.service';
 
 @Component({
@@ -9,18 +10,18 @@ import { SignalRService } from './services/signal-r.service';
 })
 export class AppComponent implements AfterViewInit  {
   
-  public appName = "T-BEG"
+  public title = "T-BEG";
   private connected;
   public result;  
   private calcSubscription : Subscription;
   private resultSubscription : Subscription;
 
-  constructor(private service : SignalRService ){}
+  constructor(private service : SignalRService, public progress: AppProgressService){}
   
   ngAfterViewInit(): void {
-    this.service.startConnection();
-    this.resultSubscription = this.service.result.subscribe(number => this.result = number)
-    this.calcSubscription = this.service.connected.subscribe( connected => this.connected = connected)
+    // this.service.startConnection();
+    // this.resultSubscription = this.service.result.subscribe(number => this.result = number)
+    // this.calcSubscription = this.service.connected.subscribe( connected => this.connected = connected)
   }
 
   login(value:any) {
