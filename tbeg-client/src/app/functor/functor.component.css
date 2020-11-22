@@ -1,5 +1,6 @@
 #functorTitle{
     font-size: 4vw;
+    font-family: 'Orbitron', sans-serif;
     position: absolute;
     top: 15vw;
     left: 50%;
@@ -7,29 +8,18 @@
 }
 
 .functorField{
+    margin-top: 3vw;
     font-size: 1vw;
     width: 15vw;
-}
-
-::ng-deep .mat-form-field-wrapper {
+    background-color: white;
     border: 2px solid black;
-    border-radius: 25px;
-    height: auto;
-   background-color: rgba(255, 255, 255, 0.63);
+    border-radius: 0.2cm;
 }
 
-::ng-deep .mat-option.text{
-    text-align: center;
-}
+#field{
+    height: 3vw;
 
-
-::ng-deep .mat-select-value{
-text-align: center;
-  color: black;}
-
-::ng-deep .mat-form-field-type-mat-select .mat-form-field-label {
-    text-align: center;
- color: black;
+    background-color: white;
 }
 
 #button {

@@ -1,22 +1,16 @@
-<html>
-  <head>
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Russo+One">
-  </head>
-  <body>
-    <div *ngIf="(progress.appProgress < 2); else content" class="main">
-      <div class="title">
-        {{title | uppercase}}
-      </div>
-      <div [ngSwitch]="progress.appProgress">
-        <div *ngSwitchCase="0" id="loading">
-          Loading ...
-        </div>
-        <app-start [text]="'START'" *ngSwitchCase="1"></app-start>
-      </div>
+<body>
+  <div *ngIf="(progress.appProgress < 2); else content" class="main">
+    <div class="title">
+      {{title | uppercase}}
     </div>
-    <ng-template #content [ngSwitch]="progress.appProgress">
-      <app-functor *ngSwitchCase="2"></app-functor>
-    </ng-template>
-  </body>
-</html>
+    <div [ngSwitch]="progress.appProgress">
+      <div *ngSwitchCase="0" id="loading">
+        Loading ...
+      </div>
+      <app-start [text]="'START'" *ngSwitchCase="1"></app-start>
+    </div>
+  </div>
+  <ng-template #content [ngSwitch]="progress.appProgress">
+    <app-functor *ngSwitchCase="2"></app-functor>
+  </ng-template>
+</body>

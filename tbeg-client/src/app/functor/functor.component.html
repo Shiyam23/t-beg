@@ -1,13 +1,13 @@
 <p id='functorTitle' >Select a functor!</p>
 <div>
-<mat-form-field class="functorField" appearance="fill">
-    <mat-label>Functor</mat-label>
-    <mat-select [(value)]="selected" [required]="true">
-        <mat-option class="selection" *ngFor="let functor of functors" [value]="functor.value">
-            {{functor.viewValue}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<br>
-<app-start id="button" [text]="'NEXT'" (click)="next()"></app-start>
+    <mat-form-field class="functorField" appearance="fill">
+        <mat-label>Functor</mat-label>
+        <mat-select [(value)]="selected" [required]="true">
+            <mat-option class="selection" *ngFor="let functor of functors" [value]="functor.value">
+                {{functor.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <app-start id="button" [text]="'NEXT'" (click)="next()"></app-start>
 </div>
