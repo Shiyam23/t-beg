@@ -1,0 +1,37 @@
+#form, .fields, .button{
+    font-size: 30px;
+}
+
+
+#form{
+    font-family: 'Roboto';
+    font-size: 30px;
+    font-weight: 800;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.fields{
+    text-align: center;
+    width: 200px;
+}
+
+.button{
+    text-align: center;
+    margin-top: 50px;    
+    margin-bottom: 50px;    
+}
+
+.scLine{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+}
+
+#result{
+    font-size: 80px;
+    font-style: normal;
+}
