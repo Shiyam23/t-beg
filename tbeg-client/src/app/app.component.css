@@ -1,37 +1,22 @@
-#form, .fields, .button{
-    font-size: 30px;
-}
-
-
-#form{
-    font-family: 'Roboto';
-    font-size: 30px;
-    font-weight: 800;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.fields{
+.main {
+    user-select: none;    
     text-align: center;
-    width: 200px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    height: 10em;
 }
 
-.button{
+.title {
+    
+    font-size: 5vw;
+    margin-bottom: 5vw;
     text-align: center;
-    margin-top: 50px;    
-    margin-bottom: 50px;    
+    text-shadow: 4px 4px 4px #aaa;
 }
 
-.scLine{
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    text-align: center;
-}
-
-#result{
-    font-size: 80px;
-    font-style: normal;
+body {
+    display: flex;
+    justify-content: center;
+    flex-flow: row ;
+    align-items: center;
 }

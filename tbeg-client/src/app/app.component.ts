@@ -9,6 +9,7 @@ import { SignalRService } from './services/signal-r.service';
 })
 export class AppComponent implements AfterViewInit  {
   
+  public appName = "T-BEG"
   private connected;
   public result;  
   private calcSubscription : Subscription;

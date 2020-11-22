@@ -1,13 +1,13 @@
-<div id="form">
-  <form #calcForm="ngForm" (ngSubmit)="login(calcForm.value)">
-    <input class="fields" type="text" name="a" ngModel>
-    +
-    <input class="fields" type="text" name="b" ngModel>
-    <br>
-    <div class="scLine">
-      <input class="button" type="submit" value="=">
-      <br>
-      <span id="result">{{result}}</span>
+<html>
+  <head>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Russo+One">
+  </head>
+  <body>
+    <div class="main">
+      <div class="title">
+        {{appName | uppercase}}
+      </div>
     </div>
-  </form>
-</div>
+  </body>
+</html>
