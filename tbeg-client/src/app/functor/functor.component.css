@@ -1,0 +1,40 @@
+#functorTitle{
+    font-size: 4vw;
+    position: absolute;
+    top: 15vw;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.functorField{
+    font-size: 1vw;
+    width: 15vw;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    border: 2px solid black;
+    border-radius: 25px;
+    height: auto;
+   background-color: rgba(255, 255, 255, 0.63);
+}
+
+::ng-deep .mat-option.text{
+    text-align: center;
+}
+
+
+::ng-deep .mat-select-value{
+text-align: center;
+  color: black;}
+
+::ng-deep .mat-form-field-type-mat-select .mat-form-field-label {
+    text-align: center;
+ color: black;
+}
+
+#button {
+    margin-top: 5vw;
+    position:absolute;
+    left: 50%;
+    transform: translate(-50%,0)
+}

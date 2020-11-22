@@ -4,7 +4,7 @@
           href="https://fonts.googleapis.com/css?family=Russo+One">
   </head>
   <body>
-    <div class="main">
+    <div *ngIf="(progress.appProgress < 2); else content" class="main">
       <div class="title">
         {{title | uppercase}}
       </div>
@@ -15,5 +15,8 @@
         <app-start [text]="'START'" *ngSwitchCase="1"></app-start>
       </div>
     </div>
+    <ng-template #content [ngSwitch]="progress.appProgress">
+      <app-functor *ngSwitchCase="2"></app-functor>
+    </ng-template>
   </body>
 </html>

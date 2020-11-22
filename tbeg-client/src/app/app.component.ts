@@ -19,6 +19,10 @@ export class AppComponent implements AfterViewInit  {
   constructor(private service : SignalRService, public progress: AppProgressService){}
   
   ngAfterViewInit(): void {
+    
+    setTimeout(() => {
+      this.progress.forward()
+    }, 1500) 
     // this.service.startConnection();
     // this.resultSubscription = this.service.result.subscribe(number => this.result = number)
     // this.calcSubscription = this.service.connected.subscribe( connected => this.connected = connected)
