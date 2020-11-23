@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { lowerCase } from 'lodash';
+import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/app-progress.service';
+import { SignalRService } from '../services/signal-r.service';
 
 @Component({
   selector: 'app-functor',
@@ -8,16 +11,24 @@ import { AppProgressService } from '../services/app-progress.service';
 })
 export class FunctorComponent implements OnInit {
 
-  constructor(public progress : AppProgressService) { }
-
-  ngOnInit(): void {
+  private functorListSub : Subscription;
+  functors : {value:string, viewValue:string}[] = new Array();
+  constructor(public progress : AppProgressService, public signalR : SignalRService) {
   }
 
-  functors = [
-    {value: 'powerset', viewValue: 'Powerset'},
-    {value: 'dx+1', viewValue: 'DX + 1'},
-    {value: 'mealy', viewValue: 'Mealy'}
-  ];
+  ngOnInit(): void {
+    this.signalR.askServer();
+    this.signalR.listenToServer();
+    this.functorListSub = this.signalR.functorList.subscribe(array => {
+      array.forEach( string => {
+        this.functors.push({
+          value: lowerCase(string),
+          viewValue: string
+        })
+      })
+    })
+  }
+
 
   selected = 'powerset';
 

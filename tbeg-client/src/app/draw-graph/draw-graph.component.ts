@@ -3,6 +3,7 @@ import * as jQuery from 'jquery';
 import * as _ from 'lodash';
 import * as $ from 'backbone';
 import * as joint from 'jointjs';
+import { SignalRService } from '../services/signal-r.service';
 
 @Component({
   selector: 'app-draw-graph',
@@ -15,7 +16,7 @@ export class DrawGraphComponent implements OnInit {
     showContextMenu : String;
     selectedState;
 
-    constructor() { }
+    constructor(public signalR : SignalRService) { }
   
 
     ngOnInit(): void {

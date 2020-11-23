@@ -5,4 +5,9 @@
     <RootNamespace>tbeg_server</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutomaticGraphLayout.Drawing" Version="1.1.11" />
+
+  </ItemGroup>
+
 </Project>

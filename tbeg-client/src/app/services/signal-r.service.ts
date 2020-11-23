@@ -7,8 +7,9 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class SignalRService {private hubConnection: SignalR.HubConnection;
+
   public connected = new Subject<boolean>();
-  public result = new Subject<number>();
+  public functorList = new Subject<Array<string>>();
 
   constructor() { }
 
@@ -31,17 +32,15 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
       .catch(err => console.log('Error while starting connection' + err))
   }
 
-  public askServer(a: number, b: number) {
+  public askServer() {
 
-    this.hubConnection.invoke("sum", a, b)
+    this.hubConnection.invoke("getFunctors")
       .catch(err => console.log(err));
-
-    this.hubConnection.stream
   }
 
   public listenToServer() {
-    this.hubConnection.on("Result", (number : number) => {
-      this.result.next(number);
+    this.hubConnection.on("Result", (functorArray : any) => {
+      this.functorList.next(functorArray);
     })
   }
 }

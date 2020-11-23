@@ -1,11 +1,60 @@
 {
   "version": 3,
   "targets": {
-    "net5.0": {}
+    "net5.0": {
+      "AutomaticGraphLayout/1.1.11": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/AutomaticGraphLayout.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/AutomaticGraphLayout.dll": {}
+        }
+      },
+      "AutomaticGraphLayout.Drawing/1.1.11": {
+        "type": "package",
+        "dependencies": {
+          "AutomaticGraphLayout": "1.1.11"
+        },
+        "compile": {
+          "lib/netstandard2.0/AutomaticGraphLayout.Drawing.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/AutomaticGraphLayout.Drawing.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "AutomaticGraphLayout/1.1.11": {
+      "sha512": "eCedsyBYhxpOFXCnX3+RPsZ0oIZ3pvKzfg2XDXvYGi6zcJmP4LdowiQLBpy4dwvQO0Sl0FEJ8EkfzwmIuLdzZA==",
+      "type": "package",
+      "path": "automaticgraphlayout/1.1.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "automaticgraphlayout.1.1.11.nupkg.sha512",
+        "automaticgraphlayout.nuspec",
+        "lib/netstandard2.0/AutomaticGraphLayout.dll"
+      ]
+    },
+    "AutomaticGraphLayout.Drawing/1.1.11": {
+      "sha512": "A2eq3GvW4pg+1QKfcy/JQZN2S4qdxli0Vqcinyq7fUIM597NRcp2vufNbo5m9tJtQN7qW+OmKcfnsesrdt3j9Q==",
+      "type": "package",
+      "path": "automaticgraphlayout.drawing/1.1.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "automaticgraphlayout.drawing.1.1.11.nupkg.sha512",
+        "automaticgraphlayout.drawing.nuspec",
+        "lib/netstandard2.0/AutomaticGraphLayout.Drawing.dll"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net5.0": []
+    "net5.0": [
+      "AutomaticGraphLayout.Drawing >= 1.1.11"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Shiyam\\.nuget\\packages\\": {}
@@ -45,6 +94,12 @@
     "frameworks": {
       "net5.0": {
         "targetAlias": "net5.0",
+        "dependencies": {
+          "AutomaticGraphLayout.Drawing": {
+            "target": "Package",
+            "version": "[1.1.11, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

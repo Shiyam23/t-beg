@@ -14,7 +14,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "jointjs"
+              "jointjs",
+              "lodash"
             ],
             "outputPath": "dist/tbeg-client",
             "index": "src/index.html",

@@ -13,25 +13,19 @@ export class AppComponent implements AfterViewInit  {
   public title = "T-BEG";
   private connected;
   public result;  
-  private calcSubscription : Subscription;
-  private resultSubscription : Subscription;
+  private connectedSub : Subscription;
 
   constructor(private service : SignalRService, public progress: AppProgressService){}
   
   ngAfterViewInit(): void {
     
-    // setTimeout(() => {
-    //   this.progress.forward()
-    // }, 1500) 
-    // this.service.startConnection();
-    // this.resultSubscription = this.service.result.subscribe(number => this.result = number)
-    // this.calcSubscription = this.service.connected.subscribe( connected => this.connected = connected)
-  }
-
-  login(value:any) {
-    if (this.connected) {
-      this.service.askServer(+value.a,+value.b);
-      this.service.listenToServer();
-    }
+    
+    this.service.startConnection();
+    this.connectedSub = this.service.connected.subscribe( connected => {
+      this.connected = connected;
+      if (connected) {
+        this.progress.forward();
+      }
+    });
   }
 }

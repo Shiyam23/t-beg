@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "SKIYiEwG0dSYXRD7rTvHWi7NLCUJeD6blJGWioTQSMh/MbUSTdudWNaNMFYWbC6oIzP1uisSCR2W1kf5xg3aww==",
+  "dgSpecHash": "ZnBpjD+GZIOwBEUBRlx+97jHFVs/r16+l2dy8ynP9Kmg5ENVbnLfhJ6hYfoAKRRRJ1AOYYWunG5af6BzYP2cPg==",
   "success": true,
   "projectFilePath": "D:\\Users\\Shiyam\\Desktop\\Bachelorarbeit\\tbeg\\tbeg-server\\tbeg-server.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Shiyam\\.nuget\\packages\\automaticgraphlayout\\1.1.11\\automaticgraphlayout.1.1.11.nupkg.sha512",
+    "C:\\Users\\Shiyam\\.nuget\\packages\\automaticgraphlayout.drawing\\1.1.11\\automaticgraphlayout.drawing.1.1.11.nupkg.sha512"
+  ],
   "logs": []
 }
