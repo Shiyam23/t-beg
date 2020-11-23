@@ -1,0 +1,41 @@
+#drawGraphTitle{
+    font-size: 4vw;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 2vw;
+/*     position: absolute;
+    top: 10vw;
+    left: 50%;
+    transform: translateX(-50%); */
+}
+
+#content{
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+#settings{
+
+    height: 28vw;
+    width: 100%;
+    border: 2px solid black;
+    background-color: white;
+    opacity: 0.8;
+}
+
+#panel{
+    width: 20vw;
+    height: 35vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:space-between;
+}
+
+#paper{
+    margin-right: 2vw;
+    border: 2px solid black;
+    background-color: white;
+    opacity: 0.8;
+}

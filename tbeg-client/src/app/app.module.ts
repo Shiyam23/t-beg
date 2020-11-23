@@ -11,13 +11,15 @@ import { FunctorComponent } from './functor/functor.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule} from '@angular/material/select';
 import { MatButtonModule} from '@angular/material/button';
+import { DrawGraphComponent } from './draw-graph/draw-graph.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     StartComponent,
-    FunctorComponent
+    FunctorComponent,
+    DrawGraphComponent
   ],
   imports: [
     BrowserModule,
