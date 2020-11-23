@@ -126,10 +126,6 @@ export class DrawGraphComponent implements OnInit {
             return link.addTo(graph);
         }   
 
-        var test = state(100,100, 'test');
-        var test2 = state(200,100, 'test2');
-        addLink(test, test2, "testLink", []);
-
         paper.unfreeze();
 
 
