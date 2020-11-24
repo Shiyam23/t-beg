@@ -1,7 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AppProgressService } from './services/app-progress.service';
-import { SignalRService } from './services/signal-r.service';
+import { AppProgressService } from './services/appProgress/app-progress.service';
+import { SignalRService } from './services/signalR/signal-r.service';
 
 @Component({
   selector: 'app-root',
