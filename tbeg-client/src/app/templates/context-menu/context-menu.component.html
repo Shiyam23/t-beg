@@ -1,0 +1,10 @@
+<div style="visibility: hidden; position: fixed"
+    [style.left]="contextMenuPosition.x"
+    [style.top]="contextMenuPosition.y"
+    [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu="matMenu">
+	<ng-template matMenuContent let-item="item">
+		<button *ngFor="let item of list" mat-menu-item (click)="item.function()">{{item.option}}</button>
+	</ng-template>
+</mat-menu>

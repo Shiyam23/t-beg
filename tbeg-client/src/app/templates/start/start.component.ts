@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AppProgressService } from 'src/app/services/app-progress.service';
+import { AppProgressService } from 'src/app/services/appProgress/app-progress.service';
 
 @Component({
   selector: 'app-start',
