@@ -13,6 +13,11 @@ import { MatMenuModule } from '@angular/material/menu'
 import { MatButtonModule} from '@angular/material/button';
 import { DrawGraphComponent } from './draw-graph/draw-graph.component';
 import { ContextMenuComponent } from './templates/context-menu/context-menu.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+
 
 
 @NgModule({
@@ -30,7 +35,10 @@ import { ContextMenuComponent } from './templates/context-menu/context-menu.comp
     MatButtonModule,
     MatSelectModule,
     MatMenuModule,
-    FormsModule
+    FormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCheckboxModule
   ],
   providers: [SignalRService, AppProgressService],
   bootstrap: [AppComponent]

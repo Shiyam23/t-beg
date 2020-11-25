@@ -11,17 +11,26 @@
 
 #content{
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     align-content: space-between;
 }
 
-#settings{
+.settings{
 
-    height: 28vw;
+    padding-left: 30px;
+    height: 25vw;
     width: 100%;
     border: 2px solid black;
     background-color: white;
-    opacity: 0.8;
+    opacity: 1;
+    padding-top: 50px;
+    
+}
+
+.settingsContent{
+    display:flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
 #panel{
@@ -34,8 +43,14 @@
 }
 
 #paper{
-    margin-right: 2vw;
+    margin-left: 2vw;
     border: 2px solid black;
     background-color: white;
     opacity: 0.8;
+}
+
+
+.option{
+    margin-top: 30px;
+    width: 50%;
 }
