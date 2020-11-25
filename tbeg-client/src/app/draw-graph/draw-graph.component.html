@@ -6,25 +6,25 @@
             <div *ngIf="selectedStateView && isStateWindow" class="settingsContent">
                     <mat-form-field class="option">
                             <mat-label>Name</mat-label>
-                            <input type="number" matInput required [(ngModel)]="stateDescription.name">
+                            <input type="number" matInput required [ngModel]="selectedItem.name" (ngModelChange)="setStateName($event)">
                             <mat-error *ngIf="emailFormControl.hasError('required')">
                             Name is <strong>required</strong>
                             </mat-error>
                     </mat-form-field>
-                    <mat-checkbox class="option" [(ngModel)]="stateDescription.isStartState">Start state</mat-checkbox>
-                    <mat-checkbox class="option" [(ngModel)]="stateDescription.isFinalState">Accept state</mat-checkbox>
+                    <mat-checkbox class="option" [ngModel]="selectedItem.isStartState" (ngModelChange)="setStateStart($event)">Start state</mat-checkbox>
+                    <mat-checkbox class="option" [ngModel]="selectedItem.isFinalState" (ngModelChange)="setStateFinal($event)">Accept state</mat-checkbox>
             </div>
             <div *ngIf="selectedStateView && !isStateWindow" class="settingsContent">
                 <mat-form-field class="option">
                     <mat-label>Name</mat-label>
-                    <input type="text" matInput required [(ngModel)]="linkDescription.name">
+                    <input type="text" matInput required [ngModel]="selectedItem.name" (ngModelChange)="setLinkName($event)">
                     <mat-error *ngIf="emailFormControl.hasError('required')">
                     Name is <strong>required</strong>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="option">
                     <mat-label>Value</mat-label>
-                    <input type="number" matInput required [(ngModel)]="linkDescription.value">
+                    <input type="text" matInput required [ngModel]="selectedItem.value" (ngModelChange)="setLinkValue($event)">
                     <mat-error *ngIf="emailFormControl.hasError('required')">
                     Value is <strong>required</strong>
                     </mat-error>

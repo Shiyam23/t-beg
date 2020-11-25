@@ -18,26 +18,12 @@ export class DrawGraphComponent implements OnInit{
 
     showContextMenu : String;
     selectedStateView : joint.dia.ElementView | joint.dia.LinkView;
+    selectedItem : State | Link;
     graph : joint.dia.Graph;
     paper : joint.dia.Paper;
     label : number = 1;
+    event : any;
     isStateWindow : boolean = true;
-    stateDescription : {
-        name:string,
-        isStartState:boolean,
-        isFinalState:boolean
-    } = {
-        name: "",
-        isStartState: false,
-        isFinalState: false
-    } 
-    linkDescription : {
-        name:string,
-        value:string,
-    } = {
-        name: "",
-        value: ""
-    } 
 
 
     @ViewChild('menu')
@@ -90,19 +76,9 @@ export class DrawGraphComponent implements OnInit{
 
         this.paper.on('blank:pointerclick', (v,x,y) => {
             if (this.selectedStateView) {
-                if (this.selectedStateView instanceof joint.dia.ElementView) {
-                    var state : State = State.findStateByModel(this.selectedStateView.model);
-                    state.setName(this.stateDescription.name);
-                    state.setStartState(this.stateDescription.isStartState);
-                    state.setFinalState(this.stateDescription.isFinalState);
-                }
-                else {
-                    var link : Link = Link.findLinkByModel(this.selectedStateView.model);
-                    link.setName(this.linkDescription.name);
-                    link.value = this.linkDescription.value;
-                }
-                    this.selectedStateView?.unhighlight(null, highlighter);
-                    this.selectedStateView = null;
+                this.selectedStateView?.unhighlight(null, highlighter);
+                this.selectedStateView = null;
+                this.selectedItem = null;
             }
         });
 
@@ -124,11 +100,7 @@ export class DrawGraphComponent implements OnInit{
             this.isStateWindow = true;
             cellView.highlight(null, highlighter);
             var state : State = State.findStateByModel(cellView.model);
-            this.stateDescription = {
-                name: state.name,
-                isStartState: state.isStartState,
-                isFinalState: state.isFinalState
-            }
+            this.selectedItem = state;
         });
         
         this.paper.on('link:pointerclick', (cellView) => {
@@ -137,10 +109,7 @@ export class DrawGraphComponent implements OnInit{
             this.isStateWindow = false;
             cellView.highlight(null, highlighter);
             var link : Link = Link.findLinkByModel(cellView.model);
-            this.linkDescription = {
-                name: link.name,
-                value: link.value,
-            }
+            this.selectedItem = link;
         });
 
         this.paper.unfreeze();
@@ -289,5 +258,26 @@ export class DrawGraphComponent implements OnInit{
         var link = Link.findLinkByModel(view.model);
         link.remove();
     }
+
+    setLinkValue(event : any) {
+        (<Link>this.selectedItem).value = event;
+    }
+    setLinkName(event : any) {
+        (<Link>this.selectedItem).setName(event);
+    }
+
+    setStateStart(event : any) {
+        (<State>this.selectedItem).setStartState(event);
+    }
+
+    setStateFinal(event : any) {
+        (<State>this.selectedItem).setFinalState(event);
+    }
+
+    setStateName(event : any) {
+        (<State>this.selectedItem).setName(event);
+    }
+
+
 }
 
