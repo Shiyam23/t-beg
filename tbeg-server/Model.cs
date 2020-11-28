@@ -2,6 +2,7 @@
 
 using Microsoft.Msagl.Drawing;
 using System;
+using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -585,8 +586,8 @@ namespace TBeg
                     for (int j = 0; j < CurrentGraph.NodeCount; j++)
                     {
                         Node node = CurrentGraph.FindNode((j + 1).ToString());
-                        node.Attr.FillColor = Color.White;
-                        node.Attr.Color = Color.Gray;
+                        node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                        node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                     }
                     UpdateGraph(name, CurrentGraph);
 
@@ -945,14 +946,14 @@ namespace TBeg
             string formula = (string)method.Invoke(CurrentGame, argumentst);
 
             //TODO: this throws exception
-            List<string> lines = new List<string>();//WrapText(formula, 600, new System.Drawing.Font("Calibri", 11.0f));
+            //List<string> lines = WrapText(formula, 600, new Font("Calibri", 11.0f));
 
 
             formula = "";
-            foreach (var item in lines)
-            {
-                formula = formula + item + Environment.NewLine;
-            }
+            //foreach (var item in lines)
+            //{
+            //    formula = formula + item + Environment.NewLine;
+            //}
             return formula;
         }
 
@@ -968,36 +969,7 @@ namespace TBeg
         /// <returns></returns>
 
         //TODO: this throws exception
-        /* private List<string> WrapText(string text, double pixels, System.Drawing.Font font)
-        {
-            string[] originalLines = text.Split(new string[] { " " },
-                StringSplitOptions.None);
-
-            List<string> wrappedLines = new List<string>();
-
-            StringBuilder actualLine = new StringBuilder();
-            double actualWidth = 0;
-
-            foreach (var item in originalLines)
-            {
-                int w = TextRenderer.MeasureText(item + " ", font).Width;
-                actualWidth += w;
-
-                if (actualWidth > pixels)
-                {
-                    wrappedLines.Add(actualLine.ToString());
-                    actualLine.Clear();
-                    actualWidth = w;
-                }
-
-                actualLine.Append(item + " ");
-            }
-
-            if (actualLine.Length > 0)
-                wrappedLines.Add(actualLine.ToString());
-
-            return wrappedLines;
-        } */
+        
 
         public void GameGoOn(string GameName, long step, string[] alphabet)
         {
@@ -1053,17 +1025,17 @@ namespace TBeg
                             p1 = (List<int>)arguments[1];
 
                             Node lila = CurrentGraph.FindNode((s + 1).ToString());
-                            lila.Attr.Color = Color.BlueViolet;
+                            lila.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
                             for (int j = 0; j < p1.Count(); j++)
                             {
                                 Node node = CurrentGraph.FindNode((p1[j] + 1).ToString());
-                                node.Attr.FillColor = Color.Violet;
+                                node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Violet;
                             }
                             // mark the state for the duplicator:
                             PropertyInfo prop = type.GetProperty("T_dup");
                             int t = (int)prop.GetValue(CurrentGame, null);
                             Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                            tu.Attr.Color = Color.SkyBlue;
+                            tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                             //
                             Interlocked.Increment(ref FLOW_Step);
                             Interlocked.Increment(ref step);
@@ -1104,11 +1076,11 @@ namespace TBeg
                             method.Invoke(CurrentGame, new Object[] { p2, alphabet.Count() });
                             // update the nodes in the graph:
                             Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                            tu.Attr.Color = Color.SkyBlue;
+                            tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                             for (int j = 0; j < p2.Count(); j++)
                             {
                                 Node node = CurrentGraph.FindNode((p2[j] + 1).ToString());
-                                node.Attr.FillColor = Color.Turquoise;
+                                node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Turquoise;
                             }
 
                             //inform GUI:
@@ -1179,18 +1151,18 @@ namespace TBeg
                                 p.Add(x_prime);
                                 // update the nodes in the graph:
                                 Node tu = CurrentGraph.FindNode((x_prime + 1).ToString());
-                                tu.Attr.Color = Color.BlueViolet;
-                                tu.Attr.FillColor = Color.White;
+                                tu.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
+                                tu.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
                                 //update previous game init
                                 PropertyInfo X = type.GetProperty("S_sp");
                                 int x = (int)X.GetValue(CurrentGame, null);
                                 Node tu_old = CurrentGraph.FindNode((x + 1).ToString());
-                                tu_old.Attr.Color = Color.Gray;
+                                tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 //tu_old.Attr.FillColor = Color.White;
                                 PropertyInfo Y = type.GetProperty("T_dup");
                                 int y = (int)Y.GetValue(CurrentGame, null);
                                 tu_old = CurrentGraph.FindNode((y + 1).ToString());
-                                tu_old.Attr.Color = Color.Gray;
+                                tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 //tu_old.Attr.FillColor = Color.White;
                                 //for (int j = 0; j < CurrentGraph.NodeCount; j++)
                                 //{
@@ -1256,18 +1228,18 @@ namespace TBeg
                             if (y_prime >= 0)
                             {
                                 Node tu = CurrentGraph.FindNode((y_prime + 1).ToString());
-                                tu.Attr.Color = Color.SkyBlue;
+                                tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                                 //get the old Y_prime value
                                 PropertyInfo Y = type.GetProperty("Y_prime");
                                 int y = (int)Y.GetValue(CurrentGame, null);
                                 Node tu_old = CurrentGraph.FindNode((y + 1).ToString());
-                                tu_old.Attr.Color = Color.Gray;
+                                tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 //reset coloring of the graph before new round
                                 for (int j = 0; j < CurrentGraph.NodeCount; j++)
                                 {
                                     Node node = CurrentGraph.FindNode((j + 1).ToString());
-                                    node.Attr.FillColor = Color.White;
-                                    node.Attr.Color = Color.Gray;
+                                    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                                    node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 }
 
                                 while (Interlocked.Read(ref FLOW_Step) > 1)
@@ -1442,17 +1414,17 @@ namespace TBeg
                     Interlocked.Increment(ref FLOW_Step);
                     //graph update:
                     Node lila = CurrentGraph.FindNode((s ).ToString());
-                    lila.Attr.Color = Color.BlueViolet;
+                    lila.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
                     for (int j = 0; j < p1.Count(); j++)
                     {
                         Node node = CurrentGraph.FindNode((p1[j]+1 ).ToString());
-                        node.Attr.FillColor = Color.Violet;
+                        node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Violet;
                     }
                     // mark the state for the duplicator:
                     PropertyInfo prop = type.GetProperty("T_dup");
                     int t = (int)prop.GetValue(CurrentGame, null);
                     Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                    tu.Attr.Color = Color.SkyBlue;
+                    tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                 }
                 else
                 {
@@ -1478,11 +1450,11 @@ namespace TBeg
                     PropertyInfo prop = type.GetProperty("T_dup");
                     int t = (int)prop.GetValue(CurrentGame, null);
                     Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                    tu.Attr.Color = Color.SkyBlue;
+                    tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                     for (int j = 0; j < predicate.Count(); j++)
                     {
                         Node node = CurrentGraph.FindNode((predicate[j] + 1).ToString());
-                        node.Attr.FillColor = Color.Turquoise;
+                        node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Turquoise;
                     }
                     //Update GUI
                     UpdateStep2(t, predicate, true);
@@ -1548,7 +1520,7 @@ namespace TBeg
                         X = type.GetProperty("X_prime");
                         X.SetValue(CurrentGame, x);
                         Node tu_old = CurrentGraph.FindNode((x + 1).ToString());
-                        tu_old.Attr.Color = Color.Gray;
+                        tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                         //tu_old.Attr.FillColor = Color.White;
                     }
                     else
@@ -1556,7 +1528,7 @@ namespace TBeg
                         Y= type.GetProperty("Y_prime");
                         Y.SetValue(CurrentGame, y);
                         Node tu_old2 = CurrentGraph.FindNode((y + 1).ToString());
-                        tu_old2.Attr.Color = Color.Gray;
+                        tu_old2.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                         //tu_old2.Attr.FillColor = Color.White;
                     }               
                     UpdateStep3(selection, x_prime, true);
@@ -1607,8 +1579,8 @@ namespace TBeg
                 for (int j = 0; j < CurrentGraph.NodeCount; j++)
                 {
                     Node node = CurrentGraph.FindNode((j + 1).ToString());
-                    node.Attr.FillColor = Color.White;
-                    node.Attr.Color = Color.Gray;
+                    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                    node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                 }
                 //TODO: reset all the textboxes and check boxes
                 UpdateStep4(y_prime, false);
@@ -1728,8 +1700,8 @@ namespace TBeg
             for (int j = 0; j < CurrentGraph.NodeCount; j++)
             {
                 Node node = CurrentGraph.FindNode((j + 1).ToString());
-                node.Attr.FillColor = Color.White;
-                node.Attr.Color = Color.Gray;
+                node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
             }
             //clean the stacks:
             stepBackGraph.Clear();
