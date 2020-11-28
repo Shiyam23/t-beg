@@ -249,6 +249,9 @@ export class DrawGraphComponent implements OnInit{
         };
         var state = State.findStateByModel(view.model);
         state.remove();
+        console.log(State.allStates);
+        console.log(Link.allLinks);
+        
     }
 
     removeLink(view: joint.dia.LinkView) {
@@ -278,6 +281,19 @@ export class DrawGraphComponent implements OnInit{
         (<State>this.selectedItem).setName(event);
     }
 
+    startClick() {
+        var states : Array<number> = 
+            State.allStates.map(state => +state.name);
+        var alphabet : Array<String> = new Array<String>();
+        Link.allLinks.forEach(link => {
+            link.name.split(",").forEach(char => {
+                if (alphabet.indexOf(char) == -1) alphabet.push(char)
+            });
+        });
+        console.log(states);
+        console.log(alphabet);
+
+    }
 
 }
 

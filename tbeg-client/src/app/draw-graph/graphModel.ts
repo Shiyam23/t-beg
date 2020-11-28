@@ -55,6 +55,10 @@ export class State {
         this.model.remove();
         this.fromLinks.forEach(link => link.remove())
         this.toLinks.forEach(link => link.remove())
+        const index = State.allStates.indexOf(this);
+        if (index > -1) {
+            State.allStates.splice(index, 1);
+          }
     }
 
     public get name() : string {
