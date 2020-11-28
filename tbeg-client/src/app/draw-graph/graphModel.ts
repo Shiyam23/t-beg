@@ -1,8 +1,8 @@
 export class State {
 
+
     static allStates : Array<State> = new Array<State>();
-    private fromLinks: Array<Link> = new Array<Link>();
-    private toLinks: Array<Link> = new Array<Link>();
+    public connections: Array<Connection> = new Array<Connection>();
 
     constructor(
         private _name: string, 
@@ -13,13 +13,10 @@ export class State {
         State.allStates.push(this);
     }
 
-    public addToLink(link:Link) {
-        this.toLinks.push(link);
+    public addLink(link:Link, target: State) {
+        this.connections.push({link: link, target: target});
     }
 
-    public addFromLink(link:Link) {
-        this.fromLinks.push(link);
-    }
 
     public setName(name:string) {
         this._name = name;
@@ -38,27 +35,28 @@ export class State {
         })
     }
 
-    public removeLink(link:Link) {
-        const index = this.fromLinks.indexOf(link);
-        if (index > -1) {
-            this.fromLinks.splice(index, 1);
-          }
-        else {
-            const index2 = this.toLinks.indexOf(link);
-            if (index2 > -1) {
-                this.toLinks.splice(index, 1);
-            }
-        }
-    }
 
     public remove(){
         this.model.remove();
-        this.fromLinks.forEach(link => link.remove())
-        this.toLinks.forEach(link => link.remove())
-        const index = State.allStates.indexOf(this);
-        if (index > -1) {
-            State.allStates.splice(index, 1);
-          }
+        this.connections.forEach(connection => {
+            connection.link.model.remove();
+            var labelIndex : number = Link.allLinks.indexOf(connection.link);
+            if (labelIndex > -1) Link.allLinks.splice(labelIndex, 1);
+        })
+        State.allStates.forEach(state => {
+            var index : number;
+            state.connections.forEach(connection => {
+                if (connection.target == this) {
+                    connection.link.model.remove();
+                    var labelIndex : number = Link.allLinks.indexOf(connection.link);
+                    if (labelIndex > -1) Link.allLinks.splice(labelIndex, 1);
+                    index = state.connections.indexOf(connection);
+                }
+            if (index > -1) state.connections.splice(index, 1);
+            });
+        });
+        var index : number = State.allStates.indexOf(this);
+        if (index > -1) State.allStates.splice(index, 1);
     }
 
     public get name() : string {
@@ -107,11 +105,7 @@ export class Link {
         private _name: string, 
         public value: string, 
         public model: joint.dia.Link ,
-        public sourceState: State,
-        public sinkState: State
     ) {
-        this.sourceState.addFromLink(this);
-        this.sinkState.addToLink(this);
         Link.allLinks.push(this);
     }
 
@@ -133,15 +127,22 @@ export class Link {
 
     public remove() {
         this.model.remove();
-        this.sourceState.removeLink(this);
-        this.sinkState.removeLink(this);
         const index = Link.allLinks.indexOf(this);
         if (index > -1) {
             Link.allLinks.splice(index, 1);
-          }
+        }
+        State.allStates.forEach(state => {
+            var index : number = state.connections.findIndex(connection => connection.link = this)
+            if (index > -1) state.connections.splice(index, 1);
+        });
     }
 
     public static findLinkByModel(model:joint.dia.Link) {
         return Link.allLinks.find(item => item.model == model);
     }
+}
+
+class Connection {
+
+    constructor(public link : Link, public target : State) {}
 }

@@ -149,7 +149,8 @@ export class DrawGraphComponent implements OnInit{
         });
         var sourceState = State.findStateByModel(source);
         var targetState = State.findStateByModel(target);
-        var link : Link = new Link(label, "", linkModel, sourceState, targetState )
+        var link : Link = new Link(label, "", linkModel);
+        sourceState.addLink(link, targetState);
         return linkModel.addTo(this.graph);
     }   
 
@@ -254,9 +255,6 @@ export class DrawGraphComponent implements OnInit{
         };
         var state = State.findStateByModel(view.model);
         state.remove();
-        console.log(State.allStates);
-        console.log(Link.allLinks);
-        
     }
 
     removeLink(view: joint.dia.LinkView) {
@@ -294,7 +292,10 @@ export class DrawGraphComponent implements OnInit{
                 if (alphabet.indexOf(char) == -1) alphabet.push(char)
             });
         });
-        this.signalR.sendGraph(states, alphabet)
+
+        console.log(states);
+        console.log(Link.allLinks);
+        //this.signalR.sendGraph(states, alphabet)
     }
 
 }
