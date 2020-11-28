@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
 import { Subject } from 'rxjs';
+import { State } from 'src/app/draw-graph/graphModel';
 
 
 @Injectable({
@@ -42,5 +43,9 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
     this.hubConnection.on("Result", (functorArray : any) => {
       this.functorList.next(functorArray);
     })
+  }
+
+  public sendGraph(states : Array<State>, alphabet : Array<string>) {
+    this.hubConnection.invoke("Graph", states, alphabet)
   }
 }

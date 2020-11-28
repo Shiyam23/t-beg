@@ -39,11 +39,16 @@ export class DrawGraphComponent implements OnInit{
     Validators.min(0),
     Validators.max(100)
     ]);
+
+    signalR : SignalRService;
     
-    constructor(public signalR : SignalRService) { }
+    constructor(signalR : SignalRService) {
+        this.signalR = signalR;
+    }
   
 
     ngOnInit(): void {
+
 
         this.graph = new joint.dia.Graph;
 
@@ -282,17 +287,14 @@ export class DrawGraphComponent implements OnInit{
     }
 
     startClick() {
-        var states : Array<number> = 
-            State.allStates.map(state => +state.name);
-        var alphabet : Array<String> = new Array<String>();
+        var states : Array<State> = State.allStates;
+        var alphabet : Array<string> = new Array<string>();
         Link.allLinks.forEach(link => {
-            link.name.split(",").forEach(char => {
+            link.name.toString().split(',').forEach(char => {
                 if (alphabet.indexOf(char) == -1) alphabet.push(char)
             });
         });
-        console.log(states);
-        console.log(alphabet);
-
+        this.signalR.sendGraph(states, alphabet)
     }
 
 }
