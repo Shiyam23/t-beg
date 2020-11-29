@@ -21,6 +21,7 @@ namespace TBeg
         event ViewEvent_GameStepUser<IView> SendStep;
         event ViewHandler_Game<IView> ExitGame;
         event ViewEvent_GameGraph<IView> ResetGraph;
+        event ViewHandler_Validator<IView> GetValidator;
         
         void SetController(IController controller);
       

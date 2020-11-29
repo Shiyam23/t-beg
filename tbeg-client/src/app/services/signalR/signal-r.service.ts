@@ -49,4 +49,15 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public sendGraph(states : Array<State>, links : Array<Link> , alphabet : Array<string>) {
     this.hubConnection.invoke("graph", states, links, alphabet)
   }
+
+  public askValidator(functor : string) {
+    console.log("getting Validator");
+    this.hubConnection.invoke("getValidator", functor)
+  }
+
+  public getValidator() {
+    this.hubConnection.on("Validator", (validator : string) => {
+      console.log(validator);
+    })
+  }
 }

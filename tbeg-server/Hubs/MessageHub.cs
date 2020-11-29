@@ -14,14 +14,11 @@ namespace Hubs
     public class MessageHub : Hub  
     {  
         private ITBeg _tbeg;
-        public MessageHub(ITBeg tbeg) {
-            _tbeg = tbeg;
-        }
 
         public override Task OnConnectedAsync()
         {
             Console.WriteLine($"Client connected...");
-            Context.Items.Add("tbeg", new TBeg.TBeg());
+            Context.Items.Add("tbeg", new TBeg.TBeg(Context.ConnectionId));
             Dictionary<String, IModel> models = new Dictionary<String, IModel>();
             UpdateFunctorList(ref models, "config_Functor.txt");
             TBeg.Controller cnt = new TBeg.Controller((TBeg.TBeg)Context.Items["tbeg"], models);
@@ -39,15 +36,19 @@ namespace Hubs
         public async Task getFunctors()  {   
             
             Console.WriteLine($"Requesting functor list...");
-            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            string dir = System.IO.Path.GetDirectoryName(path);
             await Clients.Caller.SendAsync("Result", ((TBeg.TBeg) Context.Items["tbeg"]).getFunctors("\\config_Functor.txt"));  
         } 
 
+        public Task getValidator(string functor) {
+
+            Console.WriteLine($"Requesting validator for {functor}...");
+            var gui = ((TBeg.TBeg) Context.Items["tbeg"]);
+            gui.getValidator(functor);
+            return Task.CompletedTask;
+        }
+
         public Task graph(State[] states, Link[] links, string[] alphabet ) {
             
-            //State[] states = JsonSerializer.Deserialize<State[]>(stateString);
-            Console.WriteLine(states[0].name);            
             return Task.CompletedTask;
         }
 

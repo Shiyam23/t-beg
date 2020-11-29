@@ -1,26 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-//Graph libs
-using Microsoft.Msagl.Drawing;
-using Color = Microsoft.Msagl.Drawing.Color;
-using Node = Microsoft.Msagl.Drawing.Node;
-using Shape = Microsoft.Msagl.Drawing.Shape;
-using System.Collections;
-using System.Threading;
-using Microsoft.CSharp;
-using System.CodeDom.Compiler;
-using tbeg_server;
-
-
+using Microsoft.AspNetCore.SignalR;
+using Hubs;
 
 namespace TBeg
 {
@@ -32,6 +14,7 @@ namespace TBeg
     public delegate void ViewHandler_Game<IView>(IView sender, ViewEvent_Game e);
     public delegate void ViewEvent_GameStepUser<IView>(IView sender, ViewEvent_GameStepUser e);
     public delegate void ViewEvent_GameGraph<IView>(IView sender, ViewEvent_GameGraph e);
+    public delegate void ViewHandler_Validator<IView>(string functor);
 
     //Thread-Communication
     public delegate void UpdateGraphCallback();
@@ -66,7 +49,7 @@ namespace TBeg
     public delegate void UpdateStep4Callback(int y_prime);
     public delegate void UpdateStep4EnableCallback();
 
-    public partial class TBeg : IView, IModelObserver, ITBeg
+    public partial class TBeg : IView, IModelObserver
     {
         public event ViewHandler_Matrix<IView> InitandSaveMatrix;
         public event ViewHandler_Matrix<IView> SaveToCSV;
@@ -79,6 +62,7 @@ namespace TBeg
         public event ViewHandler_Game<IView> ExitGame;// stop the game and return to starting panel
         public event ViewEvent_GameStepUser<IView> SendStep;
         public event ViewEvent_GameGraph<IView> ResetGraph;
+        public event ViewHandler_Validator<IView> GetValidator;
 
         
         //Eventhandling
@@ -86,29 +70,23 @@ namespace TBeg
 
         //more usability 
         private bool swap = false;
-        Guid id;
+        string connectionId;
+        static IHubContext<MessageHub> context;
 
         public IController Controller1
         {
-            get
-            {
-                return Controller;
-            }
+            get{ return Controller; }
 
-            set
-            {
-                Controller = value;
-            }
+            set{ Controller = value; }
         }
 
-        public TBeg()
+        public TBeg(string id)
         {
-            id = Guid.NewGuid();
+            this.connectionId = id;
         }
 
-        public Guid GetID()
-        {
-            return id;
+        public static void setHubContext(IHubContext<MessageHub> context) {
+            TBeg.context = context;
         }
 
         // MVC event handling implementations:
@@ -125,16 +103,17 @@ namespace TBeg
             return models.Keys.ToArray<string>();
         }
 
-        public string[] setFunctors(string functor)
-        {   
-            return null;
-            //string[] functors = System.IO.File.ReadAllLines(filename);
+        public void getValidator(string functor) {
 
-            //Update Model to configfile -dll types
-            /* Dictionary<String, IModel> models = this.Controller1.Models;
-            Program.UpdateFunctorList(ref models, filename);
-            this.Controller1.Models = models; */
-            //return functors;
+            GetValidator.Invoke(functor);
+        }
+
+        public void SendValidator(string regex) {
+
+            TBeg.context.Clients.Client(this.connectionId).SendAsync(
+                "Validator", regex
+            );
+
         }
 
 

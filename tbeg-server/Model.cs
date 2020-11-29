@@ -24,6 +24,7 @@ namespace TBeg
     public delegate void ModelHandler_UpdateGraphView<IModel>(IModel sender, ModelEvent_UpdateGraphView e);
     public delegate void ModelHandler_InfoFileOp<IModel>(IModel sender, ModelEvent_InfoFileOp e);
     public delegate void ModelHandler_InfoStep1<IModel>(IModel sender, ModelEvent_InfoStep e);
+    public delegate void ModelHandler_Validator<IModel>(string functor);
 
     // The ModelEventArgs class which is derived from th EventArgs class to 
     // be passed on to the controller when the value is changed
@@ -169,6 +170,7 @@ namespace TBeg
         void StepBack2(IModel model, ModelEvent_InfoStep e);
         void StepBack3(IModel model, ModelEvent_InfoStep e);
         void StepBack4(IModel model, ModelEvent_InfoStep e);
+        void SendValidator(string functor);
     }
 
 
@@ -193,6 +195,7 @@ namespace TBeg
         void LoadFromCSV(string name, string functor, string[] content, int col, int row, string optional);
         void ExitGame(string name, string functor);
         void ResetGraph(string name, string functor, Graph graph, bool backToInit);
+        void GetValidator();
     }
 
     class Model<T> : IModel where T : new()
@@ -223,6 +226,7 @@ namespace TBeg
         public event ModelHandler_InfoStep1<IModel> backStep2;
         public event ModelHandler_InfoStep1<IModel> backStep3;
         public event ModelHandler_InfoStep1<IModel> backStep4;
+        public event ModelHandler_Validator<IModel> SendValidator;
 
         [field: NonSerialized]
         Thread GameThread;
@@ -271,6 +275,7 @@ namespace TBeg
             backStep2 += new ModelHandler_InfoStep1<IModel>(imo.StepBack2);
             backStep3 += new ModelHandler_InfoStep1<IModel>(imo.StepBack3);
             backStep4 += new ModelHandler_InfoStep1<IModel>(imo.StepBack4);
+            SendValidator += new ModelHandler_Validator<IModel>(imo.SendValidator);
         }
 
         public bool CheckMatrixName(string name)
@@ -2211,6 +2216,30 @@ namespace TBeg
             }
 
             return true;
+        }
+
+        public void GetValidator() {
+            T Functor = new T();
+
+            Type[] types = Functor.GetType().GetGenericArguments();
+            // call save method of functor
+            try
+            {   
+                Console.WriteLine("Getting Validator 3");
+                //SaveTransitionSystem(string filePath, string [] userinput);
+                MethodInfo method = Functor.GetType().GetMethod("GetValidator");
+                //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
+                Object validatorObject = method.Invoke(Functor, null);
+                string validator = (string) validatorObject;
+
+                //send feedback to the UI
+                SendValidator.Invoke(validator);
+
+            }
+            catch (Exception)
+            {
+                //TODO continue with error message to GUI
+            }
         }
     }
 }

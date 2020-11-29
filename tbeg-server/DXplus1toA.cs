@@ -357,5 +357,10 @@ namespace TBeg
         {
             return InitMatrixStandard(content,  alphabet,  states);
         }
+
+        public string GetValidator() {
+            // TODO change this later
+            return "DX+1toA_Test";
+        }
     }
 }

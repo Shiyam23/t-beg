@@ -22,7 +22,7 @@ export class FunctorComponent implements OnInit {
     this.functorListSub = this.signalR.functorList.subscribe(array => {
       array.forEach( string => {
         this.functors.push({
-          value: lowerCase(string),
+          value: string,
           viewValue: string
         })
       })
@@ -30,10 +30,12 @@ export class FunctorComponent implements OnInit {
   }
 
 
-  selected = 'powerset';
+  selected = 'Powerset';
 
-  public next() {
+  public next = () => {
     this.progress.selectedFunctor = this.selected;
+    this.signalR.askValidator(this.selected);
+    this.signalR.getValidator();
     this.progress.forward();
   } 
 }

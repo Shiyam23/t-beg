@@ -291,9 +291,6 @@ export class DrawGraphComponent implements OnInit{
                 if (alphabet.indexOf(char) == -1) alphabet.push(char)
             });
         });
-
-        console.log(states);
-        console.log(Link.allLinks);
         this.signalR.sendGraph(states, Link.allLinks, alphabet)
     }
 

@@ -59,6 +59,7 @@ namespace TBeg
             view.ExitGame += new ViewHandler_Game<IView>(this.ExitGame);
             view.ResetGraph += new ViewEvent_GameGraph<IView>(this.ResetGraph);
             view.CheckConsistenceOfGameGraph += new ViewHandler_Game<IView>(this.CheckConsistenceOfGameGraph);
+            view.GetValidator += new ViewHandler_Validator<IView>(this.GetValidator);
         }
 
         private void CheckConsistenceOfGameGraph(IView sender, ViewEvent_Game e)
@@ -202,6 +203,20 @@ namespace TBeg
             try
             {
                 getTypeModel(e.functor).InitandSaveMatrix(e.name,e.functor,e.alphabet,e.states,e.content,e.optional);
+            }
+        
+            catch (Exception exe)
+            {
+                throw exe;
+            }
+        }
+
+        private void GetValidator(string functor)
+        {
+
+            try
+            {   
+                getTypeModel(functor).GetValidator();
             }
         
             catch (Exception exe)

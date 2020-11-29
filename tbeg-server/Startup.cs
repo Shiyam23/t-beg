@@ -19,7 +19,6 @@ namespace tbeg_server
         public void ConfigureServices(IServiceCollection services)
         {
             
-            services.AddSingleton<ITBeg, TBeg.TBeg>();
             services.AddCors(options => 
                 { 
                 options.AddPolicy("CorsPolicy", builder => builder

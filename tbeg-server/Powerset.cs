@@ -448,5 +448,10 @@ namespace TBeg
         {
             return InitMatrixStandard(content, alphabet, states);
         }
+
+        public string GetValidator() {
+            // TODO change this later
+            return "Powerset_Test";
+        }
     }
 }
