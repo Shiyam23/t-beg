@@ -1,32 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "/slxiWFw2Ld8Q59s9U097UcOH8HRKPAcR6Ud/lxtqNUkzHqXvRMFdECF/7uReaX8BDLLAuneBNX+X0Y+gawtQQ==",
+  "dgSpecHash": "F5UkdDBkNo1LzXW+6Qe4qiqYO0UAe2R3/XYLBEaqrZzUMMzlKISP6GtTGSfgA7Kg6N5jebGPnoRl1/Urxsmbtg==",
   "success": true,
   "projectFilePath": "D:\\Users\\Shiyam\\Desktop\\Bachelorarbeit\\tbeg\\tbeg-server\\tbeg-server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Shiyam\\.nuget\\packages\\microsoft.msagl\\1.1.3\\microsoft.msagl.1.1.3.nupkg.sha512",
     "C:\\Users\\Shiyam\\.nuget\\packages\\microsoft.msagl.drawing\\1.1.3\\microsoft.msagl.drawing.1.1.3.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Das Paket \"Microsoft.Msagl 1.1.3\" wurde nicht mit dem Projektzielframework \"net5.0\", sondern mit \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8\" wiederhergestellt. Dieses Paket ist mit Ihrem Projekt möglicherweise nicht vollständig kompatibel.",
-      "libraryId": "Microsoft.Msagl",
-      "targetGraphs": [
-        "net5.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Das Paket \"Microsoft.Msagl.Drawing 1.1.3\" wurde nicht mit dem Projektzielframework \"net5.0\", sondern mit \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8\" wiederhergestellt. Dieses Paket ist mit Ihrem Projekt möglicherweise nicht vollständig kompatibel.",
-      "libraryId": "Microsoft.Msagl.Drawing",
-      "targetGraphs": [
-        "net5.0"
-      ]
-    }
-  ]
+  "logs": []
 }

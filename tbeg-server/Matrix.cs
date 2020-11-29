@@ -86,7 +86,7 @@ namespace TBeg
 
                 return (dynamic)t.GetMethod("One").Invoke(null, null);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw (new Exception("One for type " + typeof(TTwo).ToString() + " not defined! Define function One() in " + typeof(TTwo).ToString() + " that yields the one of said semiring."));
             };
@@ -107,7 +107,7 @@ namespace TBeg
 
                 return (dynamic)t.GetMethod("Zero").Invoke(null, null);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw (new Exception("Zero for type " + typeof(TTwo).ToString() + " not defined! Define function Zero() in " + typeof(TTwo).ToString() + " that yields the zero of said semiring."));
             };
@@ -163,6 +163,19 @@ namespace TBeg
         public static bool operator !=(Matrix<TOne, TTwo> m1, Matrix<TOne, TTwo> m2)
         {
             return !(m1 == m2);
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            return this == (Matrix<TOne, TTwo>)obj;
+        }
+        
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            // TODO: write your implementation of GetHashCode() here
+            return base.GetHashCode();
         }
 
         /// <summary>

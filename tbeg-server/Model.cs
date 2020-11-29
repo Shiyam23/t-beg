@@ -534,7 +534,7 @@ namespace TBeg
                 //send feedback to the UI
                 SendInfoFileOp(name,UIInfo,optional);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //TODO continue with error message to GUI
             }
@@ -1952,7 +1952,7 @@ namespace TBeg
                 }
 
             }
-            catch (Exception exe)
+            catch (Exception)
             {
                 
                 //extract content matrix
@@ -1976,7 +1976,7 @@ namespace TBeg
                         {
                            string1 = (string)((dynamic)one.GetMethod("One").Invoke(null, null)).ToString();
                         }
-                        catch (Exception e1)
+                        catch (Exception)
                         {
                             throw (new Exception("One for type " + one.ToString() + " not defined! Define function One() in " + one.ToString() + " that yields the one of said semiring."));
                         };
@@ -1990,7 +1990,7 @@ namespace TBeg
                         {
                             string0 = (string)((dynamic)one.GetMethod("Zero").Invoke(null, null)).ToString();
                         }
-                        catch (Exception e0)
+                        catch (Exception)
                         {
                             throw (new Exception("Zero for type " + one.ToString() + " not defined! Define function One() in " + one.ToString() + " that yields the zero of said semiring."));
                         };
@@ -2102,7 +2102,7 @@ namespace TBeg
                             }
 
 
-                            catch (ArgumentException ae)
+                            catch (ArgumentException)
                             {
                                 unsaved = true;
                                 id = id + 1;
