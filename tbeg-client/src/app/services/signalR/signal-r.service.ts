@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
+import { linkSync } from 'fs';
 import { Subject } from 'rxjs';
-import { State } from 'src/app/draw-graph/graphModel';
+import { Link, State } from 'src/app/draw-graph/graphModel';
 
 
 @Injectable({
@@ -45,7 +46,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
     })
   }
 
-  public sendGraph(states : Array<State>, alphabet : Array<string>) {
-    this.hubConnection.invoke("Graph", states, alphabet)
+  public sendGraph(states : Array<State>, links : Array<Link> , alphabet : Array<string>) {
+    this.hubConnection.invoke("graph", states, links, alphabet)
   }
 }

@@ -149,8 +149,7 @@ export class DrawGraphComponent implements OnInit{
         });
         var sourceState = State.findStateByModel(source);
         var targetState = State.findStateByModel(target);
-        var link : Link = new Link(label, "", linkModel);
-        sourceState.addLink(link, targetState);
+        var link : Link = new Link(label,sourceState, targetState,"", linkModel);
         return linkModel.addTo(this.graph);
     }   
 
@@ -295,7 +294,7 @@ export class DrawGraphComponent implements OnInit{
 
         console.log(states);
         console.log(Link.allLinks);
-        //this.signalR.sendGraph(states, alphabet)
+        this.signalR.sendGraph(states, Link.allLinks, alphabet)
     }
 
 }

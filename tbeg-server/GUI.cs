@@ -27,7 +27,6 @@ namespace TBeg
 
     
 //delegates for event handling in c#:
-    public delegate void ViewHandler_SaveToCSV<IView>(IView sender, ViewEvent_Matrix e);
     public delegate void ViewHandler_Matrix<IView>(IView sender, ViewEvent_Matrix e);
     public delegate bool ViewHandler_MatrixName<IView>(IView sender, ViewEvent_Matrix e);
     public delegate void ViewHandler_Game<IView>(IView sender, ViewEvent_Game e);
@@ -67,7 +66,7 @@ namespace TBeg
     public delegate void UpdateStep4Callback(int y_prime);
     public delegate void UpdateStep4EnableCallback();
 
-    public partial class TBeg : IView, ITBeg
+    public partial class TBeg : IView, IModelObserver, ITBeg
     {
         public event ViewHandler_Matrix<IView> InitandSaveMatrix;
         public event ViewHandler_Matrix<IView> SaveToCSV;
@@ -120,16 +119,46 @@ namespace TBeg
 
         public string[] getFunctors(string filename)
         {
-            string[] functors = System.IO.File.ReadAllLines(filename);
+
+            //Update Model to configfile -dll types
+            Dictionary<String, IModel> models = this.Controller1.Models;
+            return models.Keys.ToArray<string>();
+        }
+
+        public string[] setFunctors(string functor)
+        {   
+            return null;
+            //string[] functors = System.IO.File.ReadAllLines(filename);
 
             //Update Model to configfile -dll types
             /* Dictionary<String, IModel> models = this.Controller1.Models;
             Program.UpdateFunctorList(ref models, filename);
             this.Controller1.Models = models; */
-            return functors;
+            //return functors;
         }
 
+
+        public void FileInfoToUser(IModel model, ModelEvent_InfoFileOp e) {}
+        public void UpdateToGraphView(IModel model, ModelEvent_UpdateGraphView e) {}
+        public void UpdateGraph(IModel model, ModelEvent_UpdateGraphView e) {}
+        public void UpdateGraphName(IModel model, ModelEvent_UpdateGraphView e){}
+        public void InfoTextToUser(IModel model, ModelEvent_UpdateGraphView e){}
+        public void GraphIsConsistentWithGame(IModel model, ModelEvent_UpdateGraphView e){}
+        public void InfoStep0(IModel model, ModelEvent_InfoStep e){}
+        public void InfoStep1(IModel model, ModelEvent_InfoStep e){}
+        public void InfoStep2(IModel model, ModelEvent_InfoStep e){}
+        public void InfoStep3(IModel model, ModelEvent_InfoStep e){}
+        public void InfoStep4(IModel model, ModelEvent_InfoStep e){}
+
+        public void ReturnToPanel(IModel model, ModelEvent_InfoStep e){}
+
+        //StepBack stuff
+        public void StepBack2(IModel model, ModelEvent_InfoStep e){}
+        public void StepBack3(IModel model, ModelEvent_InfoStep e){}
+        public void StepBack4(IModel model, ModelEvent_InfoStep e){}
     }
+
+    
 
     public interface ITBeg {
         abstract string[] getFunctors(string filename);

@@ -1,8 +1,9 @@
+import { link } from 'fs';
+
 export class State {
 
 
     static allStates : Array<State> = new Array<State>();
-    public connections: Array<Connection> = new Array<Connection>();
 
     constructor(
         private _name: string, 
@@ -13,9 +14,6 @@ export class State {
         State.allStates.push(this);
     }
 
-    public addLink(link:Link, target: State) {
-        this.connections.push({link: link, target: target});
-    }
 
 
     public setName(name:string) {
@@ -35,28 +33,11 @@ export class State {
         })
     }
 
-
     public remove(){
         this.model.remove();
-        this.connections.forEach(connection => {
-            connection.link.model.remove();
-            var labelIndex : number = Link.allLinks.indexOf(connection.link);
-            if (labelIndex > -1) Link.allLinks.splice(labelIndex, 1);
-        })
-        State.allStates.forEach(state => {
-            var index : number;
-            state.connections.forEach(connection => {
-                if (connection.target == this) {
-                    connection.link.model.remove();
-                    var labelIndex : number = Link.allLinks.indexOf(connection.link);
-                    if (labelIndex > -1) Link.allLinks.splice(labelIndex, 1);
-                    index = state.connections.indexOf(connection);
-                }
-            if (index > -1) state.connections.splice(index, 1);
-            });
-        });
-        var index : number = State.allStates.indexOf(this);
-        if (index > -1) State.allStates.splice(index, 1);
+        Link.allLinks = Link.allLinks.filter( link => link.source != this && link.target != this);
+        var stateIndex : number = State.allStates.indexOf(this);
+        if (stateIndex > -1) State.allStates.splice(stateIndex, 1);
     }
 
     public get name() : string {
@@ -94,6 +75,14 @@ export class State {
         return this._isFinalState
     }
 
+    toJSON() {
+
+        return {
+            name: this._name.toString(),
+            isStartState: this._isStartState,
+            isFinalState: this._isFinalState,
+        }
+    }
     
 }
 
@@ -102,7 +91,9 @@ export class Link {
     static allLinks : Array<Link> = new Array<Link>();
 
     constructor(
-        private _name: string, 
+        private _name: string,
+        public source : State,
+        public target : State,
         public value: string, 
         public model: joint.dia.Link ,
     ) {
@@ -131,18 +122,18 @@ export class Link {
         if (index > -1) {
             Link.allLinks.splice(index, 1);
         }
-        State.allStates.forEach(state => {
-            var index : number = state.connections.findIndex(connection => connection.link = this)
-            if (index > -1) state.connections.splice(index, 1);
-        });
     }
 
     public static findLinkByModel(model:joint.dia.Link) {
         return Link.allLinks.find(item => item.model == model);
     }
-}
 
-class Connection {
-
-    constructor(public link : Link, public target : State) {}
+    toJSON() {
+        return {
+            name: this._name.toString(),
+            source: this.source,
+            target: this.target,
+            value: this.value
+        }
+    }
 }
