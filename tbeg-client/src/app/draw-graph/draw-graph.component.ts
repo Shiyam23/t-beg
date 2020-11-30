@@ -22,7 +22,7 @@ export class DrawGraphComponent implements OnInit{
     selectedItem : State | Link;
     graph : joint.dia.Graph;
     paper : joint.dia.Paper;
-    label : number = 1;
+    label : string = 'a';
     event : any;
     isStateWindow : boolean = true;
 
@@ -249,7 +249,7 @@ export class DrawGraphComponent implements OnInit{
                         {x: position.x+60, y: position.y-45}
                     ];
                 }
-                var link = this.addLink(selectedState, clickedState, this.label++, vertices);
+                var link = this.addLink(selectedState, clickedState, this.label, vertices);
 
                 if (selectedState == clickedState) {
                     link.connector('smooth');
