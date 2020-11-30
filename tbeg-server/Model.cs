@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using graph = GraphModel;
 
 namespace TBeg
 {
@@ -25,6 +26,8 @@ namespace TBeg
     public delegate void ModelHandler_InfoFileOp<IModel>(IModel sender, ModelEvent_InfoFileOp e);
     public delegate void ModelHandler_InfoStep1<IModel>(IModel sender, ModelEvent_InfoStep e);
     public delegate void ModelHandler_Validator<IModel>(string validator, string message);
+    public delegate void ModelHandler_Trigger<IModel>();
+    public delegate void ModelHandler_Error<IModel>(string errorMessage);
 
     // The ModelEventArgs class which is derived from th EventArgs class to 
     // be passed on to the controller when the value is changed
@@ -171,6 +174,8 @@ namespace TBeg
         void StepBack3(IModel model, ModelEvent_InfoStep e);
         void StepBack4(IModel model, ModelEvent_InfoStep e);
         void SendValidator(string validator, string message);
+        void InitGameView();
+        void SendErrorMessage(string errorMsg);
     }
 
 
@@ -196,6 +201,7 @@ namespace TBeg
         void ExitGame(string name, string functor);
         void ResetGraph(string name, string functor, Graph graph, bool backToInit);
         void GetValidator();
+        void AddGraph(graph::Graph graph, string functor);
     }
 
     class Model<T> : IModel where T : new()
@@ -227,6 +233,8 @@ namespace TBeg
         public event ModelHandler_InfoStep1<IModel> backStep3;
         public event ModelHandler_InfoStep1<IModel> backStep4;
         public event ModelHandler_Validator<IModel> SendValidator;
+        public event ModelHandler_Trigger<IModel> InitGameView;
+        public event ModelHandler_Error<IModel> SendErrorMessage;
 
         [field: NonSerialized]
         Thread GameThread;
@@ -276,6 +284,8 @@ namespace TBeg
             backStep3 += new ModelHandler_InfoStep1<IModel>(imo.StepBack3);
             backStep4 += new ModelHandler_InfoStep1<IModel>(imo.StepBack4);
             SendValidator += new ModelHandler_Validator<IModel>(imo.SendValidator);
+            InitGameView += new ModelHandler_Trigger<IModel>(imo.InitGameView);
+            SendErrorMessage += new ModelHandler_Error<IModel>(imo.SendErrorMessage);
         }
 
         public bool CheckMatrixName(string name)
@@ -2219,9 +2229,8 @@ namespace TBeg
         }
 
         public void GetValidator() {
+            
             T Functor = new T();
-
-            Type[] types = Functor.GetType().GetGenericArguments();
             // call save method of functor
             try
             {   
@@ -2240,5 +2249,42 @@ namespace TBeg
                 //TODO continue with error message to GUI
             }
         }
+
+        public void AddGraph(graph::Graph graph, string functor) {
+            
+            
+            List<int> states = new List<int>(graph.states.Select(state => state.name).ToArray());
+
+            string[] alphabet = graph.alphabet;
+            
+            T Functor = new T();
+            // call save method of functor
+            try
+            {   
+                MethodInfo method = Functor.GetType().GetMethod("GetRowHeadings");
+                List<string> rowHeaders = (List<string>)method.Invoke(Functor, new object[] {alphabet, states, false});
+                MethodInfo method2 = Functor.GetType().GetMethod("GetValue");
+                List<string> values = new List<string>();
+
+                for (int i = 0; i < states.Count; i++) {
+                    for (int j = 0; j < rowHeaders.Count; j++) {
+                        string value = (string) method2.Invoke(Functor, new object[] {rowHeaders[j], states[i], graph});
+                        values.Add(value);
+                    }
+                }
+
+                InitandSaveMatrix("test", functor, alphabet, new List<int>(states), values.ToArray(), "");
+                InitGameView.Invoke();
+                Console.WriteLine(datamodelMatrix["test"].ToString());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        // Helper function
+        
     }
 }

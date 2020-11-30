@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR;
 using Hubs;
+using G = GraphModel;
 
 namespace TBeg
 {
@@ -15,6 +16,7 @@ namespace TBeg
     public delegate void ViewEvent_GameStepUser<IView>(IView sender, ViewEvent_GameStepUser e);
     public delegate void ViewEvent_GameGraph<IView>(IView sender, ViewEvent_GameGraph e);
     public delegate void ViewHandler_Validator<IView>(string functor);
+    public delegate void ViewHandler_Graph<IView>(G::Graph graph, string functor);
 
     //Thread-Communication
     public delegate void UpdateGraphCallback();
@@ -63,6 +65,7 @@ namespace TBeg
         public event ViewEvent_GameStepUser<IView> SendStep;
         public event ViewEvent_GameGraph<IView> ResetGraph;
         public event ViewHandler_Validator<IView> GetValidator;
+        public event ViewHandler_Graph<IView> AddGraph;
 
         
         //Eventhandling
@@ -108,12 +111,25 @@ namespace TBeg
             GetValidator.Invoke(functor);
         }
 
+        public void initMatrix(G::Graph graph, string functor) {
+            AddGraph.Invoke(graph, functor);
+        }
+
         public void SendValidator(string regex, string message) {
 
-            TBeg.context.Clients.Client(this.connectionId).SendAsync(
-                "Validator", regex, message
-            );
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("Validator", regex, message);
 
+        }
+
+        public void InitGameView() {
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InitGameView");
+        }
+
+        public void SendErrorMessage(string errorMsg) {
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("Error", errorMsg);
         }
 
 
@@ -121,7 +137,11 @@ namespace TBeg
         public void UpdateToGraphView(IModel model, ModelEvent_UpdateGraphView e) {}
         public void UpdateGraph(IModel model, ModelEvent_UpdateGraphView e) {}
         public void UpdateGraphName(IModel model, ModelEvent_UpdateGraphView e){}
-        public void InfoTextToUser(IModel model, ModelEvent_UpdateGraphView e){}
+        public void InfoTextToUser(IModel model, ModelEvent_UpdateGraphView e){
+
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("Message", e.name);
+        }
         public void GraphIsConsistentWithGame(IModel model, ModelEvent_UpdateGraphView e){}
         public void InfoStep0(IModel model, ModelEvent_InfoStep e){}
         public void InfoStep1(IModel model, ModelEvent_InfoStep e){}

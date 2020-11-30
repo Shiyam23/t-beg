@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using G = GraphModel;
 
 namespace TBeg
 {
@@ -60,6 +61,7 @@ namespace TBeg
             view.ResetGraph += new ViewEvent_GameGraph<IView>(this.ResetGraph);
             view.CheckConsistenceOfGameGraph += new ViewHandler_Game<IView>(this.CheckConsistenceOfGameGraph);
             view.GetValidator += new ViewHandler_Validator<IView>(this.GetValidator);
+            view.AddGraph += new ViewHandler_Graph<IView>(this.AddGraph);
         }
 
         private void CheckConsistenceOfGameGraph(IView sender, ViewEvent_Game e)
@@ -217,6 +219,20 @@ namespace TBeg
             try
             {   
                 getTypeModel(functor).GetValidator();
+            }
+        
+            catch (Exception exe)
+            {
+                throw exe;
+            }
+        }
+
+        private void AddGraph(G::Graph graph, string functor)
+        {
+
+            try
+            {   
+                getTypeModel(functor).AddGraph(graph, functor);
             }
         
             catch (Exception exe)

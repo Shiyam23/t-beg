@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GraphModel;
 using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
 
@@ -401,13 +402,13 @@ namespace TBeg
 
 
         //standard transformation captured by MVC
-        public void GetGraph(ref Graph g)
+        public void GetGraph(ref Microsoft.Msagl.Drawing.Graph g)
         {
             throw new NotImplementedException();
         }
 
         //standard transformation captured by MVC
-        public Matrix<List<List<int>>, int> GetTSfromGraph(Graph g, int states)
+        public Matrix<List<List<int>>, int> GetTSfromGraph(Microsoft.Msagl.Drawing.Graph g, int states)
         {
             throw new NotImplementedException();
         }
@@ -452,6 +453,22 @@ namespace TBeg
         public string[] GetValidator() {
             // No value allowed since link can handle it itself
             return new string[] {"^$", "No value allowed"};
+        }
+
+        public String GetValue(string rowhead, int state, GraphModel.Graph graph) {
+
+            Link[] links = graph.links;
+            int length = links.Length;
+            int sourceState = state;
+            int targetState = (int)Char.GetNumericValue(rowhead,1);
+
+            for (int i = 0; i < length; i++)
+            {
+                if (links[i].source.name == sourceState && links[i].target.name == targetState)
+                    return "1"; 
+            }
+
+            return "0";
         }
     }
 }

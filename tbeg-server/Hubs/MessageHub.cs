@@ -13,7 +13,6 @@ namespace Hubs
 {  
     public class MessageHub : Hub  
     {  
-        private ITBeg _tbeg;
 
         public override Task OnConnectedAsync()
         {
@@ -49,8 +48,9 @@ namespace Hubs
             return Task.CompletedTask;
         }
 
-        public Task graph(State[] states, Link[] links, string[] alphabet ) {
+        public Task graph(State[] states, Link[] links, string[] alphabet, string functor ) {
             
+            ((TBeg.TBeg)Context.Items["tbeg"]).initMatrix(new Graph(states, links, alphabet), functor);
             return Task.CompletedTask;
         }
 

@@ -306,7 +306,7 @@ export class DrawGraphComponent implements OnInit{
         });
         console.log(states);
         console.log(Link.allLinks);
-        this.signalR.sendGraph(states, Link.allLinks, alphabet)
+        this.signalR.sendGraph(states, Link.allLinks, alphabet, this.progress.selectedFunctor)
     }
 
     nextSlot() {

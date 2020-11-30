@@ -49,8 +49,8 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
     })
   }
 
-  public sendGraph(states : Array<State>, links : Array<Link> , alphabet : Array<string>) {
-    this.hubConnection.invoke("graph", states, links, alphabet)
+  public sendGraph(states : Array<State>, links : Array<Link> , alphabet : Array<string>, functor : string) {
+    this.hubConnection.invoke("graph", states, links, alphabet, functor)
   }
 
   public askValidator(functor : string) {

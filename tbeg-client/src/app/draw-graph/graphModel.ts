@@ -78,7 +78,7 @@ export class State {
     toJSON() {
 
         return {
-            name: this._name.toString(),
+            name: Number.parseInt(this._name),
             isStartState: this._isStartState,
             isFinalState: this._isFinalState,
         }

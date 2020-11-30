@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GraphModel;
 
 using Microsoft.Msagl.Drawing;
 
@@ -54,10 +55,10 @@ namespace TBeg
         string Fpalpha_xToString(int state, List<int> predicate, Matrix<T, TValue> transitionsystem);
 
         //Get graph
-        void GetGraph(ref Graph g);
+        void GetGraph(ref Microsoft.Msagl.Drawing.Graph g);
 
         //TODO: From graph to initialization panel 
-        Matrix<T, TValue>  GetTSfromGraph(Graph g, int states);
+        Matrix<T, TValue>  GetTSfromGraph(Microsoft.Msagl.Drawing.Graph g, int states);
 
         //Save ts to csv file
         string SaveTransitionSystem(string filePath, string[] userinput, string optional);
@@ -67,6 +68,7 @@ namespace TBeg
 
         string[] GetValidator();
 
+        String GetValue(string rowhead, int state, GraphModel.Graph graph);
     }
 
 }
