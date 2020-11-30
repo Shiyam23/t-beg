@@ -358,9 +358,10 @@ namespace TBeg
             return InitMatrixStandard(content,  alphabet,  states);
         }
 
-        public string GetValidator() {
-            // TODO change this later
-            return "DX+1toA_Test";
+        public string[] GetValidator() {
+            
+            // First index: regex, Second index: Error message 
+            return new string[] {"^(1|0\\.\\d{0,2})$", "Only decimals (0-1) with 2 decimal places!"};
         }
     }
 }

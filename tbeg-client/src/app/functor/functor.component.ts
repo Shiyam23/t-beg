@@ -12,6 +12,7 @@ import { SignalRService } from '../services/signalR/signal-r.service';
 export class FunctorComponent implements OnInit {
 
   private functorListSub : Subscription;
+  private validatorSub : Subscription;
   functors : {value:string, viewValue:string}[] = new Array();
   constructor(public progress : AppProgressService, public signalR : SignalRService) {
   }
@@ -36,6 +37,11 @@ export class FunctorComponent implements OnInit {
     this.progress.selectedFunctor = this.selected;
     this.signalR.askValidator(this.selected);
     this.signalR.getValidator();
-    this.progress.forward();
+    this.validatorSub = this.signalR.validator.subscribe(array => {
+      this.progress.validator = array[0];
+      this.progress.validatorErrorMessage = array[1];
+      this.progress.forward();
+    })
+    
   } 
 }

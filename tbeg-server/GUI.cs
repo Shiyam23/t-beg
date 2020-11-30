@@ -108,10 +108,10 @@ namespace TBeg
             GetValidator.Invoke(functor);
         }
 
-        public void SendValidator(string regex) {
+        public void SendValidator(string regex, string message) {
 
             TBeg.context.Clients.Client(this.connectionId).SendAsync(
-                "Validator", regex
+                "Validator", regex, message
             );
 
         }

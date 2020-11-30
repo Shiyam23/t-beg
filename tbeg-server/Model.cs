@@ -24,7 +24,7 @@ namespace TBeg
     public delegate void ModelHandler_UpdateGraphView<IModel>(IModel sender, ModelEvent_UpdateGraphView e);
     public delegate void ModelHandler_InfoFileOp<IModel>(IModel sender, ModelEvent_InfoFileOp e);
     public delegate void ModelHandler_InfoStep1<IModel>(IModel sender, ModelEvent_InfoStep e);
-    public delegate void ModelHandler_Validator<IModel>(string functor);
+    public delegate void ModelHandler_Validator<IModel>(string validator, string message);
 
     // The ModelEventArgs class which is derived from th EventArgs class to 
     // be passed on to the controller when the value is changed
@@ -170,7 +170,7 @@ namespace TBeg
         void StepBack2(IModel model, ModelEvent_InfoStep e);
         void StepBack3(IModel model, ModelEvent_InfoStep e);
         void StepBack4(IModel model, ModelEvent_InfoStep e);
-        void SendValidator(string functor);
+        void SendValidator(string validator, string message);
     }
 
 
@@ -2225,15 +2225,14 @@ namespace TBeg
             // call save method of functor
             try
             {   
-                Console.WriteLine("Getting Validator 3");
                 //SaveTransitionSystem(string filePath, string [] userinput);
                 MethodInfo method = Functor.GetType().GetMethod("GetValidator");
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
                 Object validatorObject = method.Invoke(Functor, null);
-                string validator = (string) validatorObject;
+                string[] validator = (string[]) validatorObject;
 
                 //send feedback to the UI
-                SendValidator.Invoke(validator);
+                SendValidator.Invoke(validator[0], validator[1]);
 
             }
             catch (Exception)

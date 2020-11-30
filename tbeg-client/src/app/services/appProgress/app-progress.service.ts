@@ -8,7 +8,9 @@ export class AppProgressService {
   //TODO: set this to 0 later
   appProgress : number = 0;
   maxProgress : number = 5;
-  selectedFunctor : String;
+  selectedFunctor : string;
+  validator : string;
+  validatorErrorMessage : string;
 
   constructor() { }
 

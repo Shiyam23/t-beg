@@ -12,6 +12,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
 
   public connected = new Subject<boolean>();
   public functorList = new Subject<Array<string>>();
+  public validator = new Subject<Array<string>>();
 
   constructor() { }
 
@@ -30,6 +31,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
       .then(() => {
         console.log('Hub connection started');
         this.connected.next(true);
+        this.connected.complete();
       })
       .catch(err => console.log('Error while starting connection' + err))
   }
@@ -43,6 +45,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public listenToServer() {
     this.hubConnection.on("Result", (functorArray : any) => {
       this.functorList.next(functorArray);
+      this.functorList.complete();
     })
   }
 
@@ -51,13 +54,13 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   }
 
   public askValidator(functor : string) {
-    console.log("getting Validator");
     this.hubConnection.invoke("getValidator", functor)
   }
 
   public getValidator() {
-    this.hubConnection.on("Validator", (validator : string) => {
-      console.log(validator);
+    this.hubConnection.on("Validator", (validator : string, message : string) => {
+      this.validator.next([validator, message]);
+      this.validator.complete();
     })
   }
 }

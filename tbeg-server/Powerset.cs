@@ -449,9 +449,9 @@ namespace TBeg
             return InitMatrixStandard(content, alphabet, states);
         }
 
-        public string GetValidator() {
-            // TODO change this later
-            return "Powerset_Test";
+        public string[] GetValidator() {
+            // No value allowed since link can handle it itself
+            return new string[] {"^$", "No value allowed"};
         }
     }
 }

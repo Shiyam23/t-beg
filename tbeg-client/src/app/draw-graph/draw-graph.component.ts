@@ -4,9 +4,10 @@ import * as _ from 'lodash';
 import * as $ from 'backbone';
 import * as joint from 'jointjs';
 import { SignalRService } from '../services/signalR/signal-r.service';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ContextMenuComponent } from '../templates/context-menu/context-menu.component';
 import { State, Link } from './graphModel'
+import { AppProgressService } from '../services/appProgress/app-progress.service';
 
 @Component({
   selector: 'app-draw-graph',
@@ -28,6 +29,9 @@ export class DrawGraphComponent implements OnInit{
 
     @ViewChild('menu')
     cmenu: ContextMenuComponent;
+
+    @ViewChild('linkValue')
+    linkValue;
     
     contextmenuList : Array<{
         option:string,
@@ -41,9 +45,16 @@ export class DrawGraphComponent implements OnInit{
     ]);
 
     signalR : SignalRService;
-    
-    constructor(signalR : SignalRService) {
+    progress : AppProgressService;
+    validator : string;
+    errorMessage : string;
+
+    constructor(signalR : SignalRService, progress : AppProgressService) {
         this.signalR = signalR;
+        this.progress = progress;
+        this.validator = progress.validator;
+        this.errorMessage = progress.validatorErrorMessage;
+        console.log(this.errorMessage);
     }
   
 
@@ -180,8 +191,8 @@ export class DrawGraphComponent implements OnInit{
             {
                 option:"Add state",
                 function: () => {
-                    var len = State.allStates.length;
-                    this.state(x-30, y-30, len);
+                    var name = this.nextSlot();
+                    this.state(x-30, y-30, name);
                 }
             }
         ];
@@ -265,6 +276,7 @@ export class DrawGraphComponent implements OnInit{
     }
 
     setLinkValue(event : any) {
+        if (!this.linkValue.hasError('pattern'))
         (<Link>this.selectedItem).value = event;
     }
     setLinkName(event : any) {
@@ -280,6 +292,7 @@ export class DrawGraphComponent implements OnInit{
     }
 
     setStateName(event : any) {
+        if (State.allStates.findIndex(state => state.name == event) == -1)
         (<State>this.selectedItem).setName(event);
     }
 
@@ -291,7 +304,19 @@ export class DrawGraphComponent implements OnInit{
                 if (alphabet.indexOf(char) == -1) alphabet.push(char)
             });
         });
+        console.log(states);
+        console.log(Link.allLinks);
         this.signalR.sendGraph(states, Link.allLinks, alphabet)
+    }
+
+    nextSlot() {
+        
+        var list : Array<State> = State.allStates;
+        for (let index = 0; index < list.length; index++) {
+            var listIndex = list.findIndex(state => state.name == index.toString())
+            if (listIndex == -1) return index.toString()
+        }
+        return list.length.toString();
     }
 
 }

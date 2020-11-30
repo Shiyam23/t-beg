@@ -65,7 +65,7 @@ namespace TBeg
         //Load ts from csv file
         string[,] LoadTransitionSystemContent(string content, int col, int row, string optional);
 
-        string GetValidator();
+        string[] GetValidator();
 
     }
 

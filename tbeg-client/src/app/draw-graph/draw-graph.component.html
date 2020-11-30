@@ -17,16 +17,16 @@
             <div *ngIf="selectedStateView && !isStateWindow" class="settingsContent">
                 <mat-form-field class="option">
                     <mat-label>Name</mat-label>
-                    <input type="text" matInput required [ngModel]="selectedItem.name" (ngModelChange)="setLinkName($event)">
-                    <mat-error *ngIf="emailFormControl.hasError('required')">
+                    <input type="text" matInput required [ngModel]="selectedItem.name" (ngModelChange)="setLinkName($event)" #linkName="ngModel">
+                    <mat-error *ngIf="linkName.hasError('required')">
                     Name is <strong>required</strong>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="option">
                     <mat-label>Value</mat-label>
-                    <input type="text" matInput required [ngModel]="selectedItem.value" (ngModelChange)="setLinkValue($event)">
-                    <mat-error *ngIf="emailFormControl.hasError('required')">
-                    Value is <strong>required</strong>
+                    <input type="text" matInput pattern="^$" [ngModel]="selectedItem.value" (ngModelChange)="setLinkValue($event)" #linkValue="ngModel">
+                    <mat-error *ngIf="linkValue.hasError('pattern')">
+                    {{errorMessage}}
                     </mat-error>
                 </mat-form-field>
             </div>
