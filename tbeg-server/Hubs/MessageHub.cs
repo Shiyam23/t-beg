@@ -20,7 +20,9 @@ namespace Hubs
             Console.WriteLine($"Client connected...");
             Context.Items.Add("tbeg", new TBeg.TBeg(Context.ConnectionId));
             Dictionary<String, IModel> models = new Dictionary<String, IModel>();
-            UpdateFunctorList(ref models, "config_Functor.txt");
+            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string dir = System.IO.Path.GetDirectoryName(appPath);
+            UpdateFunctorList(ref models, dir+"\\config_Functor.txt");
             TBeg.Controller cnt = new TBeg.Controller((TBeg.TBeg)Context.Items["tbeg"], models);
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             return base.OnConnectedAsync();
