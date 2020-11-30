@@ -46,13 +46,13 @@ export class DrawGraphComponent implements OnInit{
 
     signalR : SignalRService;
     progress : AppProgressService;
-    validator : string;
+    validator : RegExp;
     errorMessage : string;
 
     constructor(signalR : SignalRService, progress : AppProgressService) {
         this.signalR = signalR;
         this.progress = progress;
-        this.validator = progress.validator;
+        this.validator = new RegExp(progress.validator);
         this.errorMessage = progress.validatorErrorMessage;
         console.log(this.errorMessage);
     }
@@ -310,7 +310,6 @@ export class DrawGraphComponent implements OnInit{
     }
 
     nextSlot() {
-        
         var list : Array<State> = State.allStates;
         for (let index = 0; index < list.length; index++) {
             var listIndex = list.findIndex(state => state.name == index.toString())

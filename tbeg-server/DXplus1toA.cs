@@ -361,7 +361,7 @@ namespace TBeg
         public string[] GetValidator() {
             
             // First index: regex, Second index: Error message 
-            return new string[] {"^(1|0\\.\\d{0,2})$", "Only decimals (0-1) with 2 decimal places!"};
+            return new string[] {"^(1|0|0\\.\\d{1,2})$", "Only decimals (0-1) with 2 decimal places!"};
         }
     }
 }
