@@ -2275,7 +2275,6 @@ namespace TBeg
 
                 InitandSaveMatrix("test", functor, alphabet, new List<int>(states), values.ToArray(), "");
                 InitGameView.Invoke();
-                Console.WriteLine(datamodelMatrix["test"].ToString());
             }
             catch (Exception e)
             {
