@@ -3,15 +3,15 @@
     <div class="title">
       {{title | uppercase}}
     </div>
-    <div [ngSwitch]="progress.appProgress">
+    <div class="bottomInfo" [ngSwitch]="progress.appProgress">
       <div *ngSwitchCase="0" id="loading">
         Loading ...
       </div>
       <app-start [text]="'START'" *ngSwitchCase="1"></app-start>
     </div>
   </div>
-  <ng-template #content [ngSwitch]="progress.appProgress">
-    <app-functor *ngSwitchCase="2"></app-functor>
-    <app-draw-graph *ngSwitchCase="3"></app-draw-graph>
+  <ng-template #content>
+    <app-functor *ngIf="(progress.appProgress == 2)"></app-functor>
+    <app-draw-graph *ngIf="(progress.appProgress > 2)"></app-draw-graph>
   </ng-template>
 </body>

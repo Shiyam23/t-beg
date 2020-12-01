@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
 import { linkSync } from 'fs';
 import { Subject } from 'rxjs';
-import { Link, State } from 'src/app/draw-graph/graphModel';
+import { Link, State } from 'src/app/graphModel';
 
 
 @Injectable({

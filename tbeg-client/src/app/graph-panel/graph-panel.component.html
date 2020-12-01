@@ -1,0 +1,40 @@
+<div id="panel">
+    <div class="settings">
+        <div class="settingsContent" *ngIf="progress.selectedStateView == null"></div>
+        <div *ngIf="progress.selectedStateView && progress.isStateWindow" class="settingsContent">
+                <mat-form-field class="option" appearance="fill">
+                        <mat-label>Name</mat-label>
+                        <input type="number" matInput required [ngModel]="progress.selectedItem.name" (ngModelChange)="setStateName($event)" #stateName="ngModel">
+                        <mat-error *ngIf="stateName.hasError('required')">
+                        Name is <strong>required</strong>
+                        </mat-error>
+                </mat-form-field>
+                <mat-checkbox class="option" [ngModel]="progress.selectedItem.isStartState" (ngModelChange)="setStateStart($event)">Start state</mat-checkbox>
+                <mat-checkbox class="option" [ngModel]="progress.selectedItem.isFinalState" (ngModelChange)="setStateFinal($event)">Accept state</mat-checkbox>
+        </div>
+        <div *ngIf="progress.selectedStateView && !progress.isStateWindow" class="settingsContent">
+            <mat-form-field class="option">
+                <mat-label>Name</mat-label>
+                <input type="text" matInput required [ngModel]="progress.selectedItem.name" (ngModelChange)="setLinkName($event)" #linkName="ngModel">
+                <mat-error *ngIf="linkName.hasError('required')">
+                Name is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="option">
+                <mat-label>Value</mat-label>
+                <input type="text" matInput [pattern]="validator" [ngModel]="progress.selectedItem.value" (ngModelChange)="setLinkValue($event)" #linkValue="ngModel">
+                <mat-error *ngIf="linkValue.hasError('pattern')">
+                {{errorMessage}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="fileArea">
+            <div class="fileArea">
+                    <input id="fileSelector" type="file" accept=".txt" style="display: none;" (change)="loadFromJson($event)">
+                    <label class="file" for="fileSelector">Load</label>
+                    <label class="file" (click)="saveAsJson()">Save</label>
+            </div>
+        </div>
+    </div>
+    <app-start [text]="'START'" [click]="startClick"></app-start>
+</div>

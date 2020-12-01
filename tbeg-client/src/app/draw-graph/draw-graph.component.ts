@@ -6,7 +6,7 @@ import * as joint from 'jointjs';
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { FormControl, Validators } from '@angular/forms';
 import { ContextMenuComponent } from '../templates/context-menu/context-menu.component';
-import { State, Link } from './graphModel'
+import { State, Link } from '../graphModel'
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { saveAs } from 'file-saver';
 
@@ -19,23 +19,16 @@ export class DrawGraphComponent implements OnInit{
 
 
     showContextMenu : String;
-    selectedStateView : joint.dia.ElementView | joint.dia.LinkView;
-    selectedItem : State | Link;
     graph : joint.dia.Graph;
     paper : joint.dia.Paper;
     label : string = 'a';
     event : any;
-    isStateWindow : boolean = true;
 
 
     @ViewChild('menu')
     cmenu: ContextMenuComponent;
 
-    @ViewChild('linkValue')
-    linkValue;
-
-    @ViewChild('fileSelector')
-    fileSelector;
+    
     
     contextmenuList : Array<{
         option:string,
@@ -57,6 +50,7 @@ export class DrawGraphComponent implements OnInit{
 
     ngOnInit(): void {
 
+        console.log(this.progress.appProgress);
 
         this.graph = new joint.dia.Graph({}, {cellNamespace: joint.shapes});
 
@@ -78,6 +72,10 @@ export class DrawGraphComponent implements OnInit{
         frozen: true
         });
 
+        this.progress.graph = this.graph;
+        this.progress.paper = this.paper;
+
+
         let highlighter = {
             highlighter: {
                 name: 'stroke',
@@ -89,10 +87,10 @@ export class DrawGraphComponent implements OnInit{
         }
 
         this.paper.on('blank:pointerclick', (v,x,y) => {
-            if (this.selectedStateView) {
-                this.selectedStateView?.unhighlight(null, highlighter);
-                this.selectedStateView = null;
-                this.selectedItem = null;
+            if (this.progress.selectedStateView) {
+                this.progress.selectedStateView?.unhighlight(null, highlighter);
+                this.progress.selectedStateView = null;
+                this.progress.selectedItem = null;
             }
         });
 
@@ -109,21 +107,21 @@ export class DrawGraphComponent implements OnInit{
         })
 
         this.paper.on('element:pointerclick', (cellView) => {
-            this.selectedStateView?.unhighlight(null, highlighter)
-            this.selectedStateView = cellView;
-            this.isStateWindow = true;
+            this.progress.selectedStateView?.unhighlight(null, highlighter)
+            this.progress.selectedStateView = cellView;
+            this.progress.isStateWindow = true;
             cellView.highlight(null, highlighter);
             var state : State = State.findStateByModel(cellView.model);
-            this.selectedItem = state;
+            this.progress.selectedItem = state;
         });
         
         this.paper.on('link:pointerclick', (cellView) => {
-            this.selectedStateView?.unhighlight(null, highlighter)
-            this.selectedStateView = cellView;
-            this.isStateWindow = false;
+            this.progress.selectedStateView?.unhighlight(null, highlighter)
+            this.progress.selectedStateView = cellView;
+            this.progress.isStateWindow = false;
             cellView.highlight(null, highlighter);
             var link : Link = Link.findLinkByModel(cellView.model);
-            this.selectedItem = link;
+            this.progress.selectedItem = link;
         });
 
         this.paper.unfreeze();
@@ -201,7 +199,7 @@ export class DrawGraphComponent implements OnInit{
         event.preventDefault();
         var contextmenuList = []
 
-        if (this.selectedStateView) {
+        if (this.progress.selectedStateView) {
             contextmenuList.push({
                 option:"Add Link to here",
                 function: () => this.addLinktoClickedState(view)
@@ -227,9 +225,9 @@ export class DrawGraphComponent implements OnInit{
     }
 
     addLinktoClickedState(view: joint.dia.ElementView) {
-        if (this.selectedStateView && this.selectedStateView instanceof joint.dia.ElementView) {
+        if (this.progress.selectedStateView && this.progress.selectedStateView instanceof joint.dia.ElementView) {
 
-            var selectedState = this.selectedStateView.model;
+            var selectedState = this.progress.selectedStateView.model;
             var clickedState = view.model;
             var neigh = this.graph.isNeighbor(<joint.dia.Element>selectedState, clickedState, {
                 deep: false,
@@ -258,55 +256,19 @@ export class DrawGraphComponent implements OnInit{
     }
 
     removeState(view: joint.dia.ElementView) {
-        if (view == this.selectedStateView) {
-            this.selectedStateView = null;
+        if (view == this.progress.selectedStateView) {
+            this.progress.selectedStateView = null;
         };
         var state = State.findStateByModel(view.model);
         state.remove();
     }
 
     removeLink(view: joint.dia.LinkView) {
-        if (view == this.selectedStateView) {
-            this.selectedStateView = null;
+        if (view == this.progress.selectedStateView) {
+            this.progress.selectedStateView = null;
         };
         var link = Link.findLinkByModel(view.model);
         link.remove();
-    }
-
-    setLinkValue(event : any) {
-        if (!this.linkValue.hasError('pattern'))
-        (<Link>this.selectedItem).value = event;
-    }
-    setLinkName(event : any) {
-        (<Link>this.selectedItem).setName(event);
-    }
-
-    setStateStart(event : any) {
-        (<State>this.selectedItem).setStartState(event);
-    }
-
-    setStateFinal(event : any) {
-        (<State>this.selectedItem).setFinalState(event);
-    }
-
-    setStateName(event : any) {
-        if (State.allStates.findIndex(state => state.name == event) == -1)
-        (<State>this.selectedItem).setName(event);
-    }
-
-    startClick() {
-        var states : Array<State> = State.allStates.sort( (a,b) => Number(a.name) - Number(b.name));
-        var alphabet : Array<string> = new Array<string>();
-        var links : Array<Link> = new Array<Link>();
-        Link.allLinks.forEach(link => {
-            link.name.toString().split(',').forEach(char => {
-                if (alphabet.indexOf(char) == -1) alphabet.push(char);
-                var newLink : Link = link;
-                links.push(new Link(char, link.source, link.target, link.value, null));
-            });
-        });
-
-        this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor)
     }
 
     nextSlot() {
@@ -318,58 +280,7 @@ export class DrawGraphComponent implements OnInit{
         return (list.length+1).toString();
     }
 
-    saveAsJson = () => {
-        var graph = this.graph.toJSON();
-        var stateIDs = State.allStates.map(state => state.model.id);
-        var linkIDs = Link.allLinks.map(link => link.model.id);
-        var data = {
-            functor: this.progress.selectedFunctor,
-            graph: graph,
-            states: State.allStates,
-            stateIDs: stateIDs,
-            links: Link.allLinks,
-            linkIDs: linkIDs,
-        }
-        var blob = new Blob([JSON.stringify(data)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "graph.txt");
-    }
-
     
-    loadFromJson = (event : any) => {
-
-
-        this.selectedItem = null;
-        this.selectedStateView = null;
-
-        var file = event.target.files[0];
-        var fr = new FileReader();
-        fr.onload = () => {
-
-            var json : JSON = JSON.parse(<string>fr.result);
-            if (json["functor"] == this.progress.selectedFunctor) {
-                this.graph.fromJSON(json["graph"]);
-                State.allStates = new Array<State>();
-                Link.allLinks = new Array<Link>();
-                json["states"].forEach( (state,index) => {
-                    var id : string = <string>(json["stateIDs"][index]);
-                    var model  =  <joint.dia.Element> this.graph.getCell(id);
-                    var newState : State = new State(state.name, model, state.isStartState, state.isFinalState);
-                });
-    
-                json["links"].forEach( (link,index) => {
-                    var id : string = <string>(json["linkIDs"][index]);
-                    var model  =  <joint.dia.Link> this.graph.getCell(id);
-                    var newLink : Link = new Link(link.name, link.source, link.target, link.value, model);
-                });
-            }
-            else {
-                //TODO create Error message
-                console.log("Not the same functor!!")
-            }
-            
-        }
-        fr.readAsText(file);
-    }
 
 }
 

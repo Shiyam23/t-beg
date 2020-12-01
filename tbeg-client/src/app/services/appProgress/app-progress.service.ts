@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Link, State } from 'src/app/graphModel';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,14 @@ export class AppProgressService {
   selectedFunctor : string;
   validator : string;
   validatorErrorMessage : string;
+
+  //Graph 
+  graph : joint.dia.Graph;
+  paper : joint.dia.Paper;
+  selectedStateView : joint.dia.ElementView | joint.dia.LinkView;
+  selectedItem : State | Link;
+  isStateWindow : boolean = true;
+
 
   constructor() { }
 
