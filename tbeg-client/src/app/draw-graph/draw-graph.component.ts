@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import * as jQuery from 'jquery';
 import * as _ from 'lodash';
 import * as $ from 'backbone';
@@ -8,6 +8,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { ContextMenuComponent } from '../templates/context-menu/context-menu.component';
 import { State, Link } from './graphModel'
 import { AppProgressService } from '../services/appProgress/app-progress.service';
+import { saveAs } from 'file-saver';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-draw-graph',
@@ -32,6 +34,12 @@ export class DrawGraphComponent implements OnInit{
 
     @ViewChild('linkValue')
     linkValue;
+
+    @ViewChild('fileSelector')
+    fileSelector;
+
+    @ViewChild('fileButton')
+    fileButton;
     
     contextmenuList : Array<{
         option:string,
@@ -54,20 +62,20 @@ export class DrawGraphComponent implements OnInit{
         this.progress = progress;
         this.validator = new RegExp(progress.validator);
         this.errorMessage = progress.validatorErrorMessage;
-        console.log(this.errorMessage);
     }
   
 
     ngOnInit(): void {
 
 
-        this.graph = new joint.dia.Graph;
+        this.graph = new joint.dia.Graph({}, {cellNamespace: joint.shapes});
 
         this.paper = new joint.dia.Paper({
         el: document.getElementById("paper"),
         width: "70vw",
         height: "35vw",
         model: this.graph,
+        cellViewNamespace: joint.shapes,
         defaultConnector: { name: 'normal' },
         interactive: { 
             addLinkFromMagnet: false,
@@ -316,6 +324,59 @@ export class DrawGraphComponent implements OnInit{
             if (listIndex == -1) return index.toString()
         }
         return list.length.toString();
+    }
+
+    saveAsJson = () => {
+        var graph = this.graph.toJSON();
+        var stateIDs = State.allStates.map(state => state.model.id);
+        var linkIDs = Link.allLinks.map(link => link.model.id);
+        var data = {
+            functor: this.progress.selectedFunctor,
+            graph: graph,
+            states: State.allStates,
+            stateIDs: stateIDs,
+            links: Link.allLinks,
+            linkIDs: linkIDs,
+        }
+        var blob = new Blob([JSON.stringify(data)], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "graph.txt");
+    }
+
+    
+    loadFromJson = (event : any) => {
+
+
+        this.selectedItem = null;
+        this.selectedStateView = null;
+
+        var file = event.target.files[0];
+        var fr = new FileReader();
+        fr.onload = () => {
+
+            var json : JSON = JSON.parse(<string>fr.result);
+            if (json["functor"] == this.progress.selectedFunctor) {
+                this.graph.fromJSON(json["graph"]);
+                State.allStates = new Array<State>();
+                Link.allLinks = new Array<Link>();
+                json["states"].forEach( (state,index) => {
+                    var id : string = <string>(json["stateIDs"][index]);
+                    var model  =  <joint.dia.Element> this.graph.getCell(id);
+                    var newState : State = new State(state.name, model, state.isStartState, state.isFinalState);
+                });
+    
+                json["links"].forEach( (link,index) => {
+                    var id : string = <string>(json["linkIDs"][index]);
+                    var model  =  <joint.dia.Link> this.graph.getCell(id);
+                    var newLink : Link = new Link(link.name, link.source, link.target, link.value, model);
+                });
+            }
+            else {
+                //TODO create Error message
+                console.log("Not the same functor!!")
+            }
+            
+        }
+        fr.readAsText(file);
     }
 
 }

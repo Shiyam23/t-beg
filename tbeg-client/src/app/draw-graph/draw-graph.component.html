@@ -30,6 +30,11 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+            <div class="fileArea">
+                    <input id="fileSelector" type="file" accept=".txt" style="display: none;" (change)="loadFromJson($event)">
+                    <label class="file" for="fileSelector">Load</label>
+                    <label class="file" (click)="saveAsJson()">Save</label>
+            </div>
         </div>
         <app-start [text]="'START'" [click]="startClick"></app-start>
     </div>
