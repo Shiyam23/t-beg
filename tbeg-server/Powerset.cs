@@ -296,7 +296,7 @@ namespace TBeg
             //_elements_of_FX = ReturnFX(states, transitionSystem, alphabet);
             transitionSystem.functor = this;
             transitionSystem.Alphabet=alphabet;
-
+            transitionSystem.print();
             return transitionSystem;
         }
 
@@ -460,14 +460,20 @@ namespace TBeg
             Link[] links = graph.links;
             int length = links.Length;
             int sourceState = state;
-            int targetState = (int)Char.GetNumericValue(rowhead,1);
-
+            string rawInput = rowhead.Substring(1).Remove(rowhead.Length-2);
+            string[] inputs = rawInput.Split(',');
+            int targetState = (int)Char.GetNumericValue(inputs[1],0);
+            string label = inputs[0];
             for (int i = 0; i < length; i++)
-            {
-                if (links[i].source.name == sourceState && links[i].target.name == targetState)
+            {   
+                if (
+                    links[i].source.name == sourceState 
+                    && links[i].target.name == targetState
+                    && links[i].name == label
+                    ) {
                     return "1"; 
+                }
             }
-
             return "0";
         }
     }

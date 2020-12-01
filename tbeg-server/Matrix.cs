@@ -196,6 +196,20 @@ namespace TBeg
             return values.GetUpperBound(1) + 1;
         }
 
+        //TODO: only for debug purposes
+        public void print() {
+
+            int rowLength = values.GetLength(0);
+            int colLength = values.GetLength(1);
+
+            for (int i = 0; i < rowLength; i++) {
+                for (int j = 0; j < colLength; j++) {
+                    Console.Write(string.Format("{0} ", values[i, j]));
+                }
+                Console.Write(Environment.NewLine + Environment.NewLine);
+            }
+        }
+
 
     }
 }

@@ -305,25 +305,27 @@ export class DrawGraphComponent implements OnInit{
     }
 
     startClick() {
-        var states : Array<State> = State.allStates;
+        var states : Array<State> = State.allStates.sort( (a,b) => Number(a.name) - Number(b.name));
         var alphabet : Array<string> = new Array<string>();
+        var links : Array<Link> = new Array<Link>();
         Link.allLinks.forEach(link => {
             link.name.toString().split(',').forEach(char => {
-                if (alphabet.indexOf(char) == -1) alphabet.push(char)
+                if (alphabet.indexOf(char) == -1) alphabet.push(char);
+                var newLink : Link = link;
+                links.push(new Link(char, link.source, link.target, link.value, null));
             });
         });
-        console.log(states);
-        console.log(Link.allLinks);
-        this.signalR.sendGraph(states, Link.allLinks, alphabet, this.progress.selectedFunctor)
+
+        this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor)
     }
 
     nextSlot() {
         var list : Array<State> = State.allStates;
         for (let index = 0; index < list.length; index++) {
-            var listIndex = list.findIndex(state => state.name == index.toString())
-            if (listIndex == -1) return index.toString()
+            var listIndex = list.findIndex(state => state.name == (index+1).toString())
+            if (listIndex == -1) return (index+1).toString()
         }
-        return list.length.toString();
+        return (list.length+1).toString();
     }
 
     saveAsJson = () => {

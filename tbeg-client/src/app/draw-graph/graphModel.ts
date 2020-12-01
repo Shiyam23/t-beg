@@ -35,7 +35,7 @@ export class State {
 
     public remove(){
         this.model.remove();
-        Link.allLinks = Link.allLinks.filter( link => link.source != this && link.target != this);
+        Link.allLinks = Link.allLinks.filter( link => link.source.name != this.name && link.target.name != this.name);
         var stateIndex : number = State.allStates.indexOf(this);
         if (stateIndex > -1) State.allStates.splice(stateIndex, 1);
     }
@@ -95,9 +95,9 @@ export class Link {
         public source : State,
         public target : State,
         public value: string, 
-        public model: joint.dia.Link ,
+        public model: joint.dia.Link | null ,
     ) {
-        Link.allLinks.push(this);
+        if (model != null) Link.allLinks.push(this);
     }
 
     
