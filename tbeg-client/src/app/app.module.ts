@@ -16,6 +16,7 @@ import { ContextMenuComponent } from './templates/context-menu/context-menu.comp
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { GraphPanelComponent } from './graph-panel/graph-panel.component';
 
 
 
@@ -26,7 +27,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     StartComponent,
     FunctorComponent,
     DrawGraphComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    GraphPanelComponent
   ],
   imports: [
     BrowserModule,

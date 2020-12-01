@@ -1,7 +1,4 @@
-import { link } from 'fs';
-
 export class State {
-
 
     static allStates : Array<State> = new Array<State>();
 
@@ -13,8 +10,6 @@ export class State {
     ) {
         State.allStates.push(this);
     }
-
-
 
     public setName(name:string) {
         this._name = name;
@@ -99,7 +94,6 @@ export class Link {
     ) {
         if (model != null) Link.allLinks.push(this);
     }
-
     
     public get name() : string {
         return this._name;

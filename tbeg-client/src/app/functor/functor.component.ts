@@ -30,7 +30,6 @@ export class FunctorComponent implements OnInit {
     })
   }
 
-
   selected = 'Powerset';
 
   public next = () => {

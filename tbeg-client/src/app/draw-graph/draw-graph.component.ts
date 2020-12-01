@@ -9,7 +9,6 @@ import { ContextMenuComponent } from '../templates/context-menu/context-menu.com
 import { State, Link } from './graphModel'
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { saveAs } from 'file-saver';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-draw-graph',
@@ -37,20 +36,11 @@ export class DrawGraphComponent implements OnInit{
 
     @ViewChild('fileSelector')
     fileSelector;
-
-    @ViewChild('fileButton')
-    fileButton;
     
     contextmenuList : Array<{
         option:string,
         function:Function
       }>;
-
-    emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.min(0),
-    Validators.max(100)
-    ]);
 
     signalR : SignalRService;
     progress : AppProgressService;
