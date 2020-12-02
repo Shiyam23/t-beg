@@ -34,8 +34,7 @@ export class GraphPanelComponent implements OnInit {
         });
     });
     this.progress.forward();
-    this.progress.paper.freeze();
-    //this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor)
+    this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor)
   }
 
   saveAsJson = () => {
@@ -107,8 +106,11 @@ export class GraphPanelComponent implements OnInit {
       (<State>this.progress.selectedItem).setFinalState(event);
   }
 
-  setStateName(event : any) {
-      if (State.allStates.findIndex(state => state.name == event) == -1)
+  setStateName(event : string) {
+      if (
+          event.length != 0
+          && State.allStates.findIndex(state => state.name == event) == -1
+          )
       (<State>this.progress.selectedItem).setName(event);
   }
 

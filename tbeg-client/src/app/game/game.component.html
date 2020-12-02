@@ -1,0 +1,30 @@
+<div id="panel">
+    <div class="settings">
+        <label class="text">Step 1:</label>
+        <div class="step1Content">
+            <mat-button-toggle-group class="selection" name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle class="selectionItem" checked="True" value="1">1</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" value="2">2</mat-button-toggle>
+            </mat-button-toggle-group>
+            <label class="states">{{selectedStates}}</label>
+        </div>
+        <label class="text">Step 2:</label>
+        <div class="step1Content">
+            
+            <label class="states">{{selectedStates}}</label>
+        </div>
+        <label class="text">Step 3:</label>
+        <div class="step1Content">
+            <mat-button-toggle-group class="selection" name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle class="selectionItem" checked="True" value="1">1</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" value="2">2</mat-button-toggle>
+            </mat-button-toggle-group>
+            <label class="states">{{selectedStates}}</label>
+        </div>
+        <label class="text">Step 4:</label>
+        <div class="step1Content">
+            <label class="states">{{selectedStates}}</label>
+        </div>
+    </div>
+    <app-start [text]="'START'"></app-start>
+</div>

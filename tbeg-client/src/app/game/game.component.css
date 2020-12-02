@@ -1,0 +1,85 @@
+.settings{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+
+    height: auto;
+    padding-bottom: 1vw;
+    width: 100%;
+    border: 2px solid black;
+    background-color: white;
+    opacity: 1;
+    overflow: scroll;
+}
+
+#panel{
+    width: 20vw;
+    height: 35vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:space-between;
+}
+
+.selection{
+    font-weight: normal;
+    height: 2vw;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    border: 2px solid black;
+}
+
+
+#swap:hover{
+    background-color: black;
+    color: white;
+}
+
+.selectionItem{
+    font-size: 1vw;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.step1Content{
+    margin-top: 1vw;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.text{
+    margin-top: 1vw;
+    font-size: 1vw;
+}
+
+.states{
+    border-radius: 5px;
+    background-color: lightgray;
+    padding: 0.5vw;
+    font-size: 1.5vw;
+}
+
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+    width: 2vw;
+    color: white;
+    background-color: black;
+}
+
+.mat-button-toggle-appearance-standard {
+    color: black;
+    width: 2vw;
+    padding: 2px;
+}
+
+::ng-deep .mat-button-toggle-button {
+    display: flex;  
+    justify-content: center;
+}

@@ -52,8 +52,10 @@ export class DrawGraphComponent implements OnInit{
 
         console.log(this.progress.appProgress);
 
+        if (!this.graph)
         this.graph = new joint.dia.Graph({}, {cellNamespace: joint.shapes});
 
+        if (!this.paper)
         this.paper = new joint.dia.Paper({
         el: document.getElementById("paper"),
         width: "70vw",
@@ -86,6 +88,8 @@ export class DrawGraphComponent implements OnInit{
             }
         }
 
+        this.progress.highlighter = highlighter;
+
         this.paper.on('blank:pointerclick', (v,x,y) => {
             if (this.progress.selectedStateView) {
                 this.progress.selectedStateView?.unhighlight(null, highlighter);
@@ -95,14 +99,17 @@ export class DrawGraphComponent implements OnInit{
         });
 
         this.paper.on('blank:contextmenu', (event,x,y) => {
+            if (this.progress.appProgress == 3)
             this.openBlankMenu(event, x, y);
         });
 
         this.paper.on('element:contextmenu', (view, event,x,y) => {
+            if (this.progress.appProgress == 3)
             this.openStateMenu(event,view, x, y);
         })
 
         this.paper.on('link:contextmenu', (view, event,x,y) => {
+            if (this.progress.appProgress == 3)
             this.openLinkMenu(event,view, x, y);
         })
 

@@ -17,6 +17,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { GraphPanelComponent } from './graph-panel/graph-panel.component';
+import { GameInitComponent } from './game-init/game-init.component';
+import { GameComponent } from './game/game.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 
 
@@ -28,7 +32,9 @@ import { GraphPanelComponent } from './graph-panel/graph-panel.component';
     FunctorComponent,
     DrawGraphComponent,
     ContextMenuComponent,
-    GraphPanelComponent
+    GraphPanelComponent,
+    GameInitComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +46,8 @@ import { GraphPanelComponent } from './graph-panel/graph-panel.component';
     FormsModule,
     MatInputModule,
     MatFormFieldModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatButtonToggleModule
   ],
   providers: [SignalRService, AppProgressService],
   bootstrap: [AppComponent]

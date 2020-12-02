@@ -19,7 +19,11 @@ export class AppProgressService {
   selectedStateView : joint.dia.ElementView | joint.dia.LinkView;
   selectedItem : State | Link;
   isStateWindow : boolean = true;
+  highlighter : any;
 
+  //Setup
+  isSpoiler : boolean = true;
+  selectedStates : Array<State> = new Array<State>(); 
 
   constructor() { }
 

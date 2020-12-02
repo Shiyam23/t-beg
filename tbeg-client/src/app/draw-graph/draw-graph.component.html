@@ -1,9 +1,15 @@
-<div id='drawGraphTitle' >Draw a graph!</div>
+<div [ngSwitch]="progress.appProgress">
+    <div *ngSwitchCase="3" id='drawGraphTitle' >Draw a graph!</div>
+    <div *ngSwitchCase="4" id='drawGraphTitle' >Setup your game!</div>
+    <div *ngSwitchCase="5" id='drawGraphTitle' >Play!</div>
+</div>
+
 <div id="content">
     <div id="paper"></div>
     <div [ngSwitch]="progress.appProgress">
         <app-graph-panel *ngSwitchCase="3"></app-graph-panel>
-        <app-graph-panel *ngSwitchCase="4"></app-graph-panel>
+        <app-game-init *ngSwitchCase="4"></app-game-init>
+        <app-game *ngSwitchCase="5"></app-game>
     </div>
 </div>
 <app-context-menu #menu [optionList]="contextmenuList"></app-context-menu>
