@@ -50,7 +50,6 @@ export class DrawGraphComponent implements OnInit{
 
     ngOnInit(): void {
 
-        console.log(this.progress.appProgress);
 
         if (!this.graph)
         this.graph = new joint.dia.Graph({}, {cellNamespace: joint.shapes});

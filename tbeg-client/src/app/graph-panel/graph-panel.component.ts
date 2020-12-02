@@ -83,7 +83,7 @@ export class GraphPanelComponent implements OnInit {
         }
         else {
             //TODO create Error message
-            console.log("Not the same functor!!")
+            console.error("Not the same functor!!")
         }
         
     }

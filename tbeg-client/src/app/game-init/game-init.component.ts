@@ -50,7 +50,6 @@ export class GameInitComponent implements OnInit {
 
     this.paper.unbind('element:pointerclick');
     this.paper.on('element:pointerclick', (cellView : joint.dia.CellView, evt, x, y) => {
-      console.log(this.selectedStates.length);
       if (this.selectedStates.length < 2) {
         var selectedState : State = State.findStateByModel(<joint.dia.Element>(cellView.model));
         this.selectedStates.push(selectedState);
