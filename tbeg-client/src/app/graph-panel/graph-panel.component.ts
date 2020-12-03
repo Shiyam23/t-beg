@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { State, Link} from '../graphModel'
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-graph-panel',

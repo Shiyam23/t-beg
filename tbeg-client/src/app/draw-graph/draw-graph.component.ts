@@ -8,7 +8,6 @@ import { FormControl, Validators } from '@angular/forms';
 import { ContextMenuComponent } from '../templates/context-menu/context-menu.component';
 import { State, Link } from '../graphModel'
 import { AppProgressService } from '../services/appProgress/app-progress.service';
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-draw-graph',
