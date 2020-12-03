@@ -19,6 +19,7 @@ export class GraphPanelComponent implements OnInit {
   @ViewChild('fileSelector')
   fileSelector;
 
+
   constructor(public progress : AppProgressService, public signalR : SignalRService) { }
 
   ngOnInit(): void {
@@ -29,10 +30,10 @@ export class GraphPanelComponent implements OnInit {
     var alphabet : Array<string> = new Array<string>();
     var links : Array<Link> = new Array<Link>();
     Link.allLinks.forEach(link => {
-        link.name.toString().split(',').forEach(char => {
+        link.name.toString().split(',').forEach((char,index) => {
             if (alphabet.indexOf(char) == -1) alphabet.push(char);
             var newLink : Link = link;
-            links.push(new Link(char, link.source, link.target, link.value, null));
+            links.push(new Link(char, link.source, link.target, link.value[index], null));
         });
     });
     this.progress.forward();
@@ -92,12 +93,17 @@ export class GraphPanelComponent implements OnInit {
     fr.readAsText(file);
   }
 
-  setLinkValue(event : any) {
+  setLinkValue(event : any, index : number) {
     if (!this.linkValue.hasError('pattern'))
-    (<Link>this.progress.selectedItem).value = event;
+    (<Array<String>>(<Link>this.progress.selectedItem).value)[index] = event;
   }
-  setLinkName(event : any) {
-      (<Link>this.progress.selectedItem).setName(event);
+  setLinkName(event : string) {
+      var link : Link = (<Link>this.progress.selectedItem);
+      link.value = Array<string>(this.progress.selectedLabelArray.length);
+      var array : string[] = event.split(',');
+      if (array[array.length-1] == "") array.pop();
+      this.progress.selectedLabelArray = array;
+      link.setName(event);
   }
 
   setStateStart(event : any) {

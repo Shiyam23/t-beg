@@ -7,9 +7,10 @@ import { Link, State } from 'src/app/graphModel';
 export class AppProgressService {
 
   //TODO: set this to 0 later
-  appProgress : number = 0;
+  appProgress : number = 1;
   maxProgress : number = 5;
   selectedFunctor : string;
+  selectedLabelArray : string[];
   validator : string;
   validatorErrorMessage : string;
 

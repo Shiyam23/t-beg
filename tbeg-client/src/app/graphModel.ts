@@ -89,7 +89,7 @@ export class Link {
         private _name: string,
         public source : State,
         public target : State,
-        public value: string, 
+        public value: string | string[], 
         public model: joint.dia.Link | null ,
     ) {
         if (model != null) Link.allLinks.push(this);

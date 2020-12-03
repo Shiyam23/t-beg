@@ -13,20 +13,23 @@
                 <mat-checkbox class="option" [ngModel]="progress.selectedItem.isFinalState" (ngModelChange)="setStateFinal($event)">Accept state</mat-checkbox>
         </div>
         <div *ngIf="progress.selectedStateView && !progress.isStateWindow" class="settingsContent">
-            <mat-form-field class="option">
+            <mat-form-field class="option" appearance="fill">
                 <mat-label>Name</mat-label>
                 <input type="text" matInput required [ngModel]="progress.selectedItem.name" (ngModelChange)="setLinkName($event)" #linkName="ngModel">
                 <mat-error *ngIf="linkName.hasError('required')">
                 Name is <strong>required</strong>
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="option">
-                <mat-label>Value</mat-label>
-                <input type="text" matInput [pattern]="progress.validator" [ngModel]="progress.selectedItem.value" (ngModelChange)="setLinkValue($event)" #linkValue="ngModel">
-                <mat-error *ngIf="linkValue.hasError('pattern')">
-                {{progress.validatorErrorMessage}}
-                </mat-error>
-            </mat-form-field>
+            <div *ngFor="let x of progress.selectedLabelArray; index as i">
+                <ng-template #linkValues></ng-template>
+                <mat-form-field class="option" appearance="fill">
+                    <mat-label>Value for {{x}}</mat-label>
+                    <input type="text" matInput [pattern]="progress.validator" [ngModel]="progress.selectedItem.value[i]" (ngModelChange)="setLinkValue($event,i)" #linkValue="ngModel">
+                    <mat-error *ngIf="linkValue.hasError('pattern')">
+                    {{progress.validatorErrorMessage}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
         </div>
         <div class="fileArea">
             <div class="fileArea">

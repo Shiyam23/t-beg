@@ -127,6 +127,7 @@ export class DrawGraphComponent implements OnInit{
             cellView.highlight(null, highlighter);
             var link : Link = Link.findLinkByModel(cellView.model);
             this.progress.selectedItem = link;
+            this.progress.selectedLabelArray = link.name.split(',');
         });
 
         this.paper.unfreeze();
@@ -161,7 +162,7 @@ export class DrawGraphComponent implements OnInit{
         });
         var sourceState = State.findStateByModel(source);
         var targetState = State.findStateByModel(target);
-        var link : Link = new Link(label,sourceState, targetState,"", linkModel);
+        var link : Link = new Link(label,sourceState, targetState,new Array<string>(), linkModel);
         return linkModel.addTo(this.graph);
     }   
 
