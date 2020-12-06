@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { ceil } from 'lodash';
 import { State } from '../graphModel';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 
