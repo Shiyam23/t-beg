@@ -24,7 +24,7 @@ export class AppProgressService {
 
   //Setup
   isSpoiler : boolean = true;
-  selectedStates : Array<State> = new Array<State>(); 
+  initialPair : Array<State> = new Array<State>(); 
 
   constructor() { }
 

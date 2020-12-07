@@ -2252,6 +2252,7 @@ namespace TBeg
 
         public void AddGraph(graph::Graph graph, string functor) {
             
+            string graphName = "test";
             
             List<int> states = new List<int>(graph.states.Select(state => state.name).ToArray());
 
@@ -2273,7 +2274,8 @@ namespace TBeg
                     }
                 }
 
-                InitandSaveMatrix("test", functor, alphabet, new List<int>(states), values.ToArray(), "");
+                InitandSaveMatrix(graphName, functor, alphabet, states, values.ToArray(), "");
+                InitandSaveGame(graphName, functor, alphabet, states, values.ToArray(), "");
                 InitGameView.Invoke();
             }
             catch (Exception e)

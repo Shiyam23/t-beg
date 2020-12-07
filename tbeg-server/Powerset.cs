@@ -296,7 +296,6 @@ namespace TBeg
             //_elements_of_FX = ReturnFX(states, transitionSystem, alphabet);
             transitionSystem.functor = this;
             transitionSystem.Alphabet=alphabet;
-            transitionSystem.print();
             return transitionSystem;
         }
 

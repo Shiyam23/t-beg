@@ -132,6 +132,10 @@ namespace TBeg
             .SendAsync("Error", errorMsg);
         }
 
+        public void StartGame(string functor, string[] initialPair, bool spoiler){
+            InitGame.Invoke(this, new ViewEvent_Game("test", functor, initialPair, spoiler));
+        }
+
 
         public void FileInfoToUser(IModel model, ModelEvent_InfoFileOp e) {}
         public void UpdateToGraphView(IModel model, ModelEvent_UpdateGraphView e) {}
@@ -143,18 +147,31 @@ namespace TBeg
             .SendAsync("Message", e.name);
         }
         public void GraphIsConsistentWithGame(IModel model, ModelEvent_UpdateGraphView e){}
-        public void InfoStep0(IModel model, ModelEvent_InfoStep e){}
-        public void InfoStep1(IModel model, ModelEvent_InfoStep e){}
-        public void InfoStep2(IModel model, ModelEvent_InfoStep e){}
-        public void InfoStep3(IModel model, ModelEvent_InfoStep e){}
-        public void InfoStep4(IModel model, ModelEvent_InfoStep e){}
+        public void InfoStep0(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);
+        }
+        public void InfoStep1(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);
+        }
+        public void InfoStep2(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);
+        }
+        public void InfoStep3(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);
+        }
+        public void InfoStep4(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);}
 
-        public void ReturnToPanel(IModel model, ModelEvent_InfoStep e){}
+        public void ReturnToPanel(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);}
 
         //StepBack stuff
-        public void StepBack2(IModel model, ModelEvent_InfoStep e){}
-        public void StepBack3(IModel model, ModelEvent_InfoStep e){}
-        public void StepBack4(IModel model, ModelEvent_InfoStep e){}
+        public void StepBack2(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);}
+        public void StepBack3(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);}
+        public void StepBack4(IModel model, ModelEvent_InfoStep e){
+            Console.WriteLine(e);}
     }
 
     

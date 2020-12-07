@@ -13,6 +13,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public connected = new Subject<boolean>();
   public functorList = new Subject<Array<string>>();
   public validator = new Subject<Array<string>>();
+  public initGameView = new Subject<boolean>();
 
   constructor() { }
 
@@ -62,5 +63,16 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
       this.validator.next([validator, message]);
       this.validator.complete();
     })
+  }
+
+  public listenOnInitGameView() {
+    this.hubConnection.on("InitGameView", () => {
+      this.initGameView.next(true);
+      this.initGameView.complete();
+    })
+  }
+
+  public initGame(functor : string, initialPair : Array<string>, spoiler : boolean) {
+    this.hubConnection.invoke("InitGame", functor, initialPair, spoiler);
   }
 }

@@ -36,8 +36,11 @@ export class GraphPanelComponent implements OnInit {
             links.push(new Link(char, link.source, link.target, link.value[index], null));
         });
     });
-    this.progress.forward();
-    this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor)
+    this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor);
+    this.signalR.listenOnInitGameView();
+    this.signalR.initGameView.subscribe( bool => {
+        if (bool) this.progress.forward();
+    })
   }
 
   saveAsJson = () => {

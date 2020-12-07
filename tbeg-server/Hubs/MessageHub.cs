@@ -54,6 +54,11 @@ namespace Hubs
             return Task.CompletedTask;
         }
 
+        public Task InitGame(string functor, string[] initialPair, bool spoiler) {
+            ((TBeg.TBeg)Context.Items["tbeg"]).StartGame(functor, initialPair, spoiler);
+            return Task.CompletedTask;
+        }
+
 
         public static void UpdateFunctorList(ref Dictionary<String, IModel> models, string filename)
         {

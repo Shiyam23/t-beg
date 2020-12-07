@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { State } from '../graphModel';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
+import { SignalRService } from '../services/signalR/signal-r.service';
 
 @Component({
   selector: 'app-game-init',
@@ -18,7 +19,7 @@ export class GameInitComponent implements OnInit {
   highlighter : joint.dia.Graph;
 
 
-  constructor(public progress :  AppProgressService) {
+  constructor(public progress :  AppProgressService, public signalR : SignalRService) {
     this.selectedStates = new Array<State>();
     this.paper = this.progress.paper;
     this.graph = this.progress.graph;
@@ -47,6 +48,7 @@ export class GameInitComponent implements OnInit {
     // this.selectedStates[0] = state1;
     // this.selectedStates[1] = state2;
 
+    this.paper.unbind('link:pointerclick');
     this.paper.unbind('element:pointerclick');
     this.paper.on('element:pointerclick', (cellView : joint.dia.CellView, evt, x, y) => {
       if (this.selectedStates.length < 2) {
@@ -63,7 +65,13 @@ export class GameInitComponent implements OnInit {
   }
 
   public startClick = () => {
-    this.progress.selectedStates = this.selectedStates;
+    this.progress.initialPair = this.selectedStates;
+    var stateNames = this.selectedStates.map(state => state.name.toString())
+    this.signalR.initGame(
+      this.progress.selectedFunctor,
+      stateNames,
+      this.progress.isSpoiler
+      )
     this.progress.forward();
   }
 
