@@ -14,6 +14,7 @@ export class StartComponent implements OnInit {
 
   @Input("text") text;
   @Input("click") click = () => this.progress.forward();
+  @Input("disabled") disabled = false;
 
   ngOnInit(): void {
   }

@@ -3,35 +3,34 @@
         <label class="text">Step 1:</label>
         <label class="info">Spoiler chooses one state and predicate</label>
         <div class="step1Content">
-            <mat-button-toggle-group class="selection" name="fontStyle" aria-label="Font Style">
-                <mat-button-toggle class="selectionItem" checked="True" value="1">1</mat-button-toggle>
-                <mat-button-toggle class="selectionItem" value="2">2</mat-button-toggle>
+            <mat-button-toggle-group class="selection" [disabled]="disabled1" (change)=selectionChange($event) #selectedState="matButtonToggleGroup" aria-label="Selected Predicate">
+                <mat-button-toggle class="selectionItem" checked="True" value="1">{{x}}</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" value="2">{{y}}</mat-button-toggle>
             </mat-button-toggle-group>
-            <label class="states">{{selectedStates}}</label>
+            <label class="states">{{selStatesString[0]}}</label>
         </div>
         <hr style="width: 100%;">
         <label class="text">Step 2:</label>
         <label class="info">Duplicator answers based on the other state such that Fp_1 (ts(s)) <=^F Fp_2 (ts(t)) holds</label>
         <div class="step1Content">
-            
-            <label class="states">{{selectedStates}}</label>
+            <label class="states">{{selStatesString[1]}}</label>
         </div>
         <hr style="width: 100%;">
         <label class="text">Step 3:</label>
         <label class="info">Spoiler chooses pi and some x\' s.t. pi(x\')=1:</label>
         <div class="step1Content">
-            <mat-button-toggle-group class="selection" name="fontStyle" aria-label="Font Style">
-                <mat-button-toggle class="selectionItem" checked="True" value="1">1</mat-button-toggle>
-                <mat-button-toggle class="selectionItem" value="2">2</mat-button-toggle>
+            <mat-button-toggle-group class="selection" [disabled]="disabled2" (change)=selectionChange($event) #selectedPred="matButtonToggleGroup" aria-label="Selected Predicate">
+                <mat-button-toggle class="selectionItem" checked="True" value="1">p1</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" value="2">p2</mat-button-toggle>
             </mat-button-toggle-group>
-            <label class="states">{{selectedStates}}</label>
+            <label class="states">{{selStatesString[2]}}</label>
         </div>
         <hr style="width: 100%;">
         <label class="text">Step 4:</label>
         <label class="info">Duplicator chooses some y\' s.t. pj(y\')=1 and i != j</label>
         <div class="step1Content">
-            <label class="states">{{selectedStates}}</label>
+            <label class="states">{{selStatesString[3]}}</label>
         </div>
     </div>
-    <app-start [text]="'START'"></app-start>
+    <app-start [click]="startClick" [disabled]=startDisabled [text]="'START'"></app-start>
 </div>

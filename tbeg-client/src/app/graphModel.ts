@@ -28,6 +28,14 @@ export class State {
         })
     }
 
+    public setStrokeColor(color:string) {
+        this.model.attr({
+            body: {
+                stroke: color,
+            }
+        })
+    }
+
     public remove(){
         this.model.remove();
         Link.allLinks = Link.allLinks.filter( link => link.source.name != this.name && link.target.name != this.name);

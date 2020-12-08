@@ -13,7 +13,11 @@
     align-items: center;
 }
 
-#basic:hover{
+#basic:hover:not(.mat-button-disabled){
     background-color:black ;
     color: white;
+}
+
+.mat-button-disabled{
+    opacity: 0.5;
 }

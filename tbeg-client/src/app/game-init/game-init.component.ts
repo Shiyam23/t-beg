@@ -72,6 +72,9 @@ export class GameInitComponent implements OnInit {
       stateNames,
       this.progress.isSpoiler
       )
+    this.paper.trigger('blank:pointerclick');
+    this.paper.unbind('element:pointerclick');
+    this.paper.unbind('blank:pointerclick');
     this.progress.forward();
   }
 

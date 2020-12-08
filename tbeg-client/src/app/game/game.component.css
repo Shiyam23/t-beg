@@ -13,7 +13,7 @@
     border: 2px solid black;
     background-color: white;
     opacity: 1;
-    overflow: scroll;
+    overflow-y: scroll;
     padding: 1vw;
 }
 
@@ -75,6 +75,7 @@
     font-size: 1vw;
 }
 
+
 .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
     width: 2vw;
     color: white;
@@ -87,7 +88,20 @@
     padding: 2px;
 }
 
+.mat-button-toggle-appearance-standard:focus{
+    outline: none
+}
+
+.mat-button-toggle-disabled{
+    opacity: 0.4;
+}
+
+.mat-button-toggle-disabled.selection{
+    border-color: grey;
+}
+
 ::ng-deep .mat-button-toggle-button {
     display: flex;  
     justify-content: center;
 }
+

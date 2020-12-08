@@ -136,6 +136,10 @@ namespace TBeg
             InitGame.Invoke(this, new ViewEvent_Game("test", functor, initialPair, spoiler));
         }
 
+        public void SendStepToGame(string functor, int selection, int[] states) {
+            SendStep.Invoke(this, new ViewEvent_GameStepUser(functor, "test", new List<int>(states), selection));
+        }
+
 
         public void FileInfoToUser(IModel model, ModelEvent_InfoFileOp e) {}
         public void UpdateToGraphView(IModel model, ModelEvent_UpdateGraphView e) {}
@@ -148,30 +152,63 @@ namespace TBeg
         }
         public void GraphIsConsistentWithGame(IModel model, ModelEvent_UpdateGraphView e){}
         public void InfoStep0(IModel model, ModelEvent_InfoStep e){
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 0);
             Console.WriteLine(e);
         }
         public void InfoStep1(IModel model, ModelEvent_InfoStep e){
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 1);
             Console.WriteLine(e);
         }
         public void InfoStep2(IModel model, ModelEvent_InfoStep e){
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 2);
             Console.WriteLine(e);
         }
         public void InfoStep3(IModel model, ModelEvent_InfoStep e){
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 3);
             Console.WriteLine(e);
         }
         public void InfoStep4(IModel model, ModelEvent_InfoStep e){
-            Console.WriteLine(e);}
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 4);
+            Console.WriteLine(e);
+        
+        }
 
         public void ReturnToPanel(IModel model, ModelEvent_InfoStep e){
-            Console.WriteLine(e);}
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -1);
+            Console.WriteLine(e);
+        }
 
         //StepBack stuff
         public void StepBack2(IModel model, ModelEvent_InfoStep e){
-            Console.WriteLine(e);}
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -2);
+            Console.WriteLine(e);
+        }
         public void StepBack3(IModel model, ModelEvent_InfoStep e){
-            Console.WriteLine(e);}
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -3);
+            Console.WriteLine(e);
+        }
         public void StepBack4(IModel model, ModelEvent_InfoStep e){
-            Console.WriteLine(e);}
+            int[] pred1 = e.predicate_1?.ToArray(); 
+            TBeg.context.Clients.Client(this.connectionId)
+            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -4);
+            Console.WriteLine(e);
+        }
     }
 
     

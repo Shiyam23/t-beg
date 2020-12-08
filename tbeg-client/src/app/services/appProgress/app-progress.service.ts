@@ -10,6 +10,8 @@ export class AppProgressService {
   appProgress : number = 1;
   maxProgress : number = 5;
   selectedFunctor : string;
+
+  //Functor
   selectedLabelArray : string[];
   validator : string;
   validatorErrorMessage : string;
@@ -25,6 +27,9 @@ export class AppProgressService {
   //Setup
   isSpoiler : boolean = true;
   initialPair : Array<State> = new Array<State>(); 
+
+  //Game
+  
 
   constructor() { }
 

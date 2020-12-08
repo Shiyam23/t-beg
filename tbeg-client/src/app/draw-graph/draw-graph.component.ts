@@ -80,6 +80,7 @@ export class DrawGraphComponent implements OnInit{
             highlighter: {
                 name: 'stroke',
                 options: {
+                    padding: 7,
                     rx:30,
                     ry:30
                 }
@@ -177,7 +178,7 @@ export class DrawGraphComponent implements OnInit{
                     fontWeight: 'bold',
                 },
                 body: {
-                    strokeWidth: 2,
+                    strokeWidth: 3,
                 }
             }
         });

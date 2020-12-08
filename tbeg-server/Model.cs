@@ -124,6 +124,19 @@ namespace TBeg
             this.selection = selection;
             this.UserisSpoiler = UserisSpoiler;
         }
+
+        //TODO: remove this later
+        override
+        public String ToString() {
+            string n = Environment.NewLine;
+            string pred1 = "";
+            string pred2 = "";
+            string empty = " - ";
+            this.predicate_1?.ForEach(num => pred1 = pred1 + num.ToString() + " ");
+            this.predicate_2?.ForEach(num => pred2 = pred2 + num.ToString() + " ");
+            return $"Name: {this.name ?? empty} {n} UserIsSpoiler: {this.UserisSpoiler} {n} Selection: {this.selection} {n} Predicate1: {pred1 ?? empty} {n} Predicate2: {pred2 ?? empty} {n} x: {this.x ?? empty} {n} y: {this.y ?? empty}";
+            
+        }
     }
 
 
