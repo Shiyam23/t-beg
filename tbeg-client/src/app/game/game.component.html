@@ -4,8 +4,8 @@
         <label class="info">Spoiler chooses one state and predicate</label>
         <div class="step1Content">
             <mat-button-toggle-group class="selection" [disabled]="disabled1" (change)=selectionChange($event) #selectedState="matButtonToggleGroup" aria-label="Selected Predicate">
-                <mat-button-toggle class="selectionItem" checked="True" value="1">{{x}}</mat-button-toggle>
-                <mat-button-toggle class="selectionItem" value="2">{{y}}</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" checked="True" [value]="x">{{x}}</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" [value]="y">{{y}}</mat-button-toggle>
             </mat-button-toggle-group>
             <label class="states">{{selStatesString[0]}}</label>
         </div>
