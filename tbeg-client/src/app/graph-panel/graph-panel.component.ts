@@ -93,7 +93,10 @@ export class GraphPanelComponent implements OnInit {
         }
         
     }
-    fr.readAsText(file);
+    if (file != null) {
+        fr.readAsText(file);
+        event.target.value = "";
+    }
   }
 
   setLinkValue(event : any, index : number) {
