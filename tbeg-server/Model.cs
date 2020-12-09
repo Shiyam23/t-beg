@@ -972,16 +972,6 @@ namespace TBeg
             MethodInfo method = type.GetMethod("GetDistinguishingFormula");
             object[] argumentst = new object[] { xt, yt };
             string formula = (string)method.Invoke(CurrentGame, argumentst);
-
-            //TODO: this throws exception
-            //List<string> lines = WrapText(formula, 600, new Font("Calibri", 11.0f));
-
-
-            formula = "";
-            //foreach (var item in lines)
-            //{
-            //    formula = formula + item + Environment.NewLine;
-            //}
             return formula;
         }
 
@@ -1485,7 +1475,7 @@ namespace TBeg
                         node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Turquoise;
                     }
                     //Update GUI
-                    UpdateStep2(t, predicate, true);
+                    UpdateStep2(t, predicate, false);
          
                     //Update FLOW
                     Interlocked.Increment(ref FLOW_Step); //valid move of the user and game can continue
@@ -1621,11 +1611,11 @@ namespace TBeg
                 int x = (int)X.GetValue(CurrentGame, null);
                 Y = type.GetProperty("Y");
                 int y = (int)Y.GetValue(CurrentGame, null);
-                InitGame(true, (x + 1).ToString(), (y + 1).ToString());
+                InitGame(false, (x + 1).ToString(), (y + 1).ToString());
             }
             else
             {
-                InfoTextToUser("Your chosen state is not included in your predicate.", false, true);
+                InfoTextToUser("Your chosen state is not included in your predicate.", false, false);
             }
         }
 
