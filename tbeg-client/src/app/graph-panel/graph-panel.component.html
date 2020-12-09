@@ -20,7 +20,8 @@
                 Name is <strong>required</strong>
                 </mat-error>
             </mat-form-field>
-            <div *ngFor="let x of progress.selectedLabelArray; index as i">
+            <hr style="width: 100%;">
+            <div *ngFor="let x of progress.selectedLabelArray; index as i; last as last">
                 <ng-template #linkValues></ng-template>
                 <mat-form-field class="option" appearance="fill">
                     <mat-label>Value for {{x}}</mat-label>
@@ -29,8 +30,10 @@
                     {{progress.validatorErrorMessage}}
                     </mat-error>
                 </mat-form-field>
+                <hr *ngIf="!last" style="width: 100%;">
             </div>
         </div>
+        <hr style="width: 100%;">
         <div class="fileArea">
             <div class="fileArea">
                     <input id="fileSelector" type="file" accept=".txt" style="display: none;" (change)="loadFromJson($event)">
