@@ -65,7 +65,7 @@ export class GameComponent implements OnInit {
   }
 
   infoStep0(event : Event) {
-    this.resetMarkers(event.x, event.y);
+    this.resetMarkers();
     this.unbindGraphToArray();
     for (let i = 0; i < 4; i++) {
       this.selStates[i] = new Array<State>();
@@ -222,14 +222,15 @@ export class GameComponent implements OnInit {
     this.resetSelection(step-1);
   }
 
-  resetMarkers(x : number, y : number) {
+  resetMarkers() {
     State.allStates.forEach(state => {
       if (state.name == this.x.toString() || state.name == this.y.toString())
         state.setStrokeColor("#333333");
-      if (state.name == x.toString() || state.name == y.toString())
-        state.setColor('white');
+      if (this.selStates[0] != null && this.selStates[2] != null) {
+        this.selStates[0].forEach(state => state.setColor('white'))
+        this.selStates[1].forEach(state => state.setColor('white'))
+      }
     })
   }
-
 
 }
