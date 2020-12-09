@@ -1,0 +1,8 @@
+<div class="dialog">
+<div [ngSwitch]="data.type">
+    <p *ngSwitchCase="DialogDataType.ERROR">Error</p>
+    <p *ngSwitchCase="DialogDataType.INFO">Info</p>
+    <p *ngSwitchCase="DialogDataType.GAMEOVER">Game Over!</p>
+</div>
+<div style="white-space: pre-line">{{data.content}}</div>
+</div>

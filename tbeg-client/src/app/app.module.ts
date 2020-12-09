@@ -20,6 +20,8 @@ import { GraphPanelComponent } from './graph-panel/graph-panel.component';
 import { GameInitComponent } from './game-init/game-init.component';
 import { GameComponent } from './game/game.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DialogComponent } from './templates/dialog/dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -34,7 +36,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ContextMenuComponent,
     GraphPanelComponent,
     GameInitComponent,
-    GameComponent
+    GameComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatInputModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDialogModule
   ],
   providers: [SignalRService, AppProgressService],
   bootstrap: [AppComponent]

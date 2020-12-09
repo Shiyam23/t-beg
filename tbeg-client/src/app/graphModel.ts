@@ -1,3 +1,5 @@
+import { util } from 'jointjs';
+
 export class State {
 
     static allStates : Array<State> = new Array<State>();

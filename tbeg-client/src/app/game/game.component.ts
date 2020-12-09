@@ -5,6 +5,9 @@ import { SignalRService } from '../services/signalR/signal-r.service';
 import { Event, InfoEvent } from '../eventModel';
 import { State } from '../graphModel';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../templates/dialog/dialog.component';
+import { DialogData, DialogDataType } from '../templates/dialog/dialogData';
 
 @Component({
   selector: 'app-game',
@@ -25,14 +28,16 @@ export class GameComponent implements OnInit {
   p1Selected : boolean = true;
   disabled1 : boolean = true;
   disabled2 : boolean = true;
-  isSpoiler : boolean;
 
   @ViewChild('selectedState') selectedState : MatButtonToggleGroup;
   @ViewChild('selectedPred') selectedPred : MatButtonToggleGroup;
 
 
-  constructor(public signalR : SignalRService, public progress : AppProgressService) {
-    this.isSpoiler = this.progress.isSpoiler;
+  constructor(
+    public signalR : SignalRService, 
+    public progress : AppProgressService,
+    private dialog : MatDialog
+    ) {
   }
 
   ngOnInit(): void {
@@ -61,7 +66,15 @@ export class GameComponent implements OnInit {
   }
 
   infoMessage(event : InfoEvent) {
-    console.log(event);
+
+    var data : DialogData = {
+      type : event.over ? DialogDataType.GAMEOVER : DialogDataType.ERROR,
+      content : event.name
+    }
+
+    this.dialog.open(DialogComponent, {
+      data: data,
+    });
     if (!event.over) {
       this.startDisabled = false;
       this.progress.paper.trigger('blank:pointerclick')
@@ -77,7 +90,7 @@ export class GameComponent implements OnInit {
     }
     this.x = event.x;
     this.y = event.y;
-    if (this.isSpoiler) {
+    if (event.userIsSpoiler) {
       this.disabled1 = false;
       this.bindGraphToArray(0, false);
       this.startDisabled = false;
@@ -96,7 +109,7 @@ export class GameComponent implements OnInit {
           item => {
             if(state.name == (item+1).toString()) {
               state.setColor("plum");
-              if (!this.isSpoiler) this.selStates[0].push(state);
+              if (!event.userIsSpoiler) this.selStates[0].push(state);
             }
           }
         )
@@ -110,13 +123,13 @@ export class GameComponent implements OnInit {
           item => {
             if(state.name == (item+1).toString()) {
               state.setColor("plum");
-              if (!this.isSpoiler) this.selStates[0].push(state);
+              if (!event.userIsSpoiler) this.selStates[0].push(state);
             }
           }
         )
       })
     }
-    if (!this.isSpoiler) {
+    if (!event.userIsSpoiler) {
       this.xSelected = this.x == event.selection;
       this.bindGraphToArray(1, false);
       this.startDisabled = false;
@@ -132,12 +145,12 @@ export class GameComponent implements OnInit {
         item => {
           if (state.name == (item+1).toString()) {
             state.setColor("lightcyan");
-            if (this.isSpoiler) this.selStates[1].push(state);
+            if (event.userIsSpoiler) this.selStates[1].push(state);
           }
         }
       )
     })
-    if (this.isSpoiler) {
+    if (event.userIsSpoiler) {
       this.disabled2 = false;
       this.bindGraphToArray(2, true);
       this.startDisabled = false;
@@ -149,7 +162,7 @@ export class GameComponent implements OnInit {
   infoStep3(event : Event) {
     this.disabled2 = true;
     this.unbindGraphToArray();
-    if (!this.isSpoiler) {
+    if (!event.userIsSpoiler) {
       this.selStates[2].push(State.allStates.find(state => state.name == (event.pred1[0]+1).toString()));
       this.p1Selected = event.selection == 0;
       this.updateLabel(2);
@@ -161,7 +174,7 @@ export class GameComponent implements OnInit {
 
   infoStep4(event : Event) {
     this.unbindGraphToArray();
-    if (this.isSpoiler) {
+    if (event.userIsSpoiler) {
       this.selStates[3].push(State.allStates.find(state => state.name == (event.selection+1).toString()));
       this.updateLabel(3);
     }
