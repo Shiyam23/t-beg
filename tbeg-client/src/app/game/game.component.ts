@@ -62,6 +62,10 @@ export class GameComponent implements OnInit {
 
   infoMessage(event : InfoEvent) {
     console.log(event);
+    if (!event.over) {
+      this.startDisabled = false;
+      this.progress.paper.trigger('blank:pointerclick')
+    }
   }
 
   infoStep0(event : Event) {
@@ -217,9 +221,12 @@ export class GameComponent implements OnInit {
     else if (step == 3) selection = Number(this.selectedPred.value);
     else selection = 0;
     var states : Array<number> = this.selStates[step-1].map(state => Number(state.name)-1);
-    this.signalR.sendStep(this.progress.selectedFunctor, selection, states);
-    this.startDisabled = true;
-    this.resetSelection(step-1);
+    if (states.length > 0) {
+      this.signalR.sendStep(this.progress.selectedFunctor, selection, states);
+      this.startDisabled = true;
+      this.resetSelection(step-1);
+    }
+    
   }
 
   resetMarkers() {
