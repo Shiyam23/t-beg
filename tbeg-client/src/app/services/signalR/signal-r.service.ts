@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
 import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
-import { Event } from '../../eventModel';
+import { Event, InfoEvent } from '../../eventModel';
 
 
 @Injectable({
@@ -15,6 +15,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public validator = new Subject<Array<string>>();
   public initGameView = new Subject<boolean>();
   public gameSteps = new Subject<Event>();
+  public info = new Subject<InfoEvent>();
 
   constructor() { }
 
@@ -86,7 +87,18 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
     })
   }
 
+  public listenToInfoText() {
+    this.hubConnection.on("InfoText", (info : string, over: boolean, step : number, userIsSpoiler : boolean) => {
+      this.info.next(new InfoEvent(info,over, step, userIsSpoiler))
+    })
+  }
+
   public sendStep(functor : string, selection : number , states : Array<Number>) {
+    console.log({
+      functor: functor,
+      selection: selection,
+      states: states
+    })
     this.hubConnection.invoke("SendStep", functor.toString(), selection, states);
   }
 }

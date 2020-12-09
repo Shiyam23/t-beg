@@ -146,39 +146,44 @@ namespace TBeg
         public void UpdateGraph(IModel model, ModelEvent_UpdateGraphView e) {}
         public void UpdateGraphName(IModel model, ModelEvent_UpdateGraphView e){}
         public void InfoTextToUser(IModel model, ModelEvent_UpdateGraphView e){
-
             TBeg.context.Clients.Client(this.connectionId)
-            .SendAsync("Message", e.name);
+            .SendAsync("InfoText", e.name, e.over, e.Flow_step, e.UserisSpoiler);
+            Console.WriteLine(e);
         }
         public void GraphIsConsistentWithGame(IModel model, ModelEvent_UpdateGraphView e){}
         public void InfoStep0(IModel model, ModelEvent_InfoStep e){
             int[] pred1 = e.predicate_1?.ToArray(); 
             TBeg.context.Clients.Client(this.connectionId)
             .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 0);
+            Console.WriteLine("InfoStep 0:");
             Console.WriteLine(e);
         }
         public void InfoStep1(IModel model, ModelEvent_InfoStep e){
             int[] pred1 = e.predicate_1?.ToArray(); 
             TBeg.context.Clients.Client(this.connectionId)
             .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 1);
+            Console.WriteLine("InfoStep 1:");
             Console.WriteLine(e);
         }
         public void InfoStep2(IModel model, ModelEvent_InfoStep e){
             int[] pred1 = e.predicate_1?.ToArray(); 
             TBeg.context.Clients.Client(this.connectionId)
             .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 2);
+            Console.WriteLine("InfoStep 2:");
             Console.WriteLine(e);
         }
         public void InfoStep3(IModel model, ModelEvent_InfoStep e){
             int[] pred1 = e.predicate_1?.ToArray(); 
             TBeg.context.Clients.Client(this.connectionId)
             .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 3);
+            Console.WriteLine("InfoStep 3:");
             Console.WriteLine(e);
         }
         public void InfoStep4(IModel model, ModelEvent_InfoStep e){
             int[] pred1 = e.predicate_1?.ToArray(); 
             TBeg.context.Clients.Client(this.connectionId)
             .SendAsync("InfoStep", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, 4);
+            Console.WriteLine("InfoStep 4:");
             Console.WriteLine(e);
         
         }

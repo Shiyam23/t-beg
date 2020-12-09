@@ -1,11 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
-import { Event } from '../eventModel';
+import { Event, InfoEvent } from '../eventModel';
 import { State } from '../graphModel';
-import { state } from '@angular/animations';
-import { MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-game',
@@ -15,25 +14,31 @@ import { MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/b
 export class GameComponent implements OnInit {
 
   gameSteps : Subscription;
+  info : Subscription;
   actualStep : number;
   startDisabled : boolean = true;
   selStatesString : Array<string> = ["{ - }","{ - }","{ - }","{ - }"];
   selStates : Array<Array<State>> = new Array<Array<State>>(4);
   x : number = 1;
+  xSelected : boolean = true;
   y : number = 2;
+  p1Selected : boolean = true;
   disabled1 : boolean = true;
   disabled2 : boolean = true;
-  selection : number = 1;
+  isSpoiler : boolean;
 
   @ViewChild('selectedState') selectedState : MatButtonToggleGroup;
   @ViewChild('selectedPred') selectedPred : MatButtonToggleGroup;
 
 
-  constructor(public signalR : SignalRService, public progress : AppProgressService) { }
+  constructor(public signalR : SignalRService, public progress : AppProgressService) {
+    this.isSpoiler = this.progress.isSpoiler;
+  }
 
   ngOnInit(): void {
     
     this.signalR.listenToInfoStep();
+    this.signalR.listenToInfoText();
     this.gameSteps = this.signalR.gameSteps.subscribe((event : Event) => {
       switch (event.step) {
         case 0:
@@ -50,13 +55,25 @@ export class GameComponent implements OnInit {
           break;
       }
     });
+    this.info = this.signalR.info.subscribe((event : InfoEvent) => {
+      this.infoMessage(event);
+    });
+  }
+
+  infoMessage(event : InfoEvent) {
+    console.log(event);
   }
 
   infoStep0(event : Event) {
-    this.selStates[0] = new Array<State>();
+    this.resetMarkers(event.x, event.y);
+    this.unbindGraphToArray();
+    for (let i = 0; i < 4; i++) {
+      this.selStates[i] = new Array<State>();
+      this.updateLabel(i)
+    }
     this.x = event.x;
     this.y = event.y;
-    if (event.userIsSpoiler) {
+    if (this.isSpoiler) {
       this.disabled1 = false;
       this.bindGraphToArray(0, false);
       this.startDisabled = false;
@@ -66,13 +83,17 @@ export class GameComponent implements OnInit {
   }
   infoStep1(event : Event) {
     this.disabled1 = true;
+    this.unbindGraphToArray();
     if (Number(this.selectedState.value) == this.x) {
       State.allStates.forEach(state => {
         if(state.name == this.x.toString()) state.setStrokeColor("darkmagenta");
         if(state.name == this.y.toString()) state.setStrokeColor("cyan");
         event.pred1.forEach(
           item => {
-            if(state.name == (item+1).toString()) state.setColor("plum");
+            if(state.name == (item+1).toString()) {
+              state.setColor("plum");
+              if (!this.isSpoiler) this.selStates[0].push(state);
+            }
           }
         )
       })
@@ -83,42 +104,93 @@ export class GameComponent implements OnInit {
         if(state.name == this.x.toString()) state.setStrokeColor("cyan");
         event.pred1.forEach(
           item => {
-            if(state.name == (item-1).toString()) state.setColor("plum");
+            if(state.name == (item+1).toString()) {
+              state.setColor("plum");
+              if (!this.isSpoiler) this.selStates[0].push(state);
+            }
           }
         )
       })
     }
+    if (!this.isSpoiler) {
+      this.xSelected = this.x == event.selection;
+      this.bindGraphToArray(1, false);
+      this.startDisabled = false;
+    }
+    this.updateLabel(0);
+    this.actualStep = 2;
     
-
   }
   infoStep2(event : Event) {
-    
+    this.unbindGraphToArray();
+    State.allStates.forEach(state => {
+      event.pred1.forEach(
+        item => {
+          if (state.name == (item+1).toString()) {
+            state.setColor("lightcyan");
+            if (this.isSpoiler) this.selStates[1].push(state);
+          }
+        }
+      )
+    })
+    if (this.isSpoiler) {
+      this.disabled2 = false;
+      this.bindGraphToArray(2, true);
+      this.startDisabled = false;
+    }
+    this.updateLabel(1);
+    this.actualStep = 3;
   }
+
   infoStep3(event : Event) {
-
+    this.disabled2 = true;
+    this.unbindGraphToArray();
+    if (!this.isSpoiler) {
+      this.selStates[2].push(State.allStates.find(state => state.name == (event.pred1[0]+1).toString()));
+      this.p1Selected = event.selection == 0;
+      this.updateLabel(2);
+      this.bindGraphToArray(3, true);
+      this.startDisabled = false;
+    }
+    this.actualStep = 4;
   }
-  infoStep4(event : Event) {
 
+  infoStep4(event : Event) {
+    this.unbindGraphToArray();
+    if (this.isSpoiler) {
+      this.selStates[3].push(State.allStates.find(state => state.name == (event.selection+1).toString()));
+      this.updateLabel(3);
+    }
   }
 
   bindGraphToArray(i : number, singleItem : boolean) {
-    this.progress.paper.unbind('blank:pointerclick');
-      this.progress.paper.on('blank:pointerclick', () => {
-        this.selStates[i].forEach(state => {
-          this.progress.paper.findViewByModel(state.model).unhighlight(null, this.progress.highlighter)
-        })
-        this.selStates[i] = new Array<State>();
-        this.updateLabel(i);
-      })
-      this.progress.paper.unbind('element:pointerclick');
-      this.progress.paper.on('element:pointerclick', (cellView, event, x, y) => {
-        if (!singleItem || this.selStates[i].length < 1) {
-          var selectedState : State = State.findStateByModel(<joint.dia.Element>(cellView.model));
-          this.selStates[i].push(selectedState);
+    this.unbindGraphToArray();
+    this.progress.paper.on('blank:pointerclick', () => {
+      this.resetSelection(i)
+      this.selStates[i] = new Array<State>();
+      this.updateLabel(i);
+    })
+    this.progress.paper.on('element:pointerclick', (cellView, event, x, y) => {
+      if (!singleItem || this.selStates[i].length < 1) {
+        var selectedState : State = State.findStateByModel(<joint.dia.Element>(cellView.model));
+        if (this.selStates[i].indexOf(selectedState) == -1) {
           cellView.highlight(null, this.progress.highlighter);
+          this.selStates[i].push(selectedState);
           this.updateLabel(i);
         }
-      })
+      }
+    })
+  }
+
+  unbindGraphToArray() {
+    this.progress.paper.unbind('blank:pointerclick');
+    this.progress.paper.unbind('element:pointerclick');
+  }
+
+  resetSelection(i : number) {
+    this.selStates[i].forEach(state => {
+      this.progress.paper.findViewByModel(state.model).unhighlight(null, this.progress.highlighter)
+    })
   }
 
   updateLabel(i : number) {
@@ -126,11 +198,11 @@ export class GameComponent implements OnInit {
     var string;
     if (this.selStates[i].length > 0) {
       string = 
-        "{" + 
+        "{ " + 
         this.selStates[i]
         .map(state => state.name)
         .reduce((acc,value) => acc + ", " + value) + 
-        "}";
+        " }";
     }
     else string = "{ - }"
     this.selStatesString[i] = string;
@@ -146,11 +218,17 @@ export class GameComponent implements OnInit {
     else selection = 0;
     var states : Array<number> = this.selStates[step-1].map(state => Number(state.name)-1);
     this.signalR.sendStep(this.progress.selectedFunctor, selection, states);
-
+    this.startDisabled = true;
+    this.resetSelection(step-1);
   }
 
-  selectionChange(event) {
-    this.selection = Number(event.value);
+  resetMarkers(x : number, y : number) {
+    State.allStates.forEach(state => {
+      if (state.name == this.x.toString() || state.name == this.y.toString())
+        state.setStrokeColor("#333333");
+      if (state.name == x.toString() || state.name == y.toString())
+        state.setColor('white');
+    })
   }
 
 

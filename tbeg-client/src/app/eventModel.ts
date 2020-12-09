@@ -18,3 +18,19 @@ export class Event {
         this.step = step;
     }
 }
+
+export class InfoEvent {
+
+    name : string;
+    over : boolean;
+    step : number;
+    userIsSpoiler : boolean;
+
+    constructor (name : string, over : boolean, step : number,userIsSpoiler : boolean) {
+        this.name = name;
+        this.over = over;
+        this.step = step;
+        this.userIsSpoiler = userIsSpoiler;
+    }
+
+}
