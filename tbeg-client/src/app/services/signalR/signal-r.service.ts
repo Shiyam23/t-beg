@@ -94,11 +94,6 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   }
 
   public sendStep(functor : string, selection : number , states : Array<Number>) {
-    console.log({
-      functor: functor,
-      selection: selection,
-      states: states
-    })
     this.hubConnection.invoke("SendStep", functor.toString(), selection, states);
   }
 }
