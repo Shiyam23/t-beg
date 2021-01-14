@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
 
 @Injectable({
@@ -29,7 +30,7 @@ export class AppProgressService {
   initialPair : Array<State> = new Array<State>(); 
 
   //Game
-  
+  snackbar : Subject<string> = new Subject();  
 
   constructor() { }
 

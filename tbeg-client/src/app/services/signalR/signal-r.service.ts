@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
 import { Event, InfoEvent } from '../../eventModel';
 
@@ -16,6 +16,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public initGameView = new Subject<boolean>();
   public gameSteps = new Subject<Event>();
   public info = new Subject<InfoEvent>();
+  
 
   constructor() { }
 
@@ -75,11 +76,13 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   }
 
   public initGame(functor : string, initialPair : Array<string>, spoiler : boolean) {
+    console.log("Waiting for Server...");
     this.hubConnection.invoke("InitGame", functor, initialPair, spoiler);
   }
 
   public listenToInfoStep() {
     this.hubConnection.on("InfoStep", (name, pred1, selection, userIsSpoiler, x, y, step) => {
+      console.log("Ready");
       this.gameSteps.next(new Event(
         name, pred1, selection,
         userIsSpoiler, x, y, step
@@ -89,11 +92,13 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
 
   public listenToInfoText() {
     this.hubConnection.on("InfoText", (info : string, over: boolean, step : number, userIsSpoiler : boolean) => {
+      console.log("Ready");
       this.info.next(new InfoEvent(info,over, step, userIsSpoiler))
     })
   }
 
   public sendStep(functor : string, selection : number , states : Array<Number>) {
+    console.log("Waiting for Server...");
     this.hubConnection.invoke("SendStep", functor.toString(), selection, states);
   }
 }

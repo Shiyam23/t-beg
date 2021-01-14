@@ -77,6 +77,7 @@ export class GameComponent implements OnInit {
     });
     if (!event.over) {
       this.startDisabled = false;
+      this.closeSnackbar();
       this.progress.paper.trigger('blank:pointerclick')
     }
   }
@@ -94,6 +95,7 @@ export class GameComponent implements OnInit {
       this.disabled1 = false;
       this.bindGraphToArray(0, false);
       this.startDisabled = false;
+      this.closeSnackbar();
     }
     this.actualStep = 1;
 
@@ -133,6 +135,7 @@ export class GameComponent implements OnInit {
       this.xSelected = this.x == event.selection;
       this.bindGraphToArray(1, false);
       this.startDisabled = false;
+      this.closeSnackbar();
     }
     this.updateLabel(0);
     this.actualStep = 2;
@@ -154,6 +157,7 @@ export class GameComponent implements OnInit {
       this.disabled2 = false;
       this.bindGraphToArray(2, true);
       this.startDisabled = false;
+      this.closeSnackbar();
     }
     this.updateLabel(1);
     this.actualStep = 3;
@@ -168,6 +172,7 @@ export class GameComponent implements OnInit {
       this.updateLabel(2);
       this.bindGraphToArray(3, true);
       this.startDisabled = false;
+      this.closeSnackbar();
     }
     this.actualStep = 4;
   }
@@ -237,6 +242,7 @@ export class GameComponent implements OnInit {
     if (states.length > 0) {
       this.signalR.sendStep(this.progress.selectedFunctor, selection, states);
       this.startDisabled = true;
+      this.openSnackbar();
       this.resetSelection(step-1);
     }
     
@@ -253,4 +259,11 @@ export class GameComponent implements OnInit {
     })
   }
 
+  openSnackbar() {
+    this.progress.snackbar.next("Waiting for Server ...");
+  }
+
+  closeSnackbar() {
+    this.progress.snackbar.next(null);
+  }
 }

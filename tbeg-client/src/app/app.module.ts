@@ -22,6 +22,7 @@ import { GameComponent } from './game/game.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DialogComponent } from './templates/dialog/dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -51,7 +52,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatCheckboxModule,
     MatButtonToggleModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [SignalRService, AppProgressService],
   bootstrap: [AppComponent]
