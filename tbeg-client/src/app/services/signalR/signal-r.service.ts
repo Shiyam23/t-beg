@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import * as SignalR from '@aspnet/signalr';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
+import { DialogComponent } from 'src/app/templates/dialog/dialog.component';
+import { DialogDataType, DialogData } from 'src/app/templates/dialog/dialogData';
 import { Event, InfoEvent } from '../../eventModel';
-
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +18,8 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public initGameView = new Subject<boolean>();
   public gameSteps = new Subject<Event>();
   public info = new Subject<InfoEvent>();
-  
 
-  constructor() { }
-
+  constructor(private dialog : MatDialog) { }
 
   public startConnection() {
 
@@ -37,11 +37,11 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
         this.connected.next(true);
         this.connected.complete();
       })
-      .catch(err => console.log('Error while starting connection' + err))
-  }
+      .catch(_ => this.showError("Error occurred while connecting to Server!\nPlease try again later..."));
+      this.hubConnection.onclose( _ => this.showError("Connection Error! Please reload this Web Application"));
+  } 
 
   public askServer() {
-
     this.hubConnection.invoke("getFunctors")
       .catch(err => console.log(err));
   }
@@ -100,5 +100,16 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public sendStep(functor : string, selection : number , states : Array<Number>) {
     console.log("Waiting for Server...");
     this.hubConnection.invoke("SendStep", functor.toString(), selection, states);
+  }
+
+  private showError(msg : string) {
+    var data : DialogData = {
+      type : DialogDataType.ERROR,
+      content : msg
+    }
+    this.dialog.open(DialogComponent, {
+      data: data,
+      disableClose: true
+    })
   }
 }

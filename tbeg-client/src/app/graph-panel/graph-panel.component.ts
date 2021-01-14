@@ -3,6 +3,9 @@ import { AppProgressService } from '../services/appProgress/app-progress.service
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { State, Link} from '../graphModel'
 import { saveAs } from 'file-saver';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../templates/dialog/dialog.component';
+import { DialogData, DialogDataType } from '../templates/dialog/dialogData';
 
 
 @Component({
@@ -19,13 +22,29 @@ export class GraphPanelComponent implements OnInit {
   @ViewChild('fileSelector')
   fileSelector;
 
-
-  constructor(public progress : AppProgressService, public signalR : SignalRService) { }
+  
+  constructor(
+        public progress : AppProgressService,
+        public signalR : SignalRService,
+        private dialog : MatDialog
+    ) { }
 
   ngOnInit(): void {
   }
 
   startClick = () => {
+      
+    if (State.allStates.length < 2) {
+        var data : DialogData = {
+            type : DialogDataType.ERROR,
+            content: "Graph cannot be empty! Atleast two States are expected."
+        };
+        this.dialog.open(DialogComponent, {
+            data : data
+        });
+        return;
+    }
+
     var states : Array<State> = State.allStates.sort( (a,b) => Number(a.name) - Number(b.name));
     var alphabet : Array<string> = new Array<string>();
     var links : Array<Link> = new Array<Link>();
@@ -61,37 +80,40 @@ export class GraphPanelComponent implements OnInit {
 
 
   loadFromJson = (event : any) => {
-
-
     this.progress.selectedItem = null;
     this.progress.selectedStateView = null;
-
     var file = event.target.files[0];
     var fr = new FileReader();
     fr.onload = () => {
+        try {
+            var json : JSON = JSON.parse(<string>fr.result);
+            if (json["functor"] == this.progress.selectedFunctor) {
+                this.progress.graph.fromJSON(json["graph"]);
+                State.allStates = new Array<State>();
+                Link.allLinks = new Array<Link>();
+                json["states"].forEach( (state,index) => {
+                    var id : string = <string>(json["stateIDs"][index]);
+                    var model  =  <joint.dia.Element> this.progress.graph.getCell(id);
+                    var newState : State = new State(state.name, model, state.isStartState, state.isFinalState);
+                });
 
-        var json : JSON = JSON.parse(<string>fr.result);
-        if (json["functor"] == this.progress.selectedFunctor) {
-            this.progress.graph.fromJSON(json["graph"]);
-            State.allStates = new Array<State>();
-            Link.allLinks = new Array<Link>();
-            json["states"].forEach( (state,index) => {
-                var id : string = <string>(json["stateIDs"][index]);
-                var model  =  <joint.dia.Element> this.progress.graph.getCell(id);
-                var newState : State = new State(state.name, model, state.isStartState, state.isFinalState);
-            });
-
-            json["links"].forEach( (link,index) => {
-                var id : string = <string>(json["linkIDs"][index]);
-                var model  =  <joint.dia.Link> this.progress.graph.getCell(id);
-                var newLink : Link = new Link(link.name, link.source, link.target, link.value, model);
-            });
+                json["links"].forEach( (link,index) => {
+                    var id : string = <string>(json["linkIDs"][index]);
+                    var model  =  <joint.dia.Link> this.progress.graph.getCell(id);
+                    var newLink : Link = new Link(link.name, link.source, link.target, link.value, model);
+                });
+            }
+            else {
+                //TODO create Error message
+                console.error("Not the same functor!!")
+            }
+        } catch (e) {
+            var data : DialogData = {
+                type : DialogDataType.ERROR,
+                content : "An error occurred while reading this file!"
+            }
+            this.dialog.open(DialogComponent, {data: data});
         }
-        else {
-            //TODO create Error message
-            console.error("Not the same functor!!")
-        }
-        
     }
     if (file != null) {
         fr.readAsText(file);
