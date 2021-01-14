@@ -22,12 +22,17 @@ export class State {
         })
     }
 
-    public setColor(color:string) {
-        this.model.attr({
+    public setColor(color: string) {
+        this.model.transition('attrs/body/fill', color, {
+            valueFunction: util.interpolate.hexColor,
+            timingFunction: util.timing.linear,
+            duration: 500
+        })
+        /* this.model.attr({
             body: {
                 fill: color
             }
-        })
+        }) */
     }
 
     public setStrokeColor(color:string) {

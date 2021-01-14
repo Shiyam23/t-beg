@@ -103,12 +103,12 @@ export class GameComponent implements OnInit {
     this.unbindGraphToArray();
     if (Number(this.selectedState.value) == this.x) {
       State.allStates.forEach(state => {
-        if(state.name == this.x.toString()) state.setStrokeColor("darkmagenta");
-        if(state.name == this.y.toString()) state.setStrokeColor("cyan");
+        if(state.name == this.x.toString()) state.setStrokeColor("#8b008b");
+        if(state.name == this.y.toString()) state.setStrokeColor("#00ffff");
         event.pred1.forEach(
           item => {
             if(state.name == (item+1).toString()) {
-              state.setColor("plum");
+              state.setColor("#dda0dd");
               if (!event.userIsSpoiler) this.selStates[0].push(state);
             }
           }
@@ -117,12 +117,12 @@ export class GameComponent implements OnInit {
     }
     else {
       State.allStates.forEach(state => {
-        if(state.name == this.y.toString()) state.setStrokeColor("darkmagenta");
-        if(state.name == this.x.toString()) state.setStrokeColor("cyan");
+        if(state.name == this.y.toString()) state.setStrokeColor("#8b008b");
+        if(state.name == this.x.toString()) state.setStrokeColor("#00ffff");
         event.pred1.forEach(
           item => {
             if(state.name == (item+1).toString()) {
-              state.setColor("plum");
+              state.setColor("#dda0dd");
               if (!event.userIsSpoiler) this.selStates[0].push(state);
             }
           }
@@ -144,7 +144,7 @@ export class GameComponent implements OnInit {
       event.pred1.forEach(
         item => {
           if (state.name == (item+1).toString()) {
-            state.setColor("lightcyan");
+            state.setColor("#e0ffff");
             if (event.userIsSpoiler) this.selStates[1].push(state);
           }
         }
@@ -247,8 +247,8 @@ export class GameComponent implements OnInit {
       if (state.name == this.x.toString() || state.name == this.y.toString())
         state.setStrokeColor("#333333");
       if (this.selStates[0] != null && this.selStates[2] != null) {
-        this.selStates[0].forEach(state => state.setColor('white'))
-        this.selStates[1].forEach(state => state.setColor('white'))
+        this.selStates[0].forEach(state => state.setColor('#ffffff'))
+        this.selStates[1].forEach(state => state.setColor('#ffffff'))
       }
     })
   }
