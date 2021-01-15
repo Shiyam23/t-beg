@@ -22,7 +22,7 @@ export class GraphPanelComponent implements OnInit {
   @ViewChild('fileSelector')
   fileSelector;
 
-  
+
   constructor(
         public progress : AppProgressService,
         public signalR : SignalRService,
@@ -63,6 +63,18 @@ export class GraphPanelComponent implements OnInit {
   }
 
   saveAsJson = () => {
+
+    if (State.allStates.length == 0) {
+        let data : DialogData = {
+            type : DialogDataType.ERROR,
+            content: "Empty graph can not be saved!"
+        };
+        this.dialog.open(DialogComponent, {
+            data : data
+        });
+        return;
+    }
+
     var graph = this.progress.graph.toJSON();
     var stateIDs = State.allStates.map(state => state.model.id);
     var linkIDs = Link.allLinks.map(link => link.model.id);
