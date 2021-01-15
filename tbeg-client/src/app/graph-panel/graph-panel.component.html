@@ -2,13 +2,14 @@
     <div class="settings">
         <div class="settingsContent" *ngIf="progress.selectedStateView == null"></div>
         <div *ngIf="progress.selectedStateView && progress.isStateWindow" class="settingsContent">
-                <mat-form-field class="option" appearance="fill">
+                <!-- For later use, renaming states not available right now -->
+                <!-- <mat-form-field class="option" appearance="fill">
                         <mat-label>Name</mat-label>
                         <input type="number" matInput required [ngModel]="progress.selectedItem.name" (ngModelChange)="setStateName($event)" #stateName="ngModel">
                         <mat-error *ngIf="stateName.hasError('required')">
                         Name is <strong>required</strong>
                         </mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
                 <mat-checkbox class="option" [ngModel]="progress.selectedItem.isStartState" (ngModelChange)="setStateStart($event)">Start state</mat-checkbox>
                 <mat-checkbox class="option" [ngModel]="progress.selectedItem.isFinalState" (ngModelChange)="setStateFinal($event)">Accept state</mat-checkbox>
         </div>

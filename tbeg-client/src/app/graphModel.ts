@@ -10,7 +10,8 @@ export class State {
         private _isStartState: boolean, 
         private _isFinalState: boolean
     ) {
-        State.allStates.push(this);
+        State.allStates.splice(Number.parseInt(_name)-1, 0, this);
+        //State.allStates.push(this);
     }
 
     public setName(name:string) {
@@ -44,10 +45,14 @@ export class State {
     }
 
     public remove(){
+        let states : Array<State> = State.allStates;
         this.model.remove();
         Link.allLinks = Link.allLinks.filter( link => link.source.name != this.name && link.target.name != this.name);
-        var stateIndex : number = State.allStates.indexOf(this);
-        if (stateIndex > -1) State.allStates.splice(stateIndex, 1);
+        var stateIndex : number = states.indexOf(this);
+        if (stateIndex > -1) states.splice(stateIndex, 1);
+        for (let i : number = stateIndex; i < states.length; i = i + 1) {
+            states[i].setName((Number.parseInt(states[i]._name)-1).toString());
+        }
     }
 
     public get name() : string {

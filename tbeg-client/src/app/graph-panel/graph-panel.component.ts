@@ -106,7 +106,7 @@ export class GraphPanelComponent implements OnInit {
                 json["states"].forEach( (state,index) => {
                     var id : string = <string>(json["stateIDs"][index]);
                     var model  =  <joint.dia.Element> this.progress.graph.getCell(id);
-                    var newState : State = new State(state.name, model, state.isStartState, state.isFinalState);
+                    var newState : State = new State(state.name.toString(), model, state.isStartState, state.isFinalState);
                 });
 
                 json["links"].forEach( (link,index) => {
