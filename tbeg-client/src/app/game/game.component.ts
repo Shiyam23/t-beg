@@ -6,7 +6,7 @@ import { Event, InfoEvent, StepBackEvent } from '../eventModel';
 import { State } from '../graphModel';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogData, DialogDataType, DialogComponent } from '../templates/dialog/dialog.component';
+import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '../templates/dialog/dialog.component';
 
 @Component({
   selector: 'app-game',
@@ -68,6 +68,7 @@ export class GameComponent implements OnInit {
   infoMessage(event : InfoEvent) {
 
     var data : DialogData = {
+      option : DialogDataOption.DISMISS,
       type : event.over ? DialogDataType.GAMEOVER : DialogDataType.ERROR,
       content : event.name
     }

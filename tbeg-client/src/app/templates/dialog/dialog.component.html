@@ -1,8 +1,17 @@
 <div class="dialog">
-<div [ngSwitch]="data.type">
-    <p *ngSwitchCase="DialogDataType.ERROR">Error</p>
-    <p *ngSwitchCase="DialogDataType.INFO">Info</p>
-    <p *ngSwitchCase="DialogDataType.GAMEOVER">Game Over!</p>
-</div>
-<div style="white-space: pre-line">{{data.content}}</div>
+    <div class="aboveButton">
+        <div [ngSwitch]="data.type">
+            <h1 *ngSwitchCase="DialogDataType.ERROR">Error</h1>
+            <h1 *ngSwitchCase="DialogDataType.INFO">Warning</h1>
+            <h1 *ngSwitchCase="DialogDataType.GAMEOVER">Game Over</h1>
+        </div>
+        <hr>
+        <div class="content">
+            {{data.content}}
+        </div>
+    </div>
+    <div class="buttons">
+        <div *ngIf="data.option == DialogDataOption.ACCEPT" class="button" style="background-color: lightgreen;"  [mat-dialog-close]="'Accept'">Accept</div>
+        <div class="button" style="background-color: lightcoral;" [mat-dialog-close]="'Dismiss'">Dismiss</div>
+    </div>
 </div>

@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as SignalR from '@aspnet/signalr';
 import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
-import { DialogDataType, DialogData, DialogComponent } from 'src/app/templates/dialog/dialog.component';
+import { DialogDataType, DialogData, DialogComponent, DialogDataOption } from 'src/app/templates/dialog/dialog.component';
 import { Event, InfoEvent, StepBackEvent } from '../../eventModel';
 
 @Injectable({
@@ -113,6 +113,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
 
   private showError(msg : string) {
     var data : DialogData = {
+      option: DialogDataOption.DISMISS,
       type : DialogDataType.ERROR,
       content : msg
     }

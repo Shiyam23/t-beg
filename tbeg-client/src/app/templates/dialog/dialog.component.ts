@@ -9,6 +9,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DialogComponent implements OnInit {
 
   DialogDataType = DialogDataType;
+  DialogDataOption = DialogDataOption;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
@@ -19,6 +20,7 @@ export class DialogComponent implements OnInit {
 export interface DialogData {
 
   type : DialogDataType,
+  option: DialogDataOption,
   content: string
 
 }
@@ -28,5 +30,12 @@ export enum DialogDataType{
   INFO,
   ERROR,
   GAMEOVER
+
+}
+
+export enum DialogDataOption{
+
+  DISMISS,
+  ACCEPT
 
 }

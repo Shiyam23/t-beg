@@ -4,7 +4,7 @@ import { SignalRService } from '../services/signalR/signal-r.service';
 import { State, Link} from '../graphModel'
 import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogData, DialogDataType, DialogComponent } from '../templates/dialog/dialog.component';
+import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '../templates/dialog/dialog.component';
 
 
 @Component({
@@ -35,6 +35,7 @@ export class GraphPanelComponent implements OnInit {
       
     if (State.allStates.length < 2) {
         var data : DialogData = {
+            option: DialogDataOption.DISMISS,
             type : DialogDataType.ERROR,
             content: "Graph cannot be empty! Atleast two States are expected."
         };
@@ -65,6 +66,7 @@ export class GraphPanelComponent implements OnInit {
 
     if (State.allStates.length == 0) {
         let data : DialogData = {
+            option: DialogDataOption.DISMISS,
             type : DialogDataType.ERROR,
             content: "Empty graph can not be saved!"
         };
@@ -120,6 +122,7 @@ export class GraphPanelComponent implements OnInit {
             }
         } catch (e) {
             var data : DialogData = {
+                option: DialogDataOption.DISMISS,
                 type : DialogDataType.ERROR,
                 content : "An error occurred while reading this file!"
             }
