@@ -6,8 +6,7 @@ import { Event, InfoEvent, StepBackEvent } from '../eventModel';
 import { State } from '../graphModel';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../templates/dialog/dialog.component';
-import { DialogData, DialogDataType } from '../templates/dialog/dialogData';
+import { DialogData, DialogDataType, DialogComponent } from '../templates/dialog/dialog.component';
 
 @Component({
   selector: 'app-game',

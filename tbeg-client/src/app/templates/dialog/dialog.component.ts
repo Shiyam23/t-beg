@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData, DialogDataType } from './dialogData';
 
 @Component({
   selector: 'app-dialog',
@@ -15,5 +14,19 @@ export class DialogComponent implements OnInit {
 
   ngOnInit(): void {
   }
+}
+
+export interface DialogData {
+
+  type : DialogDataType,
+  content: string
+
+}
+
+export enum DialogDataType{
+
+  INFO,
+  ERROR,
+  GAMEOVER
 
 }

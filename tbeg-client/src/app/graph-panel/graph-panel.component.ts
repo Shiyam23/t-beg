@@ -4,8 +4,7 @@ import { SignalRService } from '../services/signalR/signal-r.service';
 import { State, Link} from '../graphModel'
 import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../templates/dialog/dialog.component';
-import { DialogData, DialogDataType } from '../templates/dialog/dialogData';
+import { DialogData, DialogDataType, DialogComponent } from '../templates/dialog/dialog.component';
 
 
 @Component({
