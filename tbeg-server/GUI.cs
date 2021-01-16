@@ -140,6 +140,18 @@ namespace TBeg
             SendStep.Invoke(this, new ViewEvent_GameStepUser(functor, "test", new List<int>(states), selection));
         }
 
+        public void SendStepBackToGame(string functor)
+        {
+            try
+            {
+                StepBack.Invoke(this, new ViewEvent_Game("test", functor));
+            }
+            catch
+            {
+
+            }
+        }
+
 
         public void FileInfoToUser(IModel model, ModelEvent_InfoFileOp e) {}
         public void UpdateToGraphView(IModel model, ModelEvent_UpdateGraphView e) {}
@@ -199,19 +211,24 @@ namespace TBeg
         public void StepBack2(IModel model, ModelEvent_InfoStep e){
             int[] pred1 = e.predicate_1?.ToArray(); 
             TBeg.context.Clients.Client(this.connectionId)
-            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -2);
+            .SendAsync("StepBack", e.name, pred1, null, e.selection, e.UserisSpoiler, e.x, e.y, -2);
+            Console.WriteLine("StepBack 2:");
             Console.WriteLine(e);
         }
         public void StepBack3(IModel model, ModelEvent_InfoStep e){
-            int[] pred1 = e.predicate_1?.ToArray(); 
+            int[] pred1 = e.predicate_1?.ToArray();
             TBeg.context.Clients.Client(this.connectionId)
-            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -3);
+            .SendAsync("StepBack", e.name, pred1, null, e.selection, e.UserisSpoiler, e.x, e.y, -3);
+            Console.WriteLine("StepBack 3:");
             Console.WriteLine(e);
         }
         public void StepBack4(IModel model, ModelEvent_InfoStep e){
-            int[] pred1 = e.predicate_1?.ToArray(); 
+            int[] pred1 = e.predicate_1?.ToArray();
+            int[] pred2 = e.predicate_2?.ToArray();
+            Console.WriteLine("pred 2 is: " + pred2[0]);
             TBeg.context.Clients.Client(this.connectionId)
-            .SendAsync("InfoStep1", e.name, pred1, e.selection, e.UserisSpoiler, e.x, e.y, -4);
+            .SendAsync("StepBack", e.name, pred1, pred2, e.selection, e.UserisSpoiler, e.x, e.y, -4);
+            Console.WriteLine("StepBack 4:");
             Console.WriteLine(e);
         }
     }

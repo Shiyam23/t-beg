@@ -64,6 +64,13 @@ namespace Hubs
             return Task.CompletedTask;
         }
 
+        public Task SendStepBack(string functor) {
+            ((TBeg.TBeg)Context.Items["tbeg"]).SendStepBackToGame(functor);
+            return Task.CompletedTask;
+        }
+
+
+
 
         public static void UpdateFunctorList(ref Dictionary<String, IModel> models, string filename)
         {

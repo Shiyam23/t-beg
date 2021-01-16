@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
-import { Event, InfoEvent } from '../eventModel';
+import { Event, InfoEvent, StepBackEvent } from '../eventModel';
 import { State } from '../graphModel';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,15 +17,14 @@ import { DialogData, DialogDataType } from '../templates/dialog/dialogData';
 export class GameComponent implements OnInit {
 
   gameSteps : Subscription;
+  backSteps : Subscription;
   info : Subscription;
   actualStep : number;
   startDisabled : boolean = true;
   selStatesString : Array<string> = ["{ - }","{ - }","{ - }","{ - }"];
   selStates : Array<Array<State>> = new Array<Array<State>>(4);
   x : number = 1;
-  xSelected : boolean = true;
   y : number = 2;
-  p1Selected : boolean = true;
   disabled1 : boolean = true;
   disabled2 : boolean = true;
 
@@ -44,6 +43,7 @@ export class GameComponent implements OnInit {
     
     this.signalR.listenToInfoStep();
     this.signalR.listenToInfoText();
+    this.signalR.listenToStepBack();
     this.gameSteps = this.signalR.gameSteps.subscribe((event : Event) => {
       switch (event.step) {
         case 0:
@@ -56,10 +56,9 @@ export class GameComponent implements OnInit {
           this.infoStep3(event); break;
         case 4:
           this.infoStep4(event); break;
-        default:
-          break;
       }
     });
+    this.backSteps = this.signalR.backSteps.subscribe((event : StepBackEvent) => this.stepBack(event));
     this.info = this.signalR.info.subscribe((event : InfoEvent) => {
       this.infoMessage(event);
     });
@@ -83,8 +82,10 @@ export class GameComponent implements OnInit {
   }
 
   infoStep0(event : Event) {
+    this.selectedState._buttonToggles.first.checked = true;
     this.resetMarkers();
     this.unbindGraphToArray();
+    this.disabled2 = true;
     for (let i = 0; i < 4; i++) {
       this.selStates[i] = new Array<State>();
       this.updateLabel(i)
@@ -101,47 +102,19 @@ export class GameComponent implements OnInit {
 
   }
   infoStep1(event : Event) {
+    this.checkFirstStateButton(this.x == event.selection);
     this.disabled1 = true;
     this.unbindGraphToArray();
-    if (Number(this.selectedState.value) == this.x) {
-      State.allStates.forEach(state => {
-        if(state.name == this.x.toString()) state.setStrokeColor("#8b008b");
-        if(state.name == this.y.toString()) state.setStrokeColor("#00ffff");
-        event.pred1.forEach(
-          item => {
-            if(state.name == (item+1).toString()) {
-              state.setColor("#dda0dd");
-              if (!event.userIsSpoiler) this.selStates[0].push(state);
-            }
-          }
-        )
-      })
-    }
-    else {
-      State.allStates.forEach(state => {
-        if(state.name == this.y.toString()) state.setStrokeColor("#8b008b");
-        if(state.name == this.x.toString()) state.setStrokeColor("#00ffff");
-        event.pred1.forEach(
-          item => {
-            if(state.name == (item+1).toString()) {
-              state.setColor("#dda0dd");
-              if (!event.userIsSpoiler) this.selStates[0].push(state);
-            }
-          }
-        )
-      })
-    }
+    this.setMarkers(event);
     if (!event.userIsSpoiler) {
-      this.xSelected = this.x == event.selection;
       this.bindGraphToArray(1, false);
       this.startDisabled = false;
       this.closeSnackbar();
     }
-    this.updateLabel(0);
     this.actualStep = 2;
-    
   }
   infoStep2(event : Event) {
+    this.disabled1 = true;
     this.unbindGraphToArray();
     State.allStates.forEach(state => {
       event.pred1.forEach(
@@ -164,11 +137,11 @@ export class GameComponent implements OnInit {
   }
 
   infoStep3(event : Event) {
+    this.checkFirstPredButton(event.selection == 0) ;
     this.disabled2 = true;
     this.unbindGraphToArray();
     if (!event.userIsSpoiler) {
       this.selStates[2].push(State.allStates.find(state => state.name == (event.pred1[0]+1).toString()));
-      this.p1Selected = event.selection == 0;
       this.updateLabel(2);
       this.bindGraphToArray(3, true);
       this.startDisabled = false;
@@ -183,6 +156,25 @@ export class GameComponent implements OnInit {
       this.selStates[3].push(State.allStates.find(state => state.name == (event.selection+1).toString()));
       this.updateLabel(3);
     }
+  }
+
+  stepBack(event : StepBackEvent) {
+    if (event.x != null && event.y != null) {
+      this.x = event.x;
+      this.y = event.y;
+      if (event.step == -3 || event.step == -4) {
+        this.checkFirstStateButton(event.x == event.selection);
+      }
+      this.setMarkers(event);
+    }
+    /* if (event.pred2 != null) {
+      State.allStates.forEach((state) => {
+        event.pred2.forEach((item) => {
+          if (Number(state.name) == item) this.selStates[1].push(state)
+        })
+      });
+      this.updateLabel(1);
+    } */
   }
 
   bindGraphToArray(i : number, singleItem : boolean) {
@@ -216,7 +208,6 @@ export class GameComponent implements OnInit {
   }
 
   updateLabel(i : number) {
-    
     var string;
     if (this.selStates[i].length > 0) {
       string = 
@@ -247,16 +238,63 @@ export class GameComponent implements OnInit {
     }
     
   }
+  
+  backClick = () => {
+    this.resetMarkers();
+    for (let i : number = 0; i < 4; i++) {
+      this.selStates[i] = new Array<State>();
+      this.updateLabel(i);
+    }
+    this.actualStep -= 3;
+    this.signalR.sendStepBack(this.progress.selectedFunctor);
+    this.startDisabled = true;
+    this.openSnackbar();
+  }
+
+
 
   resetMarkers() {
     State.allStates.forEach(state => {
       if (state.name == this.x.toString() || state.name == this.y.toString())
-        state.setStrokeColor("#333333");
-      if (this.selStates[0] != null && this.selStates[2] != null) {
-        this.selStates[0].forEach(state => state.setColor('#ffffff'))
-        this.selStates[1].forEach(state => state.setColor('#ffffff'))
+        state.setStrokeColor("#333333"); 
+    })
+    if (this.selStates[0] != null && this.selStates[2] != null) {
+      this.selStates[0].forEach(state => state.setColor('#ffffff'))
+      this.selStates[1].forEach(state => state.setColor('#ffffff'))
+    }
+  }
+
+  setMarkers(event: Event | StepBackEvent) {
+    State.allStates.forEach(state => {
+      if (this.selectedState._buttonToggles.first.checked) {
+        if(state.name == this.x.toString()) state.setStrokeColor("#8b008b");
+        if(state.name == this.y.toString()) state.setStrokeColor("#00ffff");
+      }
+      else {
+        if(state.name == this.y.toString()) state.setStrokeColor("#8b008b");
+        if(state.name == this.x.toString()) state.setStrokeColor("#00ffff");
+      }
+      event.pred1.forEach(
+        item => {
+          if(state.name == (item+1).toString()) {
+            state.setColor("#dda0dd");
+            if (!event.userIsSpoiler || event.step < 0) this.selStates[0].push(state);
+          }
+        }
+      );
+      if (event instanceof StepBackEvent && event.pred2 != null) {
+        event.pred2.forEach(
+          item => {
+            if(state.name == (item+1).toString()) {
+              state.setColor("#e0ffff");
+              this.selStates[1].push(state);
+            }
+          }
+        );
+        this.updateLabel(1);
       }
     })
+    this.updateLabel(0);
   }
 
   openSnackbar() {
@@ -265,5 +303,14 @@ export class GameComponent implements OnInit {
 
   closeSnackbar() {
     this.progress.snackbar.next(null);
+  }
+
+  checkFirstStateButton(bool : boolean) {
+    this.selectedState._buttonToggles.first.checked = bool;
+    this.selectedState._buttonToggles.last.checked = !bool;
+  }
+  checkFirstPredButton(bool : boolean) {
+    this.selectedPred._buttonToggles.first.checked = bool;
+    this.selectedPred._buttonToggles.last.checked = !bool;
   }
 }

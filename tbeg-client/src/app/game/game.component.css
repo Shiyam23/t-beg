@@ -75,28 +75,42 @@
     font-size: 1vw;
 }
 
+.buttons{
+    width: inherit;
+    justify-content: space-evenly;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
 
-.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+:host ::ng-deep .button{
+    padding: 1vw;
+    width: auto;
+    height: auto;
+}
+
+
+::ng-deep .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
     width: 2vw;
     color: white;
     background-color: black;
 }
 
-.mat-button-toggle-appearance-standard {
+::ng-deep .mat-button-toggle-appearance-standard {
     color: black;
     width: 2vw;
     padding: 2px;
 }
 
-.mat-button-toggle-appearance-standard:focus{
+::ng-deep .mat-button-toggle-appearance-standard:focus{
     outline: none
 }
 
-.mat-button-toggle-disabled{
+::ng-deep .mat-button-toggle-disabled{
     opacity: 0.4;
 }
 
-.mat-button-toggle-disabled.selection{
+::ng-deep .mat-button-toggle-disabled.selection{
     border-color: grey;
 }
 

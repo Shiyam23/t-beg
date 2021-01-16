@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
 import { DialogComponent } from 'src/app/templates/dialog/dialog.component';
 import { DialogDataType, DialogData } from 'src/app/templates/dialog/dialogData';
-import { Event, InfoEvent } from '../../eventModel';
+import { Event, InfoEvent, StepBackEvent } from '../../eventModel';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,7 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   public validator = new Subject<Array<string>>();
   public initGameView = new Subject<boolean>();
   public gameSteps = new Subject<Event>();
+  public backSteps = new Subject<StepBackEvent>();
   public info = new Subject<InfoEvent>();
 
   constructor(private dialog : MatDialog) { }
@@ -76,13 +77,11 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
   }
 
   public initGame(functor : string, initialPair : Array<string>, spoiler : boolean) {
-    console.log("Waiting for Server...");
     this.hubConnection.invoke("InitGame", functor, initialPair, spoiler);
   }
 
   public listenToInfoStep() {
     this.hubConnection.on("InfoStep", (name, pred1, selection, userIsSpoiler, x, y, step) => {
-      console.log("Ready");
       this.gameSteps.next(new Event(
         name, pred1, selection,
         userIsSpoiler, x, y, step
@@ -92,14 +91,25 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
 
   public listenToInfoText() {
     this.hubConnection.on("InfoText", (info : string, over: boolean, step : number, userIsSpoiler : boolean) => {
-      console.log("Ready");
       this.info.next(new InfoEvent(info,over, step, userIsSpoiler))
     })
   }
 
   public sendStep(functor : string, selection : number , states : Array<Number>) {
-    console.log("Waiting for Server...");
     this.hubConnection.invoke("SendStep", functor.toString(), selection, states);
+  }
+
+  public sendStepBack(functor : string) {
+    this.hubConnection.invoke("SendStepBack", functor.toString());
+  }
+
+  public listenToStepBack() {
+    this.hubConnection.on("StepBack", (name, pred1, pred2, selection, userIsSpoiler, x, y, step) => {
+      this.backSteps.next(new StepBackEvent(
+        name, pred1, pred2, selection,
+        userIsSpoiler, x, y, step
+      ))
+    });
   }
 
   private showError(msg : string) {
@@ -112,4 +122,6 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
       disableClose: true
     })
   }
+
+
 }

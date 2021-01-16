@@ -8,7 +8,7 @@ import { Link, State } from 'src/app/graphModel';
 export class AppProgressService {
 
   //TODO: set this to 0 later
-  appProgress : number = 1;
+  appProgress : number = 0;
   maxProgress : number = 5;
   selectedFunctor : string;
 

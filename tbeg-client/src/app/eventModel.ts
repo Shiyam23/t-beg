@@ -19,6 +19,29 @@ export class Event {
     }
 }
 
+export class StepBackEvent {
+    
+    name : string;
+    pred1 : number[];
+    pred2 : number[];
+    selection : number;
+    userIsSpoiler : boolean;
+    x : number;
+    y : number;
+    step : number;
+
+    constructor (name : string, pred1 : number[], pred2 : number[], selection : number, userIsSpoiler : boolean,x : number, y : number, step : number) {
+        this.name = name;
+        this.pred1 = pred1;
+        this.pred2 = pred2;
+        this.selection = selection;
+        this.userIsSpoiler = userIsSpoiler;
+        this.x = x;
+        this.y = y;
+        this.step = step;
+    }
+}
+
 export class InfoEvent {
 
     name : string;
