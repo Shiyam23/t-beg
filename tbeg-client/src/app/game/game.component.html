@@ -1,35 +1,43 @@
 <div id="panel">
     <div class="settings">
-        <label class="text">Step 1:</label>
-        <label class="info">Spoiler chooses one state and predicate</label>
-        <div class="step1Content">
-            <mat-button-toggle-group class="selection" [disabled]="disabled1" #selectedState="matButtonToggleGroup" aria-label="Selected Predicate">
-                <mat-button-toggle class="selectionItem" [checked]="true" [value]="x">{{x}}</mat-button-toggle>
-                <mat-button-toggle class="selectionItem" [checked]="false" [value]="y">{{y}}</mat-button-toggle>
-            </mat-button-toggle-group>
-            <label class="states">{{selStatesString[0]}}</label>
+        <div #steps class="stepContent">
+            <label class="text">Step 1:</label>
+            <label class="info">Spoiler chooses one state and predicate</label>
+            <div class="selectionContent">
+                <mat-button-toggle-group class="selection" [disabled]="disabled1" #selectedState="matButtonToggleGroup" aria-label="Selected Predicate">
+                    <mat-button-toggle class="selectionItem" [checked]="true" [value]="x">{{x}}</mat-button-toggle>
+                    <mat-button-toggle class="selectionItem" [checked]="false" [value]="y">{{y}}</mat-button-toggle>
+                </mat-button-toggle-group>
+                <label class="states">{{selStatesString[0]}}</label>
+            </div>
         </div>
         <hr style="width: 99%;">
-        <label class="text">Step 2:</label>
-        <label class="info">Duplicator answers based on the other state such that Fp_1 (ts(s)) <=^F Fp_2 (ts(t)) holds</label>
-        <div class="step1Content">
-            <label class="states">{{selStatesString[1]}}</label>
+        <div #steps class="stepContent">
+            <label class="text">Step 2:</label>
+            <label class="info">Duplicator answers based on the other state such that Fp_1 (ts(s)) <=^F Fp_2 (ts(t)) holds</label>
+            <div class="selectionContent">
+                <label class="states">{{selStatesString[1]}}</label>
+            </div>
         </div>
         <hr style="width: 99%;">
-        <label class="text">Step 3:</label>
-        <label class="info">Spoiler chooses pi and some x\' s.t. pi(x\')=1:</label>
-        <div class="step1Content">
-            <mat-button-toggle-group class="selection" [disabled]="disabled2" #selectedPred="matButtonToggleGroup" aria-label="Selected Predicate">
-                <mat-button-toggle class="selectionItem" [checked]="true" value="0">p1</mat-button-toggle>
-                <mat-button-toggle class="selectionItem" [checked]="false" value="1">p2</mat-button-toggle>
-            </mat-button-toggle-group>
-            <label class="states">{{selStatesString[2]}}</label>
+        <div #steps class="stepContent">
+            <label class="text">Step 3:</label>
+            <label class="info">Spoiler chooses pi and some x\' s.t. pi(x\')=1:</label>
+            <div class="selectionContent">
+                <mat-button-toggle-group class="selection" [disabled]="disabled2" #selectedPred="matButtonToggleGroup" aria-label="Selected Predicate">
+                    <mat-button-toggle class="selectionItem" [checked]="true" value="0">p1</mat-button-toggle>
+                    <mat-button-toggle class="selectionItem" [checked]="false" value="1">p2</mat-button-toggle>
+                </mat-button-toggle-group>
+                <label class="states">{{selStatesString[2]}}</label>
+            </div>
         </div>
         <hr style="width: 99%;">
-        <label class="text">Step 4:</label>
-        <label class="info">Duplicator chooses some y\' s.t. pj(y\')=1 and i != j</label>
-        <div class="step1Content">
-            <label class="states">{{selStatesString[3]}}</label>
+        <div #steps class="stepContent">
+            <label class="text">Step 4:</label>
+            <label class="info">Duplicator chooses some y\' s.t. pj(y\')=1 and i != j</label>
+            <div class="selectionContent">
+                <label class="states">{{selStatesString[3]}}</label>
+            </div>
         </div>
     </div>
     <div class="buttons">

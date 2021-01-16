@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, ViewRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
@@ -30,6 +30,7 @@ export class GameComponent implements OnInit {
 
   @ViewChild('selectedState') selectedState : MatButtonToggleGroup;
   @ViewChild('selectedPred') selectedPred : MatButtonToggleGroup;
+  @ViewChildren('steps') steps : QueryList<ElementRef>;
 
 
   constructor(
@@ -57,6 +58,7 @@ export class GameComponent implements OnInit {
         case 4:
           this.infoStep4(event); break;
       }
+      this.highlightStep(this.actualStep);
     });
     this.backSteps = this.signalR.backSteps.subscribe((event : StepBackEvent) => this.stepBack(event));
     this.info = this.signalR.info.subscribe((event : InfoEvent) => {
@@ -312,5 +314,12 @@ export class GameComponent implements OnInit {
   checkFirstPredButton(bool : boolean) {
     this.selectedPred._buttonToggles.first.checked = bool;
     this.selectedPred._buttonToggles.last.checked = !bool;
+  }
+
+  highlightStep(i : number) {
+    this.steps.forEach((item : ElementRef, j) => {
+      if (i - 1 == j) item.nativeElement.style.backgroundColor = j % 2 == 0 ? "#dda0dd" : "#e0ffff";
+      else item.nativeElement.style.backgroundColor = "white"
+    })
   }
 }
