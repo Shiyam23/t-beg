@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, ViewRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, ViewRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
@@ -13,7 +13,7 @@ import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '.
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit ,AfterViewInit {
 
   gameSteps : Subscription;
   backSteps : Subscription;
@@ -64,6 +64,27 @@ export class GameComponent implements OnInit {
       this.infoMessage(event);
     });
   }
+
+  ngAfterViewInit() {  
+    this.loadScript();
+  }
+
+
+  public loadScript() {
+    let body = <HTMLDivElement> document.body;
+    let configuration = document.createElement('script');
+    configuration.type = 'text/x-mathjax-config';
+    configuration.innerHTML = 'MathJax.Hub.Config({ showMathMenu: false, tex2jax: {inlineMath: [[\"$\",\"$\"], [\"\\(\",\"\\)\"]],processEscapes: true}});';
+    configuration.async = true;
+    configuration.defer = true;
+    body.appendChild(configuration);
+    let sourceScript = document.createElement('script');
+    sourceScript.innerHTML = '';
+    sourceScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_SVG';
+    sourceScript.async = true;
+    sourceScript.defer = true;
+    body.appendChild(sourceScript);
+}
 
   infoMessage(event : InfoEvent) {
 
