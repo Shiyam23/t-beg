@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { State } from '../graphModel';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
+import { DialogComponent, DialogData, DialogDataType, DialogDataOption} from "../templates/dialog/dialog.component";
 
 @Component({
   selector: 'app-game-init',
@@ -19,7 +21,11 @@ export class GameInitComponent implements OnInit {
   highlighter : joint.dia.Graph;
 
 
-  constructor(public progress :  AppProgressService, public signalR : SignalRService) {
+  constructor(
+    public progress :  AppProgressService,
+    public signalR : SignalRService,
+    private dialog : MatDialog
+    ) {
     this.selectedStates = new Array<State>();
     this.paper = this.progress.paper;
     this.graph = this.progress.graph;
@@ -65,13 +71,26 @@ export class GameInitComponent implements OnInit {
   }
 
   public startClick = () => {
-    this.progress.initialPair = this.selectedStates;
-    var stateNames = this.selectedStates.map(state => state.name.toString())
-    this.progress.stateNames = stateNames;
-    this.paper.trigger('blank:pointerclick');
-    this.paper.unbind('element:pointerclick');
-    this.paper.unbind('blank:pointerclick');
-    this.progress.forward();
+    
+    if (this.selectedStates.length < 2) {
+      let data : DialogData = {
+        option: DialogDataOption.DISMISS,
+        type: DialogDataType.ERROR,
+        content: "You have to select two states!"
+      }
+      this.dialog.open(DialogComponent,{
+        data: data
+      })
+    }
+    else {
+      this.progress.initialPair = this.selectedStates;
+      var stateNames = this.selectedStates.map(state => state.name.toString())
+      this.progress.stateNames = stateNames;
+      this.paper.trigger('blank:pointerclick');
+      this.paper.unbind('element:pointerclick');
+      this.paper.unbind('blank:pointerclick');
+      this.progress.forward();
+    }
   }
 
   public updateState() {
