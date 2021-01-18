@@ -274,12 +274,27 @@ export class GameComponent implements OnInit, OnDestroy {
   }
   
   backClick = () => {
+    if (
+      this.x == Number(this.progress.stateNames[0]) &&
+      this.y == Number(this.progress.stateNames[1]) &&
+      (this.actualStep == 1 || this.actualStep == 2)
+    ) {
+      let data : DialogData = {
+        type: DialogDataType.ERROR,
+        option: DialogDataOption.DISMISS,
+        content: "You can not go back any further!"
+      }
+      this.dialog.open(DialogComponent, {
+        data: data,
+      })
+      return;
+    }
     this.resetMarkers();
     for (let i : number = 0; i < 4; i++) {
       this.selStates[i] = new Array<State>();
       this.updateLabel(i);
     }
-    this.actualStep -= 3;
+    this.actualStep = (this.actualStep - 3) % 4;
     this.signalR.sendStepBack(this.progress.selectedFunctor);
     this.startDisabled = true;
     this.openSnackbar();
