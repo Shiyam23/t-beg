@@ -62,37 +62,55 @@ export class GraphPanelComponent implements OnInit {
     })
   }
 
-  saveAsJson = () => {
-
-    if (State.allStates.length == 0) {
-        let data : DialogData = {
-            option: DialogDataOption.DISMISS,
-            type : DialogDataType.ERROR,
-            content: "Empty graph can not be saved!"
-        };
-        this.dialog.open(DialogComponent, {
-            data : data
-        });
-        return;
+    saveAsJson = () => {
+        if (State.allStates.length == 0) {
+            let data : DialogData = {
+                option: DialogDataOption.DISMISS,
+                type : DialogDataType.ERROR,
+                content: "Empty graph can not be saved!"
+            };
+            this.dialog.open(DialogComponent, {
+                data : data
+            });
+            return;
+        }
+        var graph = this.progress.graph.toJSON();
+        var stateIDs = State.allStates.map(state => state.model.id);
+        var linkIDs = Link.allLinks.map(link => link.model.id);
+        var data = {
+            functor: this.progress.selectedFunctor,
+            graph: graph,
+            states: State.allStates,
+            stateIDs: stateIDs,
+            links: Link.allLinks,
+            linkIDs: linkIDs,
+        }
+        var blob = new Blob([JSON.stringify(data)], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "graph.txt");
     }
 
-    var graph = this.progress.graph.toJSON();
-    var stateIDs = State.allStates.map(state => state.model.id);
-    var linkIDs = Link.allLinks.map(link => link.model.id);
-    var data = {
-        functor: this.progress.selectedFunctor,
-        graph: graph,
-        states: State.allStates,
-        stateIDs: stateIDs,
-        links: Link.allLinks,
-        linkIDs: linkIDs,
+    load = (event : any) => {
+        if (State.allStates.length != 0) {
+            console.log("TEST")
+            let data : DialogData = {
+                type: DialogDataType.INFO,
+                option: DialogDataOption.ACCEPT,
+                content:    "Your actual graph is going to be deleted if you load another graph from file." +
+                            "You want to proceed?"
+            }   
+            let dialogRef = this.dialog.open(DialogComponent, {
+                data: data,
+                disableClose: true,    
+            })
+            dialogRef.afterClosed().subscribe(result => {
+                if (result == "Accept") this.loadFromJson(event);
+            })   
+        }
+        else this.loadFromJson(event);
     }
-    var blob = new Blob([JSON.stringify(data)], {type: "text/plain;charset=utf-8"});
-    saveAs(blob, "graph.txt");
-}
-
 
   loadFromJson = (event : any) => {
+    
     this.progress.selectedItem = null;
     this.progress.selectedStateView = null;
     var file = event.target.files[0];

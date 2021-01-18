@@ -37,7 +37,7 @@
         <hr style="width: 100%;">
         <div class="fileArea">
             <div class="fileArea">
-                    <input id="fileSelector" type="file" accept=".txt" style="display: none;" (change)="loadFromJson($event)">
+                    <input id="fileSelector" type="file" accept=".txt" style="display: none;" (change)="load($event)">
                     <label class="file" for="fileSelector">Load</label>
                     <label class="file" (click)="saveAsJson()">Save</label>
             </div>
