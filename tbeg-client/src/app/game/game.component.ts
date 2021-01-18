@@ -24,8 +24,8 @@ export class GameComponent implements OnInit, OnDestroy {
   startDisabled : boolean = true;
   selStatesString : Array<string> = ["{ - }","{ - }","{ - }","{ - }"];
   selStates : Array<Array<State>> = new Array<Array<State>>(4);
-  x : number = 1;
-  y : number = 2;
+  x : number = Number(this.progress.stateNames[0]);
+  y : number = Number(this.progress.stateNames[1]);
   disabled1 : boolean = true;
   disabled2 : boolean = true;
   rendered : boolean = true;
