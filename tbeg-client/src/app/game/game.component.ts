@@ -28,7 +28,6 @@ export class GameComponent implements OnInit, OnDestroy {
   y : number = Number(this.progress.stateNames[1]);
   disabled1 : boolean = true;
   disabled2 : boolean = true;
-  rendered : boolean = true;
   
   @ViewChild('selectedState') selectedState : MatButtonToggleGroup;
   @ViewChild('selectedPred') selectedPred : MatButtonToggleGroup;
@@ -287,6 +286,21 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   resetClick = () => {
+    let data : DialogData = {
+      type: DialogDataType.INFO,
+      option: DialogDataOption.ACCEPT,
+      content: "If you reset the game you will go back to the game setup screen. Do you really want to reset?"
+    }
+    let dialogRef = this.dialog.open(DialogComponent, {
+      data: data,
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result == "Accept") this.resetGame();
+    })
+  }
+
+  resetGame = () => {
     this.resetMarkers();
     this.signalR.sendReset(this.progress.selectedFunctor);
     for (let i : number = 0; i < 4; i++) {
@@ -295,7 +309,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.actualStep -= 0;
     this.progress.appProgress--;
   }
-
 
 
   resetMarkers() {

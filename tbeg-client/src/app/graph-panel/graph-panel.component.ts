@@ -91,7 +91,6 @@ export class GraphPanelComponent implements OnInit {
 
     load = (event : any) => {
         if (State.allStates.length != 0) {
-            console.log("TEST")
             let data : DialogData = {
                 type: DialogDataType.INFO,
                 option: DialogDataOption.ACCEPT,
