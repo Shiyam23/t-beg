@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { Event, InfoEvent, StepBackEvent } from '../eventModel';
@@ -8,12 +8,14 @@ import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '../templates/dialog/dialog.component';
 
+declare var MathJax : any;
+
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   gameSteps : Subscription;
   backSteps : Subscription;
@@ -26,7 +28,8 @@ export class GameComponent implements OnInit {
   y : number = 2;
   disabled1 : boolean = true;
   disabled2 : boolean = true;
-
+  rendered : boolean = true;
+  
   @ViewChild('selectedState') selectedState : MatButtonToggleGroup;
   @ViewChild('selectedPred') selectedPred : MatButtonToggleGroup;
   @ViewChildren('steps') steps : QueryList<ElementRef>;
@@ -38,36 +41,48 @@ export class GameComponent implements OnInit {
     private dialog : MatDialog
     ) {
   }
+  
 
   ngOnInit(): void {
-    this.loadScript();
-    this.signalR.listenToInfoStep();
-    this.signalR.listenToInfoText();
-    this.signalR.listenToStepBack();
-    this.gameSteps = this.signalR.gameSteps.subscribe((event : Event) => {
-      switch (event.step) {
-        case 0:
-          this.infoStep0(event); break;
-        case 1:
-          this.infoStep1(event); break;
-        case 2:
-          this.infoStep2(event); break;
-        case 3:
-          this.infoStep3(event); break;
-        case 4:
-          this.infoStep4(event); break;
-      }
-      this.highlightStep(this.actualStep);
-    });
-    this.backSteps = this.signalR.backSteps.subscribe((event : StepBackEvent) => this.stepBack(event));
-    this.info = this.signalR.info.subscribe((event : InfoEvent) => {
-      this.infoMessage(event);
+    MathJax.Hub.Typeset(() => {
+      this.signalR.listenToInfoStep();
+      this.signalR.listenToInfoText();
+      this.signalR.listenToStepBack();
+      this.gameSteps = this.signalR.gameSteps.subscribe((event : Event) => {
+        switch (event.step) {
+          case 0:
+            this.infoStep0(event); break;
+          case 1:
+            this.infoStep1(event); break;
+          case 2:
+            this.infoStep2(event); break;
+          case 3:
+            this.infoStep3(event); break;
+          case 4:
+            this.infoStep4(event); break;
+        }
+        this.highlightStep(this.actualStep);
+      });
+      this.backSteps = this.signalR.backSteps.subscribe((event : StepBackEvent) => this.stepBack(event));
+      this.info = this.signalR.info.subscribe((event : InfoEvent) => {
+        this.infoMessage(event);
+      });
+      this.signalR.initGame(
+        this.progress.selectedFunctor,
+        this.progress.stateNames,
+        this.progress.isSpoiler
+      )
     });
   }
 
+  ngOnDestroy(): void {
+    this.gameSteps.unsubscribe();
+    this.backSteps.unsubscribe();
+    this.info.unsubscribe();
+  }
 
   public loadScript() {
-    let body = <HTMLDivElement> document.body;
+    /* let body = <HTMLDivElement> document.body;
     let configuration = document.createElement('script');
     configuration.type = 'text/x-mathjax-config';
     configuration.innerHTML = 'MathJax.Hub.Config({ showMathMenu: false, tex2jax: {inlineMath: [[\"$\",\"$\"], [\"\\(\",\"\\)\"]],processEscapes: true}});';
@@ -79,7 +94,7 @@ export class GameComponent implements OnInit {
     sourceScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_SVG';
     sourceScript.async = true;
     sourceScript.defer = true;
-    body.appendChild(sourceScript);
+    body.appendChild(sourceScript); */
 }
 
   infoMessage(event : InfoEvent) {

@@ -67,11 +67,7 @@ export class GameInitComponent implements OnInit {
   public startClick = () => {
     this.progress.initialPair = this.selectedStates;
     var stateNames = this.selectedStates.map(state => state.name.toString())
-    this.signalR.initGame(
-      this.progress.selectedFunctor,
-      stateNames,
-      this.progress.isSpoiler
-      )
+    this.progress.stateNames = stateNames;
     this.paper.trigger('blank:pointerclick');
     this.paper.unbind('element:pointerclick');
     this.paper.unbind('blank:pointerclick');

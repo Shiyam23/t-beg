@@ -30,6 +30,7 @@ export class AppProgressService {
   initialPair : Array<State> = new Array<State>(); 
 
   //Game
+  stateNames : Array<string>;
   snackbar : Subject<string> = new Subject();  
 
   constructor() { }
