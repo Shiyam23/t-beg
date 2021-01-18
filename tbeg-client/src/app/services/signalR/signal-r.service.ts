@@ -9,7 +9,8 @@ import { Event, InfoEvent, StepBackEvent } from '../../eventModel';
 @Injectable({
   providedIn: 'root'
 })
-export class SignalRService {private hubConnection: SignalR.HubConnection;
+export class SignalRService {
+  private hubConnection: SignalR.HubConnection;
 
   public connected = new Subject<boolean>();
   public functorList = new Subject<Array<string>>();
@@ -109,6 +110,10 @@ export class SignalRService {private hubConnection: SignalR.HubConnection;
         userIsSpoiler, x, y, step
       ))
     });
+  }
+
+  public sendReset(functor: string) {
+    this.hubConnection.invoke("SendReset", functor.toString());
   }
 
   private showError(msg : string) {

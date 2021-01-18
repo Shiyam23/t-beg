@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, ViewRef } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
@@ -13,7 +13,7 @@ import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '.
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit ,AfterViewInit {
+export class GameComponent implements OnInit {
 
   gameSteps : Subscription;
   backSteps : Subscription;
@@ -40,7 +40,7 @@ export class GameComponent implements OnInit ,AfterViewInit {
   }
 
   ngOnInit(): void {
-    
+    this.loadScript();
     this.signalR.listenToInfoStep();
     this.signalR.listenToInfoText();
     this.signalR.listenToStepBack();
@@ -63,10 +63,6 @@ export class GameComponent implements OnInit ,AfterViewInit {
     this.info = this.signalR.info.subscribe((event : InfoEvent) => {
       this.infoMessage(event);
     });
-  }
-
-  ngAfterViewInit() {  
-    this.loadScript();
   }
 
 
@@ -272,6 +268,16 @@ export class GameComponent implements OnInit ,AfterViewInit {
     this.signalR.sendStepBack(this.progress.selectedFunctor);
     this.startDisabled = true;
     this.openSnackbar();
+  }
+
+  resetClick = () => {
+    this.resetMarkers();
+    this.signalR.sendReset(this.progress.selectedFunctor);
+    for (let i : number = 0; i < 4; i++) {
+      this.selStates[i] = new Array<State>();
+    }
+    this.actualStep -= 0;
+    this.progress.appProgress--;
   }
 
 

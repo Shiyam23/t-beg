@@ -68,6 +68,10 @@ namespace Hubs
             ((TBeg.TBeg)Context.Items["tbeg"]).SendStepBackToGame(functor);
             return Task.CompletedTask;
         }
+        public Task SendReset(string functor) {
+            ((TBeg.TBeg)Context.Items["tbeg"]).SendResetToGame(functor);
+            return Task.CompletedTask;
+        }
 
 
 

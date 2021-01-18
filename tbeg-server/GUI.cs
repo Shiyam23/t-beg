@@ -140,17 +140,15 @@ namespace TBeg
             SendStep.Invoke(this, new ViewEvent_GameStepUser(functor, "test", new List<int>(states), selection));
         }
 
-        public void SendStepBackToGame(string functor)
-        {
-            try
-            {
-                StepBack.Invoke(this, new ViewEvent_Game("test", functor));
-            }
-            catch
-            {
-
-            }
+        public void SendStepBackToGame(string functor){
+            StepBack.Invoke(this, new ViewEvent_Game("test", functor));
         }
+        public void SendResetToGame(string functor){
+            Console.WriteLine("Game reset");
+            ExitGame.Invoke(this, new ViewEvent_Game("test", functor));
+        }
+
+
 
 
         public void FileInfoToUser(IModel model, ModelEvent_InfoFileOp e) {}
