@@ -82,11 +82,18 @@ export class SignalRService {
 
   public listenToInfoStep() {
     this.hubConnection.on("InfoStep", (name, pred1, selection, userIsSpoiler, x, y, step) => {
+      console.log("new EVENT");
       this.gameSteps.next(new Event(
         name, pred1, selection,
         userIsSpoiler, x, y, step
       ))
     })
+  }
+
+  public stopListeningSteps() {
+    this.hubConnection.off("InfoStep");
+    this.hubConnection.off("InfoText");
+    this.hubConnection.off("Stepback");
   }
 
   public listenToInfoText() {

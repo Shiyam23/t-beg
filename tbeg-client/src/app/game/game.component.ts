@@ -52,7 +52,7 @@ export class GameComponent implements OnInit, OnDestroy {
         switch (event.step) {
           case 0:
             this.infoStep0(event); break;
-          case 1:
+            case 1:
             this.infoStep1(event); break;
           case 2:
             this.infoStep2(event); break;
@@ -79,6 +79,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameSteps.unsubscribe();
     this.backSteps.unsubscribe();
     this.info.unsubscribe();
+    this.signalR.stopListeningSteps();
   }
 
   public loadScript() {
