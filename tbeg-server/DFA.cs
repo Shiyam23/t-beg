@@ -183,7 +183,6 @@ namespace TBeg
         {
             List<int> stateList = new List<int>();
             for (int i = 0; i < alphabet; i++) {
-                Console.Write((ts.get(i,state)) + ",");
                 stateList.Add(ts.get(i,state)-1);
             }
             return stateList;

@@ -1678,7 +1678,6 @@ namespace TBeg
                         }
                         break;
                     default:
-                        Console.WriteLine("");
                         break;
                 }
             }

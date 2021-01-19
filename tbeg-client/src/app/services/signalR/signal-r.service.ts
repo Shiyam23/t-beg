@@ -29,7 +29,7 @@ export class SignalRService {
   public startConnection() {
 
     this.hubConnection = new SignalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/api', {
+      .withUrl('http://tbegserver.v22019072998792451.ultrasrv.de/api', {
         skipNegotiation: true,
         transport: SignalR.HttpTransportType.WebSockets
       })
