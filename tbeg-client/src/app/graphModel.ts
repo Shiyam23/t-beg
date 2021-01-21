@@ -104,6 +104,7 @@ export class State {
 export class Link {
 
     static allLinks : Array<Link> = new Array<Link>();
+    loopDirection : number = null;
 
     constructor(
         private _name: string,
@@ -113,6 +114,7 @@ export class Link {
         public model: joint.dia.Link | null ,
     ) {
         if (model != null) Link.allLinks.push(this);
+        if (source === target) this.loopDirection = 0;
     }
     
     public get name() : string {
@@ -136,6 +138,45 @@ export class Link {
         if (index > -1) {
             Link.allLinks.splice(index, 1);
         }
+    }
+
+    public rotate() {
+        this.loopDirection = (this.loopDirection + 1) % 4
+        let position = this.source.model.attributes.position;
+        let vertices = null;
+        switch (this.loopDirection) {
+            case 0:
+                vertices = [
+                    {x: position.x, y: position.y-45},
+                    {x: position.x+60, y: position.y-45}
+                ];
+                break;
+            case 1:
+                vertices = [
+                    {x: position.x+105, y: position.y},
+                    {x: position.x+105, y: position.y+60}
+                ];
+                break;
+            case 2:
+                vertices = [
+                    {x: position.x, y: position.y+105},
+                    {x: position.x+60, y: position.y+105}
+                ];
+                break;
+            case 3:
+                vertices = [
+                    {x: position.x-45, y: position.y},
+                    {x: position.x-45, y: position.y+60}
+                ];
+                break;
+            default:
+                break;
+        }
+        /* let vertices : joint.dia.Link.Vertex[] = [
+            {x: position.x, y: position.y+105},
+            {x: position.x+60, y: position.y+105}
+        ]; */
+        this.model.vertices(vertices);
     }
 
     public static findLinkByModel(model:joint.dia.Link) {

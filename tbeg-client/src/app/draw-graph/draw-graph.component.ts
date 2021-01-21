@@ -226,8 +226,18 @@ export class DrawGraphComponent implements OnInit{
             {
                 option:"Remove Link",
                 function: () => this.removeLink(view)
-            }
+            },
+            
         ];
+        let link : Link = Link.findLinkByModel(view.model);
+        if (link.source === link.target) {
+            this.contextmenuList.push(
+                {
+                    option:"Rotate Loop",
+                    function: () => link.rotate()
+                }, 
+            )
+        } 
         this.cmenu.onContextMenu(event);
     }
 
