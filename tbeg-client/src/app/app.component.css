@@ -19,7 +19,6 @@ body {
     justify-content: center;
     flex-flow: row ;
     align-items: center;
-    overflow: scroll;
 }
 
 .bottomInfo {
