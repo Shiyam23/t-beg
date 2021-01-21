@@ -91,7 +91,13 @@ export class DrawGraphComponent implements OnInit{
 
         this.paper.on('blank:pointerclick', (v,x,y) => {
             if (this.progress.selectedStateView) {
-                this.progress.selectedStateView?.unhighlight(null, highlighter);
+                let selectedBefore = this.progress.selectedStateView.model;
+                if (selectedBefore.isLink()) {
+                    Link.findLinkByModel(<joint.dia.Link>selectedBefore).select(false)
+                }
+                else {
+                    this.progress.selectedStateView?.unhighlight(null, highlighter);
+                }
                 this.progress.selectedStateView = null;
                 this.progress.selectedItem = null;
             }
@@ -113,7 +119,12 @@ export class DrawGraphComponent implements OnInit{
         })
 
         this.paper.on('element:pointerclick', (cellView) => {
-            this.progress.selectedStateView?.unhighlight(null, highlighter)
+            let selectedBefore = this.progress.selectedStateView;
+            if (selectedBefore?.model.isLink()) {
+                Link.findLinkByModel(<joint.dia.Link>selectedBefore.model).select(false);
+            } else {
+                selectedBefore?.unhighlight(null, highlighter)
+            }
             this.progress.selectedStateView = cellView;
             this.progress.isStateWindow = true;
             cellView.highlight(null, highlighter);
@@ -122,11 +133,16 @@ export class DrawGraphComponent implements OnInit{
         });
         
         this.paper.on('link:pointerclick', (cellView) => {
-            this.progress.selectedStateView?.unhighlight(null, highlighter)
+            var link : Link = Link.findLinkByModel(cellView.model);
+            let selectedBefore = this.progress.selectedStateView;
+            if (selectedBefore?.model.isLink()) {
+                Link.findLinkByModel(<joint.dia.Link>selectedBefore.model).select(false);
+            } else {
+                selectedBefore?.unhighlight(null, highlighter)
+            }
+            link.select(true);
             this.progress.selectedStateView = cellView;
             this.progress.isStateWindow = false;
-            cellView.highlight(null, highlighter);
-            var link : Link = Link.findLinkByModel(cellView.model);
             this.progress.selectedItem = link;
             this.progress.selectedLabelArray = link.name.split(',');
         });

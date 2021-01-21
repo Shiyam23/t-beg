@@ -105,6 +105,7 @@ export class Link {
 
     static allLinks : Array<Link> = new Array<Link>();
     loopDirection : number = null;
+    selected : boolean = false;
 
     constructor(
         private _name: string,
@@ -130,6 +131,11 @@ export class Link {
                 }
             }
         })
+    }
+
+    public select(selected : boolean) {
+        this.selected = selected;
+        this.model.attr('line/stroke', selected ? '#feb663' : '#333333')
     }
 
     public remove() {
