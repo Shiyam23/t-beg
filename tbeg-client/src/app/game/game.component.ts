@@ -21,6 +21,8 @@ export class GameComponent implements OnInit, OnDestroy {
   backSteps : Subscription;
   info : Subscription;
   actualStep : number;
+  resetDisabled : boolean = true;
+  backDisabled : boolean = true;
   startDisabled : boolean = true;
   selStatesString : Array<string> = ["{ - }","{ - }","{ - }","{ - }"];
   selStates : Array<Array<State>> = new Array<Array<State>>(4);
@@ -99,19 +101,22 @@ export class GameComponent implements OnInit, OnDestroy {
 
   infoMessage(event : InfoEvent) {
 
+    this.closeSnackbar();
     var data : DialogData = {
       option : DialogDataOption.DISMISS,
       type : event.over ? DialogDataType.GAMEOVER : DialogDataType.ERROR,
       content : event.name
     }
-
     this.dialog.open(DialogComponent, {
       data: data,
     });
     if (!event.over) {
-      this.startDisabled = false;
-      this.closeSnackbar();
+      this.disableControlButtons(false);
       this.progress.paper.trigger('blank:pointerclick')
+    } else {
+      this.startDisabled = true;
+      this.resetDisabled = false;
+      this.backDisabled = true;
     }
   }
 
@@ -129,7 +134,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (event.userIsSpoiler) {
       this.disabled1 = false;
       this.bindGraphToArray(0, false);
-      this.startDisabled = false;
+      this.disableControlButtons(false);
       this.closeSnackbar();
     }
     this.actualStep = 1;
@@ -142,7 +147,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.setMarkers(event);
     if (!event.userIsSpoiler) {
       this.bindGraphToArray(1, false);
-      this.startDisabled = false;
+      this.disableControlButtons(false);
       this.closeSnackbar();
     }
     this.actualStep = 2;
@@ -163,7 +168,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (event.userIsSpoiler) {
       this.disabled2 = false;
       this.bindGraphToArray(2, true);
-      this.startDisabled = false;
+      this.disableControlButtons(false);
       this.closeSnackbar();
     }
     this.updateLabel(1);
@@ -178,7 +183,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.selStates[2].push(State.allStates.find(state => state.name == (event.pred1[0]+1).toString()));
       this.updateLabel(2);
       this.bindGraphToArray(3, true);
-      this.startDisabled = false;
+      this.disableControlButtons(false);
       this.closeSnackbar();
     }
     this.actualStep = 4;
@@ -266,7 +271,7 @@ export class GameComponent implements OnInit, OnDestroy {
     var states : Array<number> = this.selStates[step-1].map(state => Number(state.name)-1);
     if (states.length > 0) {
       this.signalR.sendStep(this.progress.selectedFunctor, selection, states);
-      this.startDisabled = true;
+      this.disableControlButtons(true);
       this.openSnackbar();
       this.resetSelection(step-1);
     }
@@ -296,7 +301,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
     this.actualStep = (this.actualStep - 3) % 4;
     this.signalR.sendStepBack(this.progress.selectedFunctor);
-    this.startDisabled = true;
+    this.disableControlButtons(true);
     this.openSnackbar();
   }
 
@@ -376,6 +381,12 @@ export class GameComponent implements OnInit, OnDestroy {
 
   closeSnackbar() {
     this.progress.snackbar.next(null);
+  }
+
+  disableControlButtons(bool: boolean) {
+    this.backDisabled = bool;
+    this.resetDisabled = bool;
+    this.startDisabled = bool;
   }
 
   checkFirstStateButton(bool : boolean) {
