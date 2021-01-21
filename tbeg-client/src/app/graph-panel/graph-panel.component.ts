@@ -157,6 +157,7 @@ export class GraphPanelComponent implements OnInit {
     (<Array<String>>(<Link>this.progress.selectedItem).value)[index] = event;
   }
   setLinkName(event : string) {
+      if (event == null || event == '') return; 
       var link : Link = (<Link>this.progress.selectedItem);
       link.value = Array<string>(this.progress.selectedLabelArray.length);
       var array : string[] = event.split(',');
