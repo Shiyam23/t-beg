@@ -54,6 +54,10 @@ export class AppProgressService {
     return false;
   }
 
+  toStart() : void {
+    this._appProgress = 0;
+  }
+
   get appProgress() {
     return this._appProgress;
   }

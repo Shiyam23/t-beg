@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
 import { DialogDataType, DialogData, DialogComponent, DialogDataOption } from 'src/app/templates/dialog/dialog.component';
 import { Event, InfoEvent, StepBackEvent } from '../../eventModel';
+import { AppProgressService } from '../appProgress/app-progress.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,9 @@ export class SignalRService {
   public backSteps = new Subject<StepBackEvent>();
   public info = new Subject<InfoEvent>();
 
-  constructor(private dialog : MatDialog) { }
+  constructor(
+    private progress : AppProgressService,
+    private dialog : MatDialog) { }
 
   public startConnection() {
 
@@ -38,8 +41,11 @@ export class SignalRService {
         this.connected.next(true);
         this.connected.complete();
       })
-      .catch(_ => this.showError("Error occurred while connecting to Server!\nPlease try again later..."));
-      this.hubConnection.onclose( _ => this.showError("Connection Error! Please reload this Web Application"));
+      .catch(_ => this.showError("Error occurred while connecting to Server!\nPlease reload or try again later..."));
+      this.hubConnection.onclose( _ => {
+        this.progress.toStart();
+        this.showError("Connection Error! Please reload this Web Application")
+      });
   } 
 
   public askServer() {
