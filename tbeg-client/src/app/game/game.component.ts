@@ -146,6 +146,14 @@ export class GameComponent implements OnInit, OnDestroy {
     this.unbindGraphToArray();
     this.setMarkers(event);
     if (!event.userIsSpoiler) {
+      let data : DialogData = {
+        content: event.name,
+        option: DialogDataOption.DISMISS,
+        type: DialogDataType.INFO
+      }
+      this.dialog.open(DialogComponent, {
+        data: data
+      })
       this.bindGraphToArray(1, false);
       this.disableControlButtons(false);
       this.closeSnackbar();
