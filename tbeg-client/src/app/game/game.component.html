@@ -1,7 +1,7 @@
 <div id="panel">
     <div class="settings">
         <div #steps class="stepContent">
-            <label class="text">Step 1:</label>
+            <label class="text">Step 1</label>
             <label class="info">Spoiler chooses one state and predicate</label>
             <div class="selectionContent">
                 <mat-button-toggle-group class="selection" [disabled]="disabled1" #selectedState="matButtonToggleGroup" aria-label="Selected Predicate">
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <hr class="hr">
+        <hr >
         <div #steps class="stepContent">
             <label class="text">Step 2:</label>
             <label class="info">Duplicator answers based on the other state such that $Fp_1 (ts(s)) <=^F Fp_2 (ts(t))$ holds</label>
@@ -25,9 +25,9 @@
                 </div>
             </div>
         </div>
-        <hr class="hr">
+        <hr >
         <div #steps class="stepContent">
-            <label class="text">Step 3:</label>
+            <label class="text">Step 3</label>
             <label class="info">Spoiler chooses $p_i$ and some $x'$ s.t. $p_i(x')=1$:</label>
             <div class="selectionContent">
                 <mat-button-toggle-group class="selection" [disabled]="disabled2" #selectedPred="matButtonToggleGroup" aria-label="Selected Predicate">
@@ -40,9 +40,9 @@
                 </div>
             </div>
         </div>
-        <hr class="hr">
+        <hr >
         <div #steps class="stepContent">
-            <label class="text">Step 4:</label>
+            <label class="text">Step 4</label>
             <label class="info">Duplicator chooses some $y'$ s.t. $p_j(y')=1$ and $i \neq j$</label>
             <div class="selectionContent">
                 <div>

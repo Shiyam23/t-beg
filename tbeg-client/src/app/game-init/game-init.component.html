@@ -1,13 +1,15 @@
 <div id="panel">
     <div class="settings">
-        <label class="text">Play as:</label>
-        <mat-button-toggle-group class="selection" (change)="selectRole($event)" name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle class="selectionItem" checked="True" value="True">Spoiler</mat-button-toggle>
-            <mat-button-toggle class="selectionItem" value="False">Duplicator</mat-button-toggle>
-        </mat-button-toggle-group>
-        <hr style="width: 99%;">
+        <div class="roleSelection">
+            <label class="text">Play as</label>
+            <mat-button-toggle-group class="selection" (change)="selectRole($event)" name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle class="selectionItem" checked="True" value="True">Spoiler</mat-button-toggle>
+                <mat-button-toggle class="selectionItem" value="False">Duplicator</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <hr >
         <div class="states">
-            <label class="text">Select Initial Pair:</label>
+            <label class="text">Select Initial Pair</label>
             <label id="pair">{{selectedStatesLabel}}</label>
             <button id="swap" (click)="swap()" type="button" mat-button>Swap States</button>
         </div>

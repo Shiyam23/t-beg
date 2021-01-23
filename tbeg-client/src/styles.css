@@ -3,8 +3,16 @@ body {
     background: linear-gradient(45deg, white 25%, #d6d6d6 25%, #d6d6d6 50%, white 50%, white 75%, #d6d6d6 75%);
     background-size: 5px 5px;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Orbitron, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
+
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+hr{
+    margin: 0;
+    width: 100%;
+    color: black;
+    border:none;
+    background-color: #333;
+    height: 2px;
+}
