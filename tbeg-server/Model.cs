@@ -510,7 +510,11 @@ namespace TBeg
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
                 Object transitionSystem = method.Invoke(Functor, new Object[] { content, alphabet, states, optional});
                 // what if already contained?
-                datamodelMatrix.Add(name, transitionSystem);
+                if (datamodelMatrix.ContainsKey(name)) {
+                    datamodelMatrix[name] = transitionSystem;
+                } else {
+                    datamodelMatrix.Add(name, transitionSystem);
+                }
             }
 
        

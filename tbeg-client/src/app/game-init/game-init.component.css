@@ -17,6 +17,18 @@
     flex: 2
 }
 
+.buttons{
+    width: inherit;
+    justify-content: space-evenly;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+:host ::ng-deep .button{
+    width: auto;
+}
+
 .settings{
 
     display: flex;

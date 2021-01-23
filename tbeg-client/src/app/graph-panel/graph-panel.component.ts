@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { State, Link} from '../graphModel'
 import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '../templates/dialog/dialog.component';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,8 +13,9 @@ import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '.
   templateUrl: './graph-panel.component.html',
   styleUrls: ['./graph-panel.component.css']
 })
-export class GraphPanelComponent implements OnInit {
+export class GraphPanelComponent implements OnDestroy {
 
+  initGameViewSub : Subscription;
 
   @ViewChild('linkValue')
   linkValue;
@@ -28,7 +30,9 @@ export class GraphPanelComponent implements OnInit {
         private dialog : MatDialog
     ) { }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.signalR.stopListenInitGameView();
+    this.initGameViewSub.unsubscribe();
   }
 
   startClick = () => {
@@ -55,9 +59,9 @@ export class GraphPanelComponent implements OnInit {
             links.push(new Link(char, link.source, link.target, link.value[index], null));
         });
     });
-    this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor);
     this.signalR.listenOnInitGameView();
-    this.signalR.initGameView.subscribe( bool => {
+    this.signalR.sendGraph(states, links, alphabet, this.progress.selectedFunctor);
+    this.initGameViewSub = this.signalR.initGameView.subscribe( bool => {
         if (bool) this.progress.forward();
     })
   }

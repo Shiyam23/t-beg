@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { State } from '../graphModel';
+import { Link, State } from '../graphModel';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { DialogComponent, DialogData, DialogDataType, DialogDataOption} from "../templates/dialog/dialog.component";
@@ -11,7 +11,7 @@ import { DialogComponent, DialogData, DialogDataType, DialogDataOption} from "..
   templateUrl: './game-init.component.html',
   styleUrls: ['./game-init.component.css']
 })
-export class GameInitComponent implements OnInit {
+export class GameInitComponent implements OnInit{
 
   selectedStatesLabel : String = "(?,?)";
 
@@ -66,6 +66,8 @@ export class GameInitComponent implements OnInit {
     });
   }
 
+
+
   public selectRole = (event : MatButtonToggleChange) => {
     this.progress.isSpoiler = event.value === "True"
   }
@@ -91,6 +93,54 @@ export class GameInitComponent implements OnInit {
       this.paper.unbind('blank:pointerclick');
       this.progress.forward();
     }
+  }
+
+  public goBack = () => {
+    this.paper.trigger('blank:pointerclick');
+    this.progress.isSpoiler = true;
+    this.paper.unbind('blank:pointerclick');
+    this.paper.on('blank:pointerclick', (v,x,y) => {
+      if (this.progress.selectedStateView) {
+          let selectedBefore = this.progress.selectedStateView.model;
+          if (selectedBefore.isLink()) {
+              Link.findLinkByModel(<joint.dia.Link>selectedBefore).select(false)
+          }
+          else {
+              this.progress.selectedStateView?.unhighlight(null, this.highlighter);
+          }
+          this.progress.selectedStateView = null;
+          this.progress.selectedItem = null;
+      }
+    });
+    this.paper.unbind('element:pointerclick');
+    this.paper.on('element:pointerclick', (cellView) => {
+      let selectedBefore = this.progress.selectedStateView;
+      if (selectedBefore?.model.isLink()) {
+          Link.findLinkByModel(<joint.dia.Link>selectedBefore.model).select(false);
+      } else {
+          selectedBefore?.unhighlight(null, this.highlighter)
+      }
+      this.progress.selectedStateView = cellView;
+      this.progress.isStateWindow = true;
+      cellView.highlight(null, this.highlighter);
+      var state : State = State.findStateByModel(cellView.model);
+      this.progress.selectedItem = state;
+  });
+  this.paper.on('link:pointerclick', (cellView) => {
+    var link : Link = Link.findLinkByModel(cellView.model);
+    let selectedBefore = this.progress.selectedStateView;
+    if (selectedBefore?.model.isLink()) {
+        Link.findLinkByModel(<joint.dia.Link>selectedBefore.model).select(false);
+    } else {
+        selectedBefore?.unhighlight(null, this.highlighter)
+    }
+    link.select(true);
+    this.progress.selectedStateView = cellView;
+    this.progress.isStateWindow = false;
+    this.progress.selectedItem = link;
+    this.progress.selectedLabelArray = link.name.split(',');
+});
+    this.progress.backward();
   }
 
   public updateState() {

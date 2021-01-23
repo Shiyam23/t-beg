@@ -72,8 +72,11 @@ export class SignalRService {
   public listenOnInitGameView() {
     this.hubConnection.on("InitGameView", () => {
       this.initGameView.next(true);
-      this.initGameView.complete();
     })
+  }
+
+  public stopListenInitGameView() {
+    this.hubConnection.off("InitGameView");
   }
 
   public initGame(functor : string, initialPair : Array<string>, spoiler : boolean) {

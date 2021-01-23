@@ -8,8 +8,8 @@ import { Link, State } from 'src/app/graphModel';
 export class AppProgressService {
 
   //TODO: set this to 0 later
-  appProgress : number = 0;
-  maxProgress : number = 5;
+  private _appProgress : number = 0;
+  private maxProgress : number = 5;
   selectedFunctor : string;
 
   //Functor
@@ -38,7 +38,7 @@ export class AppProgressService {
   forward() : boolean {
 
     if (this.checkValidProgress) {
-      (this.appProgress)++;
+      (this._appProgress)++;
       return true
     }
     return false;
@@ -46,10 +46,14 @@ export class AppProgressService {
 
   backward() : boolean {
     if (this.checkValidProgress) {
-      (this.appProgress)--;
+      (this._appProgress)--;
       return true
     }
     return false;
+  }
+
+  get appProgress() {
+    return this._appProgress;
   }
   
   private checkValidProgress() : boolean {

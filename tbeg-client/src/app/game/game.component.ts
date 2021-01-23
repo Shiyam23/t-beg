@@ -335,7 +335,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.selStates[i] = new Array<State>();
     }
     this.actualStep -= 0;
-    this.progress.appProgress--;
+    this.progress.backward();
   }
 
 

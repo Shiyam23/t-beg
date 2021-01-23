@@ -14,5 +14,8 @@
             <button id="swap" (click)="swap()" type="button" mat-button>Swap States</button>
         </div>
     </div>
-    <app-start [click]="startClick" [text]="'START'"></app-start>
+    <div class="buttons">
+        <app-start [click]="goBack" [text]="'⭰'"></app-start>
+        <app-start [click]="startClick" [text]="'START'"></app-start>
+    </div>
 </div>
