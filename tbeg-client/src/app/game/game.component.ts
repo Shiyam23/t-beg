@@ -307,7 +307,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   resetClick = () => {
     let data : DialogData = {
-      type: DialogDataType.INFO,
+      type: DialogDataType.WARNING,
       option: DialogDataOption.ACCEPT,
       content: "If you reset the game you will go back to the game setup screen. Do you really want to reset?"
     }
@@ -403,5 +403,44 @@ export class GameComponent implements OnInit, OnDestroy {
       if (i - 1 == j) item.nativeElement.style.backgroundColor = j % 2 == 0 ? "#dda0dd" : "#e0ffff";
       else item.nativeElement.style.backgroundColor = "white"
     })
+  }
+
+  toolTipClick(step : number) {
+    let content;
+    switch (step) {
+      case 0:
+        content = "ts: Your transition system\n" +
+                  "s: The state chosen for the Spoiler\n" +
+                  "t: The state chosen for the Duplicator"
+        break;
+      case 1:
+        content = "Spoiler chooses one state s and a predicate: X -> {0,1}, which corresponds to a "+
+                  "subset of the state space X of your transition system."
+        break;
+      case 2:
+        content = "The value Fp_1(ts(s)) in F{0,1} dervid from the move of the Spoiler has to be at "+
+                  "least matched by the Duplicator. Otherwise the states are not bisimilar."
+        break;
+      case 3:
+        content = "If the Duplicator was able to mimic the move in Step 2, Step 3 enables the Spoiler "+
+                  "to show that the Duplicator has cheated in Step 2, i.e. D has included at least one state "+
+                  "into p_2, such that no bisimilar state in p_1 exists."
+                  "least matched by the Duplicator. Otherwise the states are not bisimilar."
+        break;
+      case 4:
+        content = "Here the Duplicator tries to choose a bisimilar state y' to the one chosen by S in Step 3. "+
+                  "If there is no such state available, D proceeds with another state and the game proceeds with "+
+                  "a non-bisimilar state pair (x',y'). This means that S has a winning-strategy. If the game "+
+                  "proceeds with a bismilar state-pair, D has a winning-strategy."
+        break;
+    }
+    let data : DialogData = {
+      content: content,
+      option: DialogDataOption.DISMISS,
+      type: DialogDataType.INFO
+    }
+    this.dialog.open(DialogComponent,{
+      data : data
+    });
   }
 }

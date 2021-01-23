@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { lowerCase } from 'lodash';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
+import { DialogComponent, DialogData, DialogDataOption, DialogDataType } from '../templates/dialog/dialog.component';
 
 @Component({
   selector: 'app-functor',
@@ -14,7 +16,11 @@ export class FunctorComponent implements OnInit {
   private functorListSub : Subscription;
   private validatorSub : Subscription;
   functors : {value:string, viewValue:string}[] = new Array();
-  constructor(public progress : AppProgressService, public signalR : SignalRService) {
+  constructor(
+    public progress : AppProgressService, 
+    public signalR : SignalRService,
+    private dialog : MatDialog
+    ) {
   }
 
   ngOnInit(): void {
@@ -43,4 +49,16 @@ export class FunctorComponent implements OnInit {
     })
     
   } 
+
+  public clickToolTip = () => {
+    let data : DialogData = {
+      type: DialogDataType.INFO,
+      option: DialogDataOption.DISMISS,
+      content:  "A functor describes the branching type of a system. An example is F = Powerset, which enables" + 
+                "non-determinism e.g. x can map to a set of states: x -> {x,y}."
+    }
+    this.dialog.open(DialogComponent, {
+      data: data
+    })
+  }
 }

@@ -28,6 +28,7 @@ export interface DialogData {
 export enum DialogDataType{
 
   INFO,
+  WARNING,
   ERROR,
   GAMEOVER
 

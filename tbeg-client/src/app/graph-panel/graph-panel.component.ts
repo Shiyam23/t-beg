@@ -92,7 +92,7 @@ export class GraphPanelComponent implements OnInit {
     load = (event : any) => {
         if (State.allStates.length != 0) {
             let data : DialogData = {
-                type: DialogDataType.INFO,
+                type: DialogDataType.WARNING,
                 option: DialogDataOption.ACCEPT,
                 content:    "Your actual graph is going to be deleted if you load another graph from file." +
                             "You want to proceed?"

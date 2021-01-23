@@ -2,7 +2,8 @@
     <div class="aboveButton">
         <div [ngSwitch]="data.type">
             <h1 *ngSwitchCase="DialogDataType.ERROR">Error</h1>
-            <h1 *ngSwitchCase="DialogDataType.INFO">Warning</h1>
+            <h1 *ngSwitchCase="DialogDataType.INFO">Information</h1>
+            <h1 *ngSwitchCase="DialogDataType.WARNING">Warning</h1>
             <h1 *ngSwitchCase="DialogDataType.GAMEOVER">Game Over</h1>
         </div>
         <hr>

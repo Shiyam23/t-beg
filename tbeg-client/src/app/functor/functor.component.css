@@ -1,6 +1,7 @@
 #functorTitle{
     font-size: 4vw;
     font-family: 'Orbitron', sans-serif;
+    user-select: none;
 }
 
 .functorContent{
@@ -29,4 +30,8 @@
 
 #button {
     margin-top: 1vw;
+}
+
+mat-icon{
+    font-size: 2vw;
 }
