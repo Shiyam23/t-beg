@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { lowerCase } from 'lodash';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
@@ -11,11 +10,13 @@ import { DialogComponent, DialogData, DialogDataOption, DialogDataType } from '.
   templateUrl: './functor.component.html',
   styleUrls: ['./functor.component.css']
 })
-export class FunctorComponent implements OnInit {
+export class FunctorComponent implements OnInit, OnDestroy {
 
   private functorListSub : Subscription;
   private validatorSub : Subscription;
-  functors : {value:string, viewValue:string}[] = new Array();
+  functors : {value:string, viewValue:string}[] = this.progress.availableFunctors;
+  selected : string;
+
   constructor(
     public progress : AppProgressService, 
     public signalR : SignalRService,
@@ -24,19 +25,27 @@ export class FunctorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalR.askServer();
-    this.signalR.listenToServer();
-    this.functorListSub = this.signalR.functorList.subscribe(array => {
-      array.forEach( string => {
-        this.functors.push({
-          value: string,
-          viewValue: string
-        })
+    if (this.functors.length == 0) {
+      this.signalR.askServer();
+      this.signalR.listenToServer();
+      this.functorListSub = this.signalR.functorList.subscribe(array => {
+        array.forEach( string => {
+          this.functors.push({
+            value: string,
+            viewValue: string
+          });
+        });
+        if (array.length != 0) this.selected = array[0];
       })
-    })
+    } else {
+      this.selected = this.functors[0].viewValue;
+    }
   }
 
-  selected = 'Powerset';
+  ngOnDestroy() : void {
+    this.signalR.stopGetValidator();
+    this.validatorSub.unsubscribe();
+  }
 
   public next = () => {
     this.progress.selectedFunctor = this.selected;
@@ -47,7 +56,6 @@ export class FunctorComponent implements OnInit {
       this.progress.validatorErrorMessage = array[1];
       this.progress.forward();
     })
-    
   } 
 
   public clickToolTip = () => {

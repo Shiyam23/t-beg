@@ -32,7 +32,7 @@ export class GraphPanelComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.signalR.stopListenInitGameView();
-    this.initGameViewSub.unsubscribe();
+    if (this.initGameViewSub != null) this.initGameViewSub.unsubscribe();
   }
 
   startClick = () => {
@@ -64,6 +64,10 @@ export class GraphPanelComponent implements OnDestroy {
     this.initGameViewSub = this.signalR.initGameView.subscribe( bool => {
         if (bool) this.progress.forward();
     })
+  }
+
+  goBack = () => {
+      this.progress.backward();
   }
 
     saveAsJson = () => {

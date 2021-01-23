@@ -65,8 +65,11 @@ export class SignalRService {
   public getValidator() {
     this.hubConnection.on("Validator", (validator : string, message : string) => {
       this.validator.next([validator, message]);
-      this.validator.complete();
     })
+  }
+
+  public stopGetValidator() {
+    this.hubConnection.off("Validator");
   }
 
   public listenOnInitGameView() {

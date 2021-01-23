@@ -43,5 +43,7 @@
             </div>
         </div>
     </div>
-    <app-start [text]="'START'" [click]="startClick"></app-start>
-</div>
+    <div class="buttons">
+        <app-start [click]="goBack" [text]="'⭰'"></app-start>
+        <app-start [click]="startClick" [text]="'START'"></app-start>
+    </div>

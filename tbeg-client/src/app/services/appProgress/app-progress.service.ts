@@ -10,6 +10,8 @@ export class AppProgressService {
   //TODO: set this to 0 later
   private _appProgress : number = 0;
   private maxProgress : number = 5;
+
+  availableFunctors : {value:string, viewValue:string}[] = new Array();
   selectedFunctor : string;
 
   //Functor
