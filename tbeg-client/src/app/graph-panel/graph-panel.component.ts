@@ -149,7 +149,14 @@ export class GraphPanelComponent implements OnDestroy {
             }
             else {
                 //TODO create Error message
-                console.error("Not the same functor!!")
+                var data : DialogData = {
+                    option: DialogDataOption.DISMISS,
+                    type : DialogDataType.ERROR,
+                    content :   "The functor you chose is not the same as the functor used in the file!" +
+                                "\nYou chose: " + this.progress.selectedFunctor +
+                                "\nFunctor used in file: " + json["functor"]
+                }
+                this.dialog.open(DialogComponent, {data: data});
             }
         } catch (e) {
             var data : DialogData = {
