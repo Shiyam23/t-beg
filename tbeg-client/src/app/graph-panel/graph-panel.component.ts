@@ -67,6 +67,8 @@ export class GraphPanelComponent implements OnDestroy {
   }
 
   goBack = () => {
+      State.allStates = new Array<State>();
+      Link.allLinks = new Array<Link>();
       this.progress.backward();
   }
 
@@ -138,8 +140,12 @@ export class GraphPanelComponent implements OnDestroy {
                 json["links"].forEach( (link,index) => {
                     var id : string = <string>(json["linkIDs"][index]);
                     var model  =  <joint.dia.Link> this.progress.graph.getCell(id);
-                    var newLink : Link = new Link(link.name, link.source, link.target, link.value, model);
+                    let source = State.allStates.find(state => state.name == link.source.name);
+                    let target = State.allStates.find(state => state.name == link.target.name);
+                    var newLink : Link = new Link(link.name, source, target, link.value, model);
                 });
+                console.log(State.allStates);
+                console.log(Link.allLinks);
             }
             else {
                 //TODO create Error message
@@ -158,6 +164,7 @@ export class GraphPanelComponent implements OnDestroy {
         fr.readAsText(file);
         event.target.value = "";
     }
+    
   }
 
   setLinkValue(event : any, index : number) {
