@@ -9,10 +9,22 @@
     transform: translateX(-50%); */
 }
 
+.valueRow{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
 #content{
     display: flex;
     flex-direction: row-reverse;
     align-content: space-between;
+}
+
+mat-icon{
+    position: relative;
+    top: 1vw;
+    left: 0.5vw;
 }
 
 .settings{

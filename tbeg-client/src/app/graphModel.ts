@@ -7,8 +7,7 @@ export class State {
     constructor(
         private _name: string, 
         public model: joint.dia.Element,
-        private _isStartState: boolean, 
-        private _isFinalState: boolean
+        public value: string
     ) {
         State.allStates.splice(Number.parseInt(_name)-1, 0, this);
         //State.allStates.push(this);
@@ -63,39 +62,11 @@ export class State {
         return State.allStates.find(item => item.model == model)
     }
 
-    public setFinalState(isFinalState : boolean) {
-        this._isFinalState = isFinalState;
-        this.model.attr({
-            body: {
-                strokeDasharray: isFinalState? 10 : 0
-            }
-        })
-    }
-
-    public setStartState(isStartState : boolean) {
-        this._isStartState = isStartState;
-        this.model.attr({
-            body: {
-                fill: isStartState? 'green' : 'white'
-            }
-        })
-    }
-
-    public get isStartState() : boolean {
-        return this._isStartState;
-    }
-
-
-    public get isFinalState() : boolean {
-        return this._isFinalState
-    }
-
     toJSON() {
 
         return {
             name: Number.parseInt(this._name),
-            isStartState: this._isStartState,
-            isFinalState: this._isFinalState,
+            value: this.value.toString(),
         }
     }
     

@@ -4,8 +4,7 @@ namespace GraphModel {
 
         static public State[] states;
         public int name {get; set;}
-        public bool isStartState {get; set;}
-        public bool isFinalState {get; set;}
+        public string value {get; set;}
 
     }
 

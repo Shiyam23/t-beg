@@ -25,7 +25,7 @@ namespace TBeg
     public delegate void ModelHandler_UpdateGraphView<IModel>(IModel sender, ModelEvent_UpdateGraphView e);
     public delegate void ModelHandler_InfoFileOp<IModel>(IModel sender, ModelEvent_InfoFileOp e);
     public delegate void ModelHandler_InfoStep1<IModel>(IModel sender, ModelEvent_InfoStep e);
-    public delegate void ModelHandler_Validator<IModel>(string validator, string message);
+    public delegate void ModelHandler_Validator<IModel>(string[] stateValidator, string[] linkValidator);
     public delegate void ModelHandler_Trigger<IModel>();
     public delegate void ModelHandler_Error<IModel>(string errorMessage);
 
@@ -186,7 +186,7 @@ namespace TBeg
         void StepBack2(IModel model, ModelEvent_InfoStep e);
         void StepBack3(IModel model, ModelEvent_InfoStep e);
         void StepBack4(IModel model, ModelEvent_InfoStep e);
-        void SendValidator(string validator, string message);
+        void SendValidator(string[] stateValidator, string[] linkValidator);
         void InitGameView();
         void SendErrorMessage(string errorMsg);
     }
@@ -2245,7 +2245,7 @@ namespace TBeg
                 MethodInfo method = Functor.GetType().GetMethod("GetValidator");
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
                 Object validatorObject = method.Invoke(Functor, null);
-                string[] validator = (string[]) validatorObject;
+                string[][] validator = (string[][]) validatorObject;
 
                 //send feedback to the UI
                 SendValidator.Invoke(validator[0], validator[1]);

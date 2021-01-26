@@ -449,9 +449,14 @@ namespace TBeg
             return InitMatrixStandard(content, alphabet, states);
         }
 
-        public string[] GetValidator() {
-            // No value allowed since link can handle it itself
-            return new string[] {"^$", "No value allowed"};
+        public string[][] GetValidator() {
+            
+            // First array: State [<Regex>, <ErrorMessage>, <Description>]
+            // Second array: Link [<Regex>, <ErrorMessage>, <Description>]
+            return new string[][] {
+                new string[]{"^$", "No value allowed", "No value expected here!"},
+                new string[]{"^$", "No value allowed", "No value expected here!"}
+            };
         }
 
         public String GetValue(string rowhead, int state, GraphModel.Graph graph) {

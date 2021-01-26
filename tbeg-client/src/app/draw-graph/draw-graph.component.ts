@@ -36,14 +36,10 @@ export class DrawGraphComponent implements OnInit{
 
     signalR : SignalRService;
     progress : AppProgressService;
-    validator : RegExp;
-    errorMessage : string;
 
     constructor(signalR : SignalRService, progress : AppProgressService) {
         this.signalR = signalR;
         this.progress = progress;
-        this.validator = new RegExp(progress.validator);
-        this.errorMessage = progress.validatorErrorMessage;
     }
   
 
@@ -179,7 +175,7 @@ export class DrawGraphComponent implements OnInit{
         });
         var sourceState = State.findStateByModel(source);
         var targetState = State.findStateByModel(target);
-        var link : Link = new Link(label,sourceState, targetState,new Array<string>(), linkModel);
+        var link : Link = new Link(label,sourceState, targetState,[''], linkModel);
         return linkModel.addTo(this.graph);
     }   
 
@@ -198,7 +194,7 @@ export class DrawGraphComponent implements OnInit{
                 }
             }
         });
-        var state : State = new State(label, circle, false, false);
+        var state : State = new State(label, circle, '');
         circle.addTo(this.graph);
         return state;
     }

@@ -20,6 +20,9 @@ export class GraphPanelComponent implements OnDestroy {
   @ViewChild('linkValue')
   linkValue;
 
+  @ViewChild('stateValue')
+  stateValue;
+
   @ViewChild('fileSelector')
   fileSelector;
 
@@ -49,13 +52,47 @@ export class GraphPanelComponent implements OnDestroy {
         return;
     }
 
+    if (State.allStates.some(state => {
+        if (!RegExp(this.progress.stateValidator[0]).test(state.value)) {
+            let data : DialogData = {
+                option: DialogDataOption.DISMISS,
+                type : DialogDataType.ERROR,
+                content: `You need to give a value for state ${state.name}`
+            };
+            this.dialog.open(DialogComponent, {
+                data : data
+            });
+            return true;
+        }
+    })) return;
+
+    if (Link.allLinks.some(link => {
+        let checkArray : string[];
+        if (!Array.isArray(link.value)) checkArray = [<string>link.value];
+        else checkArray = link.value;
+        return checkArray.some((value,i) => {
+            if (!RegExp(this.progress.linkValidator[0]).test(value)) {
+                let chars = link.name.split(',');
+                let data : DialogData = {
+                    option: DialogDataOption.DISMISS,
+                    type : DialogDataType.ERROR,
+                    content: `${value} You need to give a value for link ${chars[i]} from ${link.source.name} to ${link.target.name}`
+                };
+                this.dialog.open(DialogComponent, {
+                    data : data
+                });
+                return true;
+            }
+        })
+    })) return;
+
     var states : Array<State> = State.allStates.sort( (a,b) => Number(a.name) - Number(b.name));
     var alphabet : Array<string> = new Array<string>();
     var links : Array<Link> = new Array<Link>();
     Link.allLinks.forEach(link => {
         link.name.toString().split(',').forEach((char,index) => {
             if (alphabet.indexOf(char) == -1) alphabet.push(char);
-            var newLink : Link = link;
+            console.log(link.value);
             links.push(new Link(char, link.source, link.target, link.value[index], null));
         });
     });
@@ -134,7 +171,7 @@ export class GraphPanelComponent implements OnDestroy {
                 json["states"].forEach( (state,index) => {
                     var id : string = <string>(json["stateIDs"][index]);
                     var model  =  <joint.dia.Element> this.progress.graph.getCell(id);
-                    var newState : State = new State(state.name.toString(), model, state.isStartState, state.isFinalState);
+                    var newState : State = new State(state.name.toString(), model, state.value);
                 });
 
                 json["links"].forEach( (link,index) => {
@@ -144,8 +181,6 @@ export class GraphPanelComponent implements OnDestroy {
                     let target = State.allStates.find(state => state.name == link.target.name);
                     var newLink : Link = new Link(link.name, source, target, link.value, model);
                 });
-                console.log(State.allStates);
-                console.log(Link.allLinks);
             }
             else {
                 //TODO create Error message
@@ -178,22 +213,22 @@ export class GraphPanelComponent implements OnDestroy {
     if (!this.linkValue.hasError('pattern'))
     (<Array<String>>(<Link>this.progress.selectedItem).value)[index] = event;
   }
+
+  setStateValue(event : any) {
+    if (!this.stateValue.hasError('pattern'))
+    (<State>this.progress.selectedItem).value = event;
+  }
+
+
   setLinkName(event : string) {
-      if (event == null || event == '') return; 
+      if (event == null || event == '' || event.startsWith(',') || event.endsWith(',')) return; 
       var link : Link = (<Link>this.progress.selectedItem);
       link.value = Array<string>(this.progress.selectedLabelArray.length);
+      link.value.fill('');
       var array : string[] = event.split(',');
       if (array[array.length-1] == "") array.pop();
       this.progress.selectedLabelArray = array;
       link.setName(event);
-  }
-
-  setStateStart(event : any) {
-      (<State>this.progress.selectedItem).setStartState(event);
-  }
-
-  setStateFinal(event : any) {
-      (<State>this.progress.selectedItem).setFinalState(event);
   }
 
   setStateName(event : string) {
@@ -202,6 +237,17 @@ export class GraphPanelComponent implements OnDestroy {
           && State.allStates.findIndex(state => state.name == event) == -1
           )
       (<State>this.progress.selectedItem).setName(event);
+  }
+
+  valueInfoClick = (content : string) => {
+    let data : DialogData = {
+        content: content,
+        option: DialogDataOption.DISMISS,
+        type: DialogDataType.INFO
+    }
+    this.dialog.open(DialogComponent, {
+        data: data
+    })
   }
 
 }

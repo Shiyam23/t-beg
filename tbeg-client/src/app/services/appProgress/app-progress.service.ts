@@ -16,8 +16,8 @@ export class AppProgressService {
 
   //Functor
   selectedLabelArray : string[];
-  validator : string;
-  validatorErrorMessage : string;
+  stateValidator : string[];
+  linkValidator : string[];
 
   //Graph 
   graph : joint.dia.Graph;

@@ -52,8 +52,8 @@ export class FunctorComponent implements OnInit, OnDestroy {
     this.signalR.askValidator(this.selected);
     this.signalR.getValidator();
     this.validatorSub = this.signalR.validator.subscribe(array => {
-      this.progress.validator = array[0];
-      this.progress.validatorErrorMessage = array[1];
+      this.progress.stateValidator = array[0];
+      this.progress.linkValidator = array[1];
       this.progress.forward();
     })
   } 

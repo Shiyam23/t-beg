@@ -10,8 +10,16 @@
                         Name is <strong>required</strong>
                         </mat-error>
                 </mat-form-field> -->
-                <mat-checkbox class="option" [ngModel]="progress.selectedItem.isStartState" (ngModelChange)="setStateStart($event)">Start state</mat-checkbox>
-                <mat-checkbox class="option" [ngModel]="progress.selectedItem.isFinalState" (ngModelChange)="setStateFinal($event)">Accept state</mat-checkbox>
+                <div *ngIf="progress.stateValidator[0] != '^$'" class="valueRow">
+                    <mat-form-field class="option" appearance="fill">
+                            <mat-label>Value</mat-label>
+                            <input type="text" matInput [pattern]="progress.stateValidator[0]" [ngModel]="progress.selectedItem.value" (ngModelChange)="setStateValue($event)" #stateValue="ngModel">
+                            <mat-error *ngIf="stateValue.hasError('pattern')">
+                            {{progress.stateValidator[1]}}
+                            </mat-error>
+                    </mat-form-field>
+                    <mat-icon (click)="valueInfoClick(progress.stateValidator[2])">announcement</mat-icon>
+                </div>
         </div>
         <div *ngIf="progress.selectedStateView && !progress.isStateWindow" class="settingsContent">
             <mat-form-field class="option" appearance="fill">
@@ -21,17 +29,22 @@
                 Name is <strong>required</strong>
                 </mat-error>
             </mat-form-field>
-            <hr >
-            <div *ngFor="let x of progress.selectedLabelArray; index as i; last as last">
-                <ng-template #linkValues></ng-template>
-                <mat-form-field class="option" appearance="fill">
-                    <mat-label>Value for {{x}}</mat-label>
-                    <input type="text" matInput [pattern]="progress.validator" [ngModel]="progress.selectedItem.value[i]" (ngModelChange)="setLinkValue($event,i)" #linkValue="ngModel">
-                    <mat-error *ngIf="linkValue.hasError('pattern')">
-                    {{progress.validatorErrorMessage}}
-                    </mat-error>
-                </mat-form-field>
-                <hr *ngIf="!last" >
+            <hr>
+            <div *ngIf="progress.linkValidator[0] != '^$'">
+                <div *ngFor="let x of progress.selectedLabelArray; index as i; last as last; first as first">
+                    <ng-template #linkValues></ng-template>
+                    <div class="valueRow">
+                        <mat-form-field class="option" appearance="fill">
+                            <mat-label>Value for {{x}}</mat-label>
+                            <input type="text" matInput [pattern]="progress.linkValidator[0]" [ngModel]="progress.selectedItem.value[i]" (ngModelChange)="setLinkValue($event,i)" #linkValue="ngModel">
+                            <mat-error *ngIf="linkValue.hasError('pattern')">
+                            {{progress.linkValidator[1]}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-icon *ngIf="first" (click)="valueInfoClick(progress.linkValidator[2])">announcement</mat-icon>
+                    </div>
+                    <hr *ngIf="!last" >
+                </div>
             </div>
         </div>
         <hr >

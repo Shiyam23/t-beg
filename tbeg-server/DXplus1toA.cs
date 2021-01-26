@@ -359,10 +359,14 @@ namespace TBeg
             return InitMatrixStandard(content,  alphabet,  states);
         }
 
-        public string[] GetValidator() {
+        public string[][] GetValidator() {
             
-            // First index: regex, Second index: Error message 
-            return new string[] {"^(1|0|0\\.\\d{1,2})$", "Only decimals (0-1) with 2 decimal places!"};
+            // First array: State [<Regex>, <ErrorMessage>, <Description>]
+            // Second array: Link [<Regex>, <ErrorMessage>, <Description>]
+            return new string[][] {
+                new string[] {"^$", "No value allowed here", "No value expected here!"},
+                new string[] {"^(1|0|0\\.\\d{1,2})$", "Only decimals (0-1) with 2 decimal places!", "Write here the probability of the transition"}
+            };
         }
 
         public String GetValue(string rowhead, int state, GraphModel.Graph graph) {

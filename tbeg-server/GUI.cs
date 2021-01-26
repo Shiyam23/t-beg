@@ -115,10 +115,10 @@ namespace TBeg
             AddGraph.Invoke(graph, functor);
         }
 
-        public void SendValidator(string regex, string message) {
+        public void SendValidator(string[] stateValidator, string[] linkValidator) {
 
             TBeg.context.Clients.Client(this.connectionId)
-            .SendAsync("Validator", regex, message);
+            .SendAsync("Validator", stateValidator, linkValidator);
 
         }
 

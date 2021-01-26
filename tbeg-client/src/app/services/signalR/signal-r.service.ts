@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as SignalR from '@aspnet/signalr';
+import { link } from 'fs';
 import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
 import { DialogDataType, DialogData, DialogComponent, DialogDataOption } from 'src/app/templates/dialog/dialog.component';
@@ -15,7 +16,7 @@ export class SignalRService {
 
   public connected = new Subject<boolean>();
   public functorList = new Subject<Array<string>>();
-  public validator = new Subject<Array<string>>();
+  public validator = new Subject<Array<Array<string>>>();
   public initGameView = new Subject<boolean>();
   public gameSteps = new Subject<Event>();
   public backSteps = new Subject<StepBackEvent>();
@@ -69,8 +70,8 @@ export class SignalRService {
   }
 
   public getValidator() {
-    this.hubConnection.on("Validator", (validator : string, message : string) => {
-      this.validator.next([validator, message]);
+    this.hubConnection.on("Validator", (stateValidator : Array<string>, linkValidator : Array<string>) => {
+      this.validator.next([stateValidator, linkValidator]);
     })
   }
 
