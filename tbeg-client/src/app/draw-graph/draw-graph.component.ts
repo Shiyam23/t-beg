@@ -274,13 +274,40 @@ export class DrawGraphComponent implements OnInit{
                         {x: position.x+60, y: position.y-45}
                     ];
                 }
-                var link = this.addLink(selectedState, clickedState, this.label, vertices);
-
+                let linkModel = this.addLink(selectedState, clickedState, this.label, vertices);
+                
                 if (selectedState == clickedState) {
-                    link.connector('smooth');
-                    selectedState.embed(link);
+                    linkModel.connector('smooth');
+                    selectedState.embed(linkModel);
+                }
+                else {
+                    let link = Link.findLinkByModel(linkModel);
+                    let reverseLink = Link.allLinks
+                    .find(link => link.target.model == selectedState 
+                            && link.source.model == clickedState);
+                    if (reverseLink != null) {
+                        let vertexHandler = this.updateVertex(reverseLink.model, linkModel, selectedState, clickedState);
+                        vertexHandler();
+                        link.vertexHandler = vertexHandler;
+                        reverseLink.vertexHandler = vertexHandler;
+                        selectedState.on('change:position', vertexHandler);
+                        clickedState.on('change:position', vertexHandler);
+                        linkModel.connector('smooth');
+                        reverseLink.model.connector('smooth');
+
+                    }
                 }
             }
+        }
+    }
+
+    updateVertex = (link1:joint.dia.Link, link2:joint.dia.Link, state1:joint.dia.Element, state2:joint.dia.Element) => {
+        return () => {
+            let line = new joint.g.Line(link2.getSourcePoint(), link2.getTargetPoint());
+            let vertex1 = line.rotate(line.midpoint(), 90).pointAtLength(line.length()/2-30);
+            let vertex2 = line.rotate(line.midpoint(), 180).pointAtLength(line.length()/2-30);
+            link1.vertices([vertex1]);
+            link2.vertices([vertex2]);
         }
     }
 
@@ -297,6 +324,19 @@ export class DrawGraphComponent implements OnInit{
             this.progress.selectedStateView = null;
         };
         var link = Link.findLinkByModel(view.model);
+        if (link.vertexHandler) {
+            let vertexHandler = link.vertexHandler;
+            link.source.model.off('change:position', vertexHandler);
+            link.target.model.off('change:position', vertexHandler);
+            let reverseLink = Link.allLinks.find(link2 => 
+                link.source == link2.target
+                && link.target == link2.source
+                && link != link2);
+            reverseLink?.model.vertices([]);
+            reverseLink?.model.connector('normal');
+            link.vertexHandler = null;
+            reverseLink.vertexHandler = null;
+        }
         link.remove();
     }
 

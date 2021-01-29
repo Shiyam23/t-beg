@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '../templates/dialog/dialog.component';
 import { Subscription } from 'rxjs';
+import * as joint from 'jointjs';
 
 
 @Component({
@@ -92,7 +93,6 @@ export class GraphPanelComponent implements OnDestroy {
     Link.allLinks.forEach(link => {
         link.name.toString().split(',').forEach((char,index) => {
             if (alphabet.indexOf(char) == -1) alphabet.push(char);
-            console.log(link.value);
             links.push(new Link(char, link.source, link.target, link.value[index], null));
         });
     });
@@ -205,9 +205,32 @@ export class GraphPanelComponent implements OnDestroy {
     if (file != null) {
         fr.readAsText(file);
         event.target.value = "";
+        fr.onloadend = this.checkDoubleLinks;
     }
     
   }
+
+  private checkDoubleLinks = () => {
+    Link.allLinks.forEach(link => {
+        let link2 : Link = Link.allLinks.find(link2 => 
+            link.source == link2.target 
+            && link.target == link2.source
+            && link != link2);
+        if (link2) {
+            link.source.model.on('change:position', (_, __) => {
+                this.updateVertex(link.model, link2.model, link.source.model, link.target.model);
+            });
+        }
+    })
+  }
+
+  updateVertex = (link1:joint.dia.Link, link2:joint.dia.Link, state1:joint.dia.Element, state2:joint.dia.Element) => {
+    let line = new joint.g.Line(link2.getSourcePoint(), link2.getTargetPoint());
+    let vertex1 = line.rotate(line.midpoint(), 90).pointAtLength(line.length()/2-30);
+    let vertex2 = line.rotate(line.midpoint(), 180).pointAtLength(line.length()/2-30);
+    link1.vertices([vertex1]);
+    link2.vertices([vertex2]);
+}
 
   setLinkValue(event : any, index : number) {
     if (!this.linkValue.hasError('pattern'))
