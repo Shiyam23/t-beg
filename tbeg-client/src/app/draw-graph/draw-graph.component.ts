@@ -143,6 +143,8 @@ export class DrawGraphComponent implements OnInit{
             this.progress.selectedLabelArray = link.name.split(',');
         });
 
+        this.progress.updateVertex = this.updateVertex;
+
         this.paper.unfreeze();
     }
 
@@ -286,7 +288,7 @@ export class DrawGraphComponent implements OnInit{
                     .find(link => link.target.model == selectedState 
                             && link.source.model == clickedState);
                     if (reverseLink != null) {
-                        let vertexHandler = this.updateVertex(reverseLink.model, linkModel, selectedState, clickedState);
+                        let vertexHandler = this.progress.updateVertex(reverseLink.model, linkModel, selectedState, clickedState);
                         vertexHandler();
                         link.vertexHandler = vertexHandler;
                         reverseLink.vertexHandler = vertexHandler;

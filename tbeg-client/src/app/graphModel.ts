@@ -77,7 +77,7 @@ export class Link {
     static allLinks : Array<Link> = new Array<Link>();
     loopDirection : number = null;
     selected : boolean = false;
-    vertexHandler : () => void = Function;
+    vertexHandler : () => void;
 
     constructor(
         private _name: string,

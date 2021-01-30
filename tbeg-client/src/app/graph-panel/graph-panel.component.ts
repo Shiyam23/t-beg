@@ -217,20 +217,21 @@ export class GraphPanelComponent implements OnDestroy {
             && link.target == link2.source
             && link != link2);
         if (link2) {
-            link.source.model.on('change:position', (_, __) => {
-                this.updateVertex(link.model, link2.model, link.source.model, link.target.model);
-            });
+            let vertexHandler = this.progress.updateVertex(link2.model, link.model, link.source.model, link.target.model);
+            vertexHandler();
+            if (link.vertexHandler == null) {
+                link.vertexHandler = vertexHandler;
+                link2.vertexHandler = vertexHandler;
+                link.source.model.on('change:position', vertexHandler);
+                link.target.model.on('change:position', vertexHandler);
+                link.model.connector('smooth');
+                link2.model.connector('smooth');
+            }
         }
     })
   }
 
-  updateVertex = (link1:joint.dia.Link, link2:joint.dia.Link, state1:joint.dia.Element, state2:joint.dia.Element) => {
-    let line = new joint.g.Line(link2.getSourcePoint(), link2.getTargetPoint());
-    let vertex1 = line.rotate(line.midpoint(), 90).pointAtLength(line.length()/2-30);
-    let vertex2 = line.rotate(line.midpoint(), 180).pointAtLength(line.length()/2-30);
-    link1.vertices([vertex1]);
-    link2.vertices([vertex2]);
-}
+
 
   setLinkValue(event : any, index : number) {
     if (!this.linkValue.hasError('pattern'))

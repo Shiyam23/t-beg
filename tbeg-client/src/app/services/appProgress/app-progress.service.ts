@@ -26,6 +26,7 @@ export class AppProgressService {
   selectedItem : State | Link;
   isStateWindow : boolean = true;
   highlighter : any;
+  updateVertex : any;
 
   //Setup
   isSpoiler : boolean = true;
