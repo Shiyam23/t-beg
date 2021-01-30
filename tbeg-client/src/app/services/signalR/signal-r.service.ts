@@ -147,5 +147,18 @@ export class SignalRService {
     })
   }
 
+  public listenOnError() {
+    this.hubConnection.on("Error", (errorMessage) => {
+      var data : DialogData = {
+        option: DialogDataOption.DISMISS,
+        type : DialogDataType.ERROR,
+        content : errorMessage
+      }
+      this.dialog.open(DialogComponent, {
+        data: data,
+      })
+    });
+  }
+
 
 }

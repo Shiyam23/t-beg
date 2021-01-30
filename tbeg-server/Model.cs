@@ -2283,13 +2283,14 @@ namespace TBeg
 
                 InitandSaveMatrix(graphName, functor, alphabet, states, values.ToArray(), "");
                 InitandSaveGame(graphName, functor, alphabet, states, values.ToArray(), "");
-                InitGameView.Invoke();
             }
             catch (Exception e)
             {
-                throw e;
+                SendErrorMessage(e.InnerException.Message);
+                return;
             }
 
+                InitGameView.Invoke();
         }
 
         // Helper function
