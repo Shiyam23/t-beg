@@ -327,8 +327,8 @@ namespace TBeg
                 // update View, create GAME-Board:
                 // transform to graph:
 
-                Graph graph = new Graph();
-                ExtractGraphfromTS(transitionSystem, ref graph, states, alphabet);
+                //Graph graph = new Graph();
+                //ExtractGraphfromTS(transitionSystem, ref graph, states, alphabet);
                 /*
                 for (int i = 0; i < states.Count; i++)
                 {
@@ -391,12 +391,12 @@ namespace TBeg
                     edge.Label.FontSize = 5;
                 }
                */
-                CurrentGraph = graph;
-                UpdateGraphView(name, graph);
+                //CurrentGraph = graph;
+                //UpdateGraphView(name, graph);
 
                 PropertyInfo InitGraph = transitionSystem.GetType().GetProperty("InitGraph1");
                 //Reference check?? Deep copy better:
-                InitGraph.SetValue(transitionSystem, DeepCopyGraph(graph));
+                //InitGraph.SetValue(transitionSystem, DeepCopyGraph(graph));
 
             }
             catch (Exception e)
@@ -408,7 +408,7 @@ namespace TBeg
 
         private void ExtractGraphfromTS(Object transitionSystem, ref Graph graph, List<int> states, string[] alphabet)
         {
-            for (int i = 0; i < states.Count; i++)
+            /* for (int i = 0; i < states.Count; i++)
             {
                 Node node_i = new Node((i + 1).ToString());
                 //Update size of the label? GUI
@@ -416,7 +416,7 @@ namespace TBeg
                 node_i.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
 
                 graph.AddNode(node_i);
-            }
+            } */
 
 
             // Distinguish between this weighted automata template and a more general one:
@@ -504,8 +504,7 @@ namespace TBeg
             Type[] types = Functor.GetType().GetGenericArguments();
 
             // init matrix and save
-            try
-            {
+           
                 MethodInfo method = Functor.GetType().GetMethod("InitMatrix");
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
                 Object transitionSystem = method.Invoke(Functor, new Object[] { content, alphabet, states, optional});
@@ -515,13 +514,7 @@ namespace TBeg
                 } else {
                     datamodelMatrix.Add(name, transitionSystem);
                 }
-            }
-
-       
-            catch (ArgumentException e)
-            {
-                throw e;
-            }
+           
             //update view
 
         }
@@ -533,19 +526,14 @@ namespace TBeg
 
             Type[] types = Functor.GetType().GetGenericArguments();
             // call save method of functor
-            try
-            {
+           
                 //SaveTransitionSystem(string filePath, string [] userinput);
                 MethodInfo method = Functor.GetType().GetMethod("SaveTransitionSystem");
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
                 Object info = method.Invoke(Functor, new Object[] { name, content, optional });
                 string infotext = (string)info;
 
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+           
         }
 
         public void LoadFromCSV(string name, string functor, string[] content, int col, int row, string optional)
@@ -555,8 +543,7 @@ namespace TBeg
 
             Type[] types = Functor.GetType().GetGenericArguments();
             // call save method of functor
-            try
-            {
+           
                 //SaveTransitionSystem(string filePath, string [] userinput);
                 MethodInfo method = Functor.GetType().GetMethod("LoadTransitionSystemContent");
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
@@ -565,11 +552,7 @@ namespace TBeg
 
                 //send feedback to the UI
                 SendInfoFileOp(name,UIInfo,optional);
-            }
-            catch (Exception)
-            {
-                //TODO continue with error message to GUI
-            }
+          
         }
 
         public void SendInfoFileOp(string name, string [,] content, string optional)
@@ -587,8 +570,7 @@ namespace TBeg
             // Iinit Game Instance
             if (CheckMatrixName(name))
             {
-                try
-                {
+                
                     Object transitionSystem = datamodelMatrix[name];
                     T Functor = new T();
                     Type[] typeArgs = new Type[2];
@@ -615,13 +597,13 @@ namespace TBeg
 
                     //clear the game-graph if necessary
                     //reset coloring of the graph before new round
-                    for (int j = 0; j < CurrentGraph.NodeCount; j++)
+                    /* for (int j = 0; j < CurrentGraph.NodeCount; j++)
                     {
                         Node node = CurrentGraph.FindNode((j + 1).ToString());
                         node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
                         node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                     }
-                    UpdateGraph(name, CurrentGraph);
+                    UpdateGraph(name, CurrentGraph); */
 
                     //extract the alphabet:
                     Type ts = transitionSystem.GetType();
@@ -639,11 +621,7 @@ namespace TBeg
                     GameThread = new Thread(() => GameGoOn(name, 1, alphabet));
                     GameThread.IsBackground = true;
                     GameThread.Start();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                
 
                 
             }
@@ -665,9 +643,9 @@ namespace TBeg
                 CurrentGame = stepBack.Pop();
                 CurrentGame = stepBack.Pop(); //state before the last step of the user
                 //set to top of the gameStep stack
-                Graph g = (Graph)stepBackGraph.Pop();
-                g = (Graph)stepBackGraph.Pop();
-                g = (Graph)stepBackGraph.Pop(); //state before the last step of the user
+                // Graph g = (Graph)stepBackGraph.Pop();
+                // g = (Graph)stepBackGraph.Pop();
+                // g = (Graph)stepBackGraph.Pop(); //state before the last step of the user
                 // threadsafety
                 Interlocked.Decrement(ref FLOW_Step);
                 Interlocked.Decrement(ref FLOW_Step);
@@ -689,13 +667,13 @@ namespace TBeg
                 bool userisSpoiler = (bool)spoiler.GetValue(CurrentGame, null);
 
                 //prepare the graph
-                for (int i = 0; i < CurrentGraph.NodeCount; i++)
-                {
+                // for (int i = 0; i < CurrentGraph.NodeCount; i++)
+                // {
 
-                    CurrentGraph.FindNode((i + 1).ToString()).Attr.Shape = g.FindNode((i + 1).ToString()).Attr.Shape;
-                    CurrentGraph.FindNode((i + 1).ToString()).Attr.Color = g.FindNode((i + 1).ToString()).Attr.Color;
-                    CurrentGraph.FindNode((i + 1).ToString()).Attr.FillColor = g.FindNode((i + 1).ToString()).Attr.FillColor;
-                }
+                //     CurrentGraph.FindNode((i + 1).ToString()).Attr.Shape = g.FindNode((i + 1).ToString()).Attr.Shape;
+                //     CurrentGraph.FindNode((i + 1).ToString()).Attr.Color = g.FindNode((i + 1).ToString()).Attr.Color;
+                //     CurrentGraph.FindNode((i + 1).ToString()).Attr.FillColor = g.FindNode((i + 1).ToString()).Attr.FillColor;
+                // }
 
 
                 //update to situation according to step caseSwitch
@@ -707,12 +685,12 @@ namespace TBeg
                         try
                         {
                             stepBack = SaveStepBack(4, CurrentGame, name);
-                            stepBackGraph = SaveStepBackGraph(4, name);
+                            //stepBackGraph = SaveStepBackGraph(4, name);
                         }
                         catch
                         {
                             stepBack = SaveStepBack(0, CurrentGame, name);
-                            stepBackGraph = SaveStepBackGraph(0, name);
+                            //stepBackGraph = SaveStepBackGraph(0, name);
                         }
                         //inform GUI get the initial states of this round
                         PropertyInfo X = type.GetProperty("X");
@@ -721,11 +699,11 @@ namespace TBeg
                         int y = (int)Y.GetValue(CurrentGame, null);
                         InitGame(userisSpoiler, (x + 1).ToString(), (y + 1).ToString());
                         //update graph
-                        UpdateGraph(name, CurrentGraph);
+                        //UpdateGraph(name, CurrentGraph);
                         break;
                     case 2:
                         stepBack = SaveStepBack(1, CurrentGame, name);
-                        stepBackGraph = SaveStepBackGraph(1, name);
+                        //stepBackGraph = SaveStepBackGraph(1, name);
                         PropertyInfo S_SP = type.GetProperty("S_sp");
                         x = (int)S_SP.GetValue(CurrentGame, null);
                         PropertyInfo P1 = type.GetProperty("P1");
@@ -746,11 +724,11 @@ namespace TBeg
                       
                         UpdateStep1(x + 1, p1, userisSpoiler, value);
                         //update graph
-                        UpdateGraph(name, CurrentGraph);
+                        //UpdateGraph(name, CurrentGraph);
                         break;
                     case 3:
                         stepBack = SaveStepBack(2, CurrentGame, name);
-                        stepBackGraph = SaveStepBackGraph(2, name);
+                        //stepBackGraph = SaveStepBackGraph(2, name);
                         //reconstruct initial situation
                         X = type.GetProperty("X");
                         x = (int)X.GetValue(CurrentGame, null);
@@ -774,11 +752,11 @@ namespace TBeg
                         UpdateStep2(y, p2, userisSpoiler);
 
                         //update graph
-                        UpdateGraph(name, CurrentGraph);
+                        //UpdateGraph(name, CurrentGraph);
                         break;
                     case 4:
                         stepBack = SaveStepBack(3, CurrentGame, name);
-                        stepBackGraph = SaveStepBackGraph(3, name);
+                        //stepBackGraph = SaveStepBackGraph(3, name);
                         //reconstruct initial situation wrt selection:                
                         PropertyInfo Sel = type.GetProperty("Selection");
                         int selection = (int)Sel.GetValue(CurrentGame, null);
@@ -831,7 +809,7 @@ namespace TBeg
                         p.Add(x);
                         UpdateStep3(selection, p, false);
                         //update graph
-                        UpdateGraph(name, CurrentGraph);
+                        //UpdateGraph(name, CurrentGraph);
                         break;
                     default:
                         break;
@@ -1000,7 +978,7 @@ namespace TBeg
 
             //save inital situation ?? need to create a new ref object?
             stepBack = SaveStepBack(0, CurrentGame, GameName);
-            stepBackGraph = SaveStepBackGraph(1, GameName);
+            //stepBackGraph = SaveStepBackGraph(1, GameName);
             Type type = CurrentGame.GetType();
             MethodInfo method;
 
@@ -1008,8 +986,8 @@ namespace TBeg
             // game continues until: exit or one of the players wins the game
             while (Interlocked.Read(ref play) == 1)
             {
-                try
-                {
+                // try
+                // {
                     PropertyInfo spoiler;
                     if (Interlocked.Read(ref FLOW_Step) == 1)
                     {
@@ -1030,9 +1008,9 @@ namespace TBeg
                                 Interlocked.Increment(ref step);
                                 //save this step
                                 stepBack = SaveStepBack(1, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(1, GameName);
+                                //stepBackGraph = SaveStepBackGraph(1, GameName);
                                 //inform GUI:
-                                UpdateGraph(GameName, CurrentGraph);
+                                //UpdateGraph(GameName, CurrentGraph);
                             }
                         }
                         else //PC is Spoiler
@@ -1046,27 +1024,27 @@ namespace TBeg
                             s = (int)arguments[0];
                             p1 = (List<int>)arguments[1];
 
-                            Node lila = CurrentGraph.FindNode((s + 1).ToString());
-                            lila.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
-                            for (int j = 0; j < p1.Count(); j++)
-                            {
-                                Node node = CurrentGraph.FindNode((p1[j] + 1).ToString());
-                                node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Violet;
-                            }
+                            //Node lila = CurrentGraph.FindNode((s + 1).ToString());
+                            //lila.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
+                            //for (int j = 0; j < p1.Count(); j++)
+                            //{
+                            //    Node node = CurrentGraph.FindNode((p1[j] + 1).ToString());
+                            //    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Violet;
+                            //}
                             // mark the state for the duplicator:
                             PropertyInfo prop = type.GetProperty("T_dup");
                             int t = (int)prop.GetValue(CurrentGame, null);
-                            Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                            tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
+                            //Node tu = CurrentGraph.FindNode((t + 1).ToString());
+                            //tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                             //
                             Interlocked.Increment(ref FLOW_Step);
                             Interlocked.Increment(ref step);
 
                             //save this step
                             stepBack = SaveStepBack(1, CurrentGame, GameName);
-                            stepBackGraph = SaveStepBackGraph(1, GameName);
+                            //stepBackGraph = SaveStepBackGraph(1, GameName);
                             //inform GUI:
-                            UpdateGraph(GameName, CurrentGraph);
+                            //UpdateGraph(GameName, CurrentGraph);
                             //value infostring Fpalpha(x)
                             method = type.GetMethod("Fpalpha_xToString");
                             string value;
@@ -1097,16 +1075,16 @@ namespace TBeg
                             method = type.GetMethod("Step2_PCIsDefender");
                             method.Invoke(CurrentGame, new Object[] { p2, alphabet.Count() });
                             // update the nodes in the graph:
-                            Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                            tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
-                            for (int j = 0; j < p2.Count(); j++)
-                            {
-                                Node node = CurrentGraph.FindNode((p2[j] + 1).ToString());
-                                node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Turquoise;
-                            }
+                            //Node tu = CurrentGraph.FindNode((t + 1).ToString());
+                            //tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
+                            //for (int j = 0; j < p2.Count(); j++)
+                            //{
+                            //     Node node = CurrentGraph.FindNode((p2[j] + 1).ToString());
+                            //     node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Turquoise;
+                            // }
 
                             //inform GUI:
-                            UpdateGraph(GameName, CurrentGraph);
+                            //UpdateGraph(GameName, CurrentGraph);
                             method = type.GetMethod("Step2ByUser");
                             bool check = (bool)method.Invoke(CurrentGame, new Object[] { p2 });
                             if (check)
@@ -1115,7 +1093,7 @@ namespace TBeg
                                 Interlocked.Increment(ref step);
                                 //save this step
                                 stepBack = SaveStepBack(2, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(2, GameName);
+                                //stepBackGraph = SaveStepBackGraph(2, GameName);
                                 UpdateStep2(t, p2, true);
                             }
                             else
@@ -1147,8 +1125,8 @@ namespace TBeg
                                 Interlocked.Increment(ref step);
                                 //save this step
                                 stepBack = SaveStepBack(2, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(2, GameName);
-                                UpdateGraph(GameName, CurrentGraph);
+                                // stepBackGraph = SaveStepBackGraph(2, GameName);
+                                // UpdateGraph(GameName, CurrentGraph);
                             }
 
 
@@ -1172,19 +1150,19 @@ namespace TBeg
                                 List<int> p = new List<int>();
                                 p.Add(x_prime);
                                 // update the nodes in the graph:
-                                Node tu = CurrentGraph.FindNode((x_prime + 1).ToString());
-                                tu.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
-                                tu.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                                //Node tu = CurrentGraph.FindNode((x_prime + 1).ToString());
+                                //tu.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
+                                //tu.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
                                 //update previous game init
                                 PropertyInfo X = type.GetProperty("S_sp");
                                 int x = (int)X.GetValue(CurrentGame, null);
-                                Node tu_old = CurrentGraph.FindNode((x + 1).ToString());
-                                tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
+                                //Node tu_old = CurrentGraph.FindNode((x + 1).ToString());
+                                //tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 //tu_old.Attr.FillColor = Color.White;
                                 PropertyInfo Y = type.GetProperty("T_dup");
                                 int y = (int)Y.GetValue(CurrentGame, null);
-                                tu_old = CurrentGraph.FindNode((y + 1).ToString());
-                                tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
+                                //tu_old = CurrentGraph.FindNode((y + 1).ToString());
+                                //tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 //tu_old.Attr.FillColor = Color.White;
                                 //for (int j = 0; j < CurrentGraph.NodeCount; j++)
                                 //{
@@ -1197,8 +1175,8 @@ namespace TBeg
                                 //update x in game instance
                                 //save this step
                                 stepBack = SaveStepBack(3, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(3, GameName);
-                                UpdateGraph(GameName, CurrentGraph);
+                                //stepBackGraph = SaveStepBackGraph(3, GameName);
+                                //UpdateGraph(GameName, CurrentGraph);
                                 UpdateStep3(selection, p, false);
                             }
                             else
@@ -1231,8 +1209,8 @@ namespace TBeg
                                 Interlocked.Increment(ref step);
                                 //save this step
                                 stepBack = SaveStepBack(3, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(3, GameName);
-                                UpdateGraph(GameName, CurrentGraph);
+                                //stepBackGraph = SaveStepBackGraph(3, GameName);
+                                //UpdateGraph(GameName, CurrentGraph);
                             }
                         }
 
@@ -1249,20 +1227,20 @@ namespace TBeg
 
                             if (y_prime >= 0)
                             {
-                                Node tu = CurrentGraph.FindNode((y_prime + 1).ToString());
-                                tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
+                                //Node tu = CurrentGraph.FindNode((y_prime + 1).ToString());
+                                //tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                                 //get the old Y_prime value
                                 PropertyInfo Y = type.GetProperty("Y_prime");
                                 int y = (int)Y.GetValue(CurrentGame, null);
-                                Node tu_old = CurrentGraph.FindNode((y + 1).ToString());
-                                tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
+                                //Node tu_old = CurrentGraph.FindNode((y + 1).ToString());
+                                //tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                                 //reset coloring of the graph before new round
-                                for (int j = 0; j < CurrentGraph.NodeCount; j++)
-                                {
-                                    Node node = CurrentGraph.FindNode((j + 1).ToString());
-                                    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
-                                    node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
-                                }
+                                // for (int j = 0; j < CurrentGraph.NodeCount; j++)
+                                // {
+                                //     Node node = CurrentGraph.FindNode((j + 1).ToString());
+                                //     node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                                //     node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
+                                // }
 
                                 while (Interlocked.Read(ref FLOW_Step) > 1)
                                     Interlocked.Decrement(ref FLOW_Step);
@@ -1273,7 +1251,7 @@ namespace TBeg
                                 UpdateStep4(y_prime, true);
                                 //save this step
                                 stepBack = SaveStepBack(4, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(4, GameName);
+                                //stepBackGraph = SaveStepBackGraph(4, GameName);
                                 //Update Game-step overview:
                                 PropertyInfo X = type.GetProperty("X");
                                 int x = (int)X.GetValue(CurrentGame, null);
@@ -1297,7 +1275,7 @@ namespace TBeg
                                 else InfoTextToUser("Duplicator has lost the game, because condition of step 4 is not satisfied. But Duplicator has a winning strategy.", true, true);
                             }
                             //inform GUI:
-                            UpdateGraph(GameName, CurrentGraph);
+                            //UpdateGraph(GameName, CurrentGraph);
                         }
                         else //User is Defender
                         {
@@ -1314,18 +1292,18 @@ namespace TBeg
                                     Interlocked.Decrement(ref step);
                                 //save this step
                                 stepBack = SaveStepBack(4, CurrentGame, GameName);
-                                stepBackGraph = SaveStepBackGraph(4, GameName);
-                                UpdateGraph(GameName, CurrentGraph);
+                                //stepBackGraph = SaveStepBackGraph(4, GameName);
+                                //UpdateGraph(GameName, CurrentGraph);
                             }
 
                         }
                     }
-                }
-                catch
+               /*  }
+                 catch
                 {
                     Interlocked.Decrement(ref play); // Game thread should finish
                     InfoTextToUser("Please check your game configurations. Maybe you have an unvalid state selection?", true, true);
-                }
+                 } */
             }//while play not interrupted or finished
 
         }
@@ -1435,18 +1413,18 @@ namespace TBeg
                     UpdateStep1(s, p1, true, value);
                     Interlocked.Increment(ref FLOW_Step);
                     //graph update:
-                    Node lila = CurrentGraph.FindNode((s ).ToString());
+                    /* Node lila = CurrentGraph.FindNode((s ).ToString());
                     lila.Attr.Color = Microsoft.Msagl.Drawing.Color.BlueViolet;
                     for (int j = 0; j < p1.Count(); j++)
                     {
                         Node node = CurrentGraph.FindNode((p1[j]+1 ).ToString());
                         node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Violet;
-                    }
+                    } */
                     // mark the state for the duplicator:
                     PropertyInfo prop = type.GetProperty("T_dup");
                     int t = (int)prop.GetValue(CurrentGame, null);
-                    Node tu = CurrentGraph.FindNode((t + 1).ToString());
-                    tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
+                    //Node tu = CurrentGraph.FindNode((t + 1).ToString());
+                    //tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                 }
                 else
                 {
@@ -1471,13 +1449,13 @@ namespace TBeg
                 {
                     PropertyInfo prop = type.GetProperty("T_dup");
                     int t = (int)prop.GetValue(CurrentGame, null);
-                    Node tu = CurrentGraph.FindNode((t + 1).ToString());
+                    /* Node tu = CurrentGraph.FindNode((t + 1).ToString());
                     tu.Attr.Color = Microsoft.Msagl.Drawing.Color.SkyBlue;
                     for (int j = 0; j < predicate.Count(); j++)
                     {
                         Node node = CurrentGraph.FindNode((predicate[j] + 1).ToString());
                         node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Turquoise;
-                    }
+                    } */
                     //Update GUI
                     UpdateStep2(t, predicate, false);
          
@@ -1541,16 +1519,16 @@ namespace TBeg
                     {
                         X = type.GetProperty("X_prime");
                         X.SetValue(CurrentGame, x);
-                        Node tu_old = CurrentGraph.FindNode((x + 1).ToString());
-                        tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
+                        // Node tu_old = CurrentGraph.FindNode((x + 1).ToString());
+                        // tu_old.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                         //tu_old.Attr.FillColor = Color.White;
                     }
                     else
                     {
                         Y= type.GetProperty("Y_prime");
                         Y.SetValue(CurrentGame, y);
-                        Node tu_old2 = CurrentGraph.FindNode((y + 1).ToString());
-                        tu_old2.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
+                        // Node tu_old2 = CurrentGraph.FindNode((y + 1).ToString());
+                        // tu_old2.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
                         //tu_old2.Attr.FillColor = Color.White;
                     }               
                     UpdateStep3(selection, x_prime, true);
@@ -1598,12 +1576,12 @@ namespace TBeg
             if (check)
             {
                 //reset coloring of the graph before new round
-                for (int j = 0; j < CurrentGraph.NodeCount; j++)
+                /* for (int j = 0; j < CurrentGraph.NodeCount; j++)
                 {
                     Node node = CurrentGraph.FindNode((j + 1).ToString());
                     node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
                     node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
-                }
+                } */
                 //TODO: reset all the textboxes and check boxes
                 UpdateStep4(y_prime, false);
                 while (Interlocked.Read(ref FLOW_Step) > 1)
@@ -1719,14 +1697,14 @@ namespace TBeg
 
             // clear graph vizu:
             //reset coloring of the graph before new round
-            for (int j = 0; j < CurrentGraph.NodeCount; j++)
+            /* for (int j = 0; j < CurrentGraph.NodeCount; j++)
             {
                 Node node = CurrentGraph.FindNode((j + 1).ToString());
                 node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
                 node.Attr.Color = Microsoft.Msagl.Drawing.Color.Gray;
-            }
+            } */
             //clean the stacks:
-            stepBackGraph.Clear();
+            //stepBackGraph.Clear();
             stepBack.Clear();
         }
 
@@ -1952,9 +1930,9 @@ namespace TBeg
             // extraxt transitionsystem from graph
             int states = graph.Nodes.Count() ;
             // Adapt node-ids to game concept:
-            KeepTheIdsConsistentToGame(states, ref graph);
+            //KeepTheIdsConsistentToGame(states, ref graph);
             // Adapt smaller graph to enable content-info
-            UseAllIds(states, ref graph);
+            //UseAllIds(states, ref graph);
 
             List<string> alphabet=new List<string>();
             //call getTSFrom Graph method or switch to standard
@@ -2102,19 +2080,19 @@ namespace TBeg
                                 //only use this if back to init graph
                                 if (backToInit)
                                 {
-                                    graph = new Graph();
-                                    ExtractGraphfromTS(transitionSystem, ref graph, statesList, alphabet.ToArray());
+                                    //graph = new Graph();
+                                    //ExtractGraphfromTS(transitionSystem, ref graph, statesList, alphabet.ToArray());
                                 }
 
 
                                 CurrentGraph = graph;
 
-                                UpdateGraph_Name(nameGraphUpdate, graph);
-                                UpdateGraphView(nameGraphUpdate, graph);
+                                //UpdateGraph_Name(nameGraphUpdate, graph);
+                                //UpdateGraphView(nameGraphUpdate, graph);
 
                                 PropertyInfo InitGraph = transitionSystem.GetType().GetProperty("InitGraph1");
                                 //Deep copy better:
-                                InitGraph.SetValue(transitionSystem, DeepCopyGraph(graph));
+                                //InitGraph.SetValue(transitionSystem, DeepCopyGraph(graph));
 
                                 //TODO: this throws exception
                                 //SaveToCSV(Application.StartupPath + "\\Transitionsystems\\" + functor + "\\" + nameGraphUpdate + ".ts", functor, contentCSV, "");
@@ -2169,12 +2147,12 @@ namespace TBeg
 
         private void UpdateGraph_Name(string nameGraphUpdate, Graph graph)
         {
-            GraphNameUpdate.Invoke(this, new  ModelEvent_UpdateGraphView(nameGraphUpdate, graph, false, 0));
+            //GraphNameUpdate.Invoke(this, new  ModelEvent_UpdateGraphView(nameGraphUpdate, graph, false, 0));
         }
 
         public void CheckConsistenceOfGameGraph(string name, string functor)
         {
-            bool graphsareConsistent;
+            /* bool graphsareConsistent;
             //get the currentGraph and the InitGraph of the transitionsystem
             if (CheckMatrixName(name)) {
                 Object transitionSystem = datamodelMatrix[name];
@@ -2185,7 +2163,8 @@ namespace TBeg
                 graphsareConsistent = GraphsAreEqual(CurrentGraph, InitGraph);
             //check for equality
             GraphIsConsistentWithGame.Invoke(this, new ModelEvent_UpdateGraphView(name, graphsareConsistent, InitGraph));
-            }
+            
+            } */
 
         }
 
@@ -2239,8 +2218,7 @@ namespace TBeg
             
             T Functor = new T();
             // call save method of functor
-            try
-            {   
+         
                 //SaveTransitionSystem(string filePath, string [] userinput);
                 MethodInfo method = Functor.GetType().GetMethod("GetValidator");
                 //todo: T1 and T2 from Functor<T1,T2> is not  known, but in types:
@@ -2250,11 +2228,7 @@ namespace TBeg
                 //send feedback to the UI
                 SendValidator.Invoke(validator[0], validator[1]);
 
-            }
-            catch (Exception)
-            {
-                //TODO continue with error message to GUI
-            }
+          
         }
 
         public void AddGraph(graph::Graph graph, string functor) {

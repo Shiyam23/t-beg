@@ -66,112 +66,48 @@ namespace TBeg
 
         private void CheckConsistenceOfGameGraph(IView sender, ViewEvent_Game e)
         {
-            try
-            {
                 getTypeModel(e.functor).CheckConsistenceOfGameGraph(e.name, e.functor);
-            }
-            catch (Exception ex)
-            {
-                //Inform the user: forwarding Infos via exceptions from Model to View
-                throw ex;
-            }
         }
 
         private void ResetGraph(IView sender, ViewEvent_GameGraph e)
         {
-            try
-            {
                 getTypeModel(e.functor).ResetGraph(e.name, e.functor, e.graph, e.BackToInit);
-            }
-            catch (Exception ex)
-            {
-                //Inform the user, but exeptions are handled in the model via try catch blocks, forwarding Infos drom Model to View
-                throw ex;
-            }
         }
 
         private void ExitGame(IView sender, ViewEvent_Game e)
         {
-            try
-            {
                 getTypeModel(e.functor).ExitGame(e.name, e.functor);
-            }
-            catch
-            {
-                throw new Exception();
-            }
         }
 
         private void StepBack(IView sender, ViewEvent_Game e)
         {
-            try
-            {
                 getTypeModel(e.functor).StepBack(e.name, e.functor);
-            }
-            catch
-            {
-                throw new Exception();
-            }
         }
 
         private void LoadFromCSV(IView sender, ViewEvent_Matrix e)
         {
-            try
-            {
                 getTypeModel(e.functor).LoadFromCSV(e.name, e.functor, e.content, e.col, e.row, e.optional);
-            }
-            catch
-            {
-                throw new Exception();
-            }
         }
 
         private void SaveToCSV(IView sender, ViewEvent_Matrix e)
         {
-            try
-            {
                 getTypeModel(e.functor).SaveToCSV(e.name, e.functor,  e.content, e.optional);
-            }
-            catch
-            {
-                throw new Exception();
-            }
         }
 
         private void SendStep(IView sender, ViewEvent_GameStepUser e)
         {
-            try
-            {
                 getTypeModel(e.functor).SendStepSwitchCase(e.name, e.p2,e.selection);
-            }
-            catch
-            {
-                throw new Exception();
-            }
+            
         }
 
         private void InitGame(IView sender, ViewEvent_Game e)
         {
-            try
-            {
-                getTypeModel(e.functor).InitGame(e.name, e.functor, e.initPair,e.spoiler);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                getTypeModel(e.functor).InitGame(e.name, e.functor, e.initPair,e.spoiler);   
         }
 
         private void InitandSaveGame(IView sender, ViewEvent_Matrix e)
         {
-            try
-            {
                 getTypeModel(e.functor).InitandSaveGame(e.name, e.functor, e.alphabet, e.states, e.content,e.optional);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         private bool CheckMatrixName(IView sender, ViewEvent_Matrix e)
@@ -195,50 +131,22 @@ namespace TBeg
         /// <returns></returns>
         public IModel getTypeModel(String t)
         {
-
             return Models[t];
         }
 
         private void InitandSaveMatrix(IView sender, ViewEvent_Matrix e)
         {
-
-            try
-            {
                 getTypeModel(e.functor).InitandSaveMatrix(e.name,e.functor,e.alphabet,e.states,e.content,e.optional);
-            }
-        
-            catch (Exception exe)
-            {
-                throw exe;
-            }
         }
 
         private void GetValidator(string functor)
         {
-
-            try
-            {   
                 getTypeModel(functor).GetValidator();
-            }
-        
-            catch (Exception exe)
-            {
-                throw exe;
-            }
         }
 
         private void AddGraph(G::Graph graph, string functor)
         {
-
-            try
-            {   
                 getTypeModel(functor).AddGraph(graph, functor);
-            }
-        
-            catch (Exception exe)
-            {
-                throw exe;
-            }
         }
     }
 }
