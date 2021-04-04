@@ -91,9 +91,9 @@ namespace TBeg
         {
             List<int> t = returnAlpha(state, transitionsystem.columns(), transitionsystem, transitionsystem.Alphabet);
             List<int> Fp_t = ReturnFp(predicate)(t);
-            string ret = "{";
+            string ret = "(" + Fp_t[Fp_t.Count-1] + ",{" ;
             for(int i = 0; i < Fp_t.Count - 1; i++) {
-                ret += "(" + transitionsystem.Alphabet[i] + ", " + Fp_t[i] + ")" + (i == Fp_t.Count - 2 ? "}" : ",");
+                ret += "(" + transitionsystem.Alphabet[i] + ", " + Fp_t[i] + ")" + (i == Fp_t.Count - 2 ? "})" : ",");
             }
             return ret;
         }
@@ -181,13 +181,11 @@ namespace TBeg
 
         public List<int> ReturnDirectSuccesors(int state, Matrix<List<int>, int> ts, int states, int alphabet)
         {
-            Console.WriteLine($"Successors of {state}...");
             List<int> stateList = new List<int>();
             for (int i = 0; i < alphabet; i++) {
                 Console.Write((ts.get(i,state)) + ",");
                 stateList.Add(ts.get(i,state)-1);
             }
-            Console.WriteLine("");
             return stateList;
         }
 
