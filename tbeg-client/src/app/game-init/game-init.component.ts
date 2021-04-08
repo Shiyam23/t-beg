@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { Link, State } from '../graphModel';
@@ -11,7 +12,7 @@ import { DialogComponent, DialogData, DialogDataType, DialogDataOption} from "..
   templateUrl: './game-init.component.html',
   styleUrls: ['./game-init.component.css']
 })
-export class GameInitComponent implements OnInit{
+export class GameInitComponent implements OnInit, AfterViewInit{
 
   selectedStatesLabel : String = "(?,?)";
 
@@ -66,6 +67,34 @@ export class GameInitComponent implements OnInit{
     });
   }
 
+  ngAfterViewInit() : void {
+    if (this.progress.tutorial) {
+      let data : DialogData = {
+        type: DialogDataType.TUTORIAL,
+        option: DialogDataOption.DISMISS,
+        content:  "You made it! Now you have to setup this game:" + 
+                  "<ol>" +
+                  "<li>Choose your role:" +
+                    "<ul>" +
+                      "<li>Spoiler: Tries to show that there is no behavioral equivalence for the selected states</li>" +
+                      "<li>Duplicator: Tries to show that there is a behavioral equivalence for the selected states</li>" +
+                      "<li>For the purpose of this tutorial, <b>choose Duplicator</b>" +
+                    "</ul>" +
+                  "</li>" +
+                  "<li>Select the initial pair of states of which the behavioural equivalence should be checked. For this tutorial, <b>choose 1 and 4</b>"
+      }
+      let width = '45vw';
+      this.progress.lastData = data;
+      this.progress.lastWidth = width;
+      this.dialog.open(DialogComponent, {
+          data: data,
+          width: width,
+          scrollStrategy: new NoopScrollStrategy()
+      })
+    }
+}
+
+
 
 
   public selectRole = (event : MatButtonToggleChange) => {
@@ -83,16 +112,33 @@ export class GameInitComponent implements OnInit{
       this.dialog.open(DialogComponent,{
         data: data
       })
+      return;
     }
-    else {
-      this.progress.initialPair = this.selectedStates;
-      var stateNames = this.selectedStates.map(state => state.name.toString())
-      this.progress.stateNames = stateNames;
-      this.paper.trigger('blank:pointerclick');
-      this.paper.unbind('element:pointerclick');
-      this.paper.unbind('blank:pointerclick');
-      this.progress.forward();
-    }
+
+    if (this.progress.tutorial 
+        && (!(this.selectedStates[0].name == '1' && this.selectedStates[1].name == '4')
+        || this.progress.isSpoiler == true)) {
+          var data : DialogData = {
+            option: DialogDataOption.DISMISS,
+            type : DialogDataType.TUTORIAL,
+            content:  "For this tutorial, please choose the <b>Duplicator</b> role and <b>(1,4)</b> as the initial pair. " +
+                      "Please consider that the order of the pair matters! So (4,1) is not valid for this tutorial."
+        };
+        this.dialog.open(DialogComponent, {
+          data : data,
+          width: '26vw'
+        });
+        return;
+      }
+
+    this.progress.initialPair = this.selectedStates;
+    var stateNames = this.selectedStates.map(state => state.name.toString())
+    this.progress.stateNames = stateNames;
+    this.paper.trigger('blank:pointerclick');
+    this.paper.unbind('element:pointerclick');
+    this.paper.unbind('blank:pointerclick');
+    this.progress.forward();
+    
   }
 
   public goBack = () => {

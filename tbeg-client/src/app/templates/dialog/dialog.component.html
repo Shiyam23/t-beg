@@ -1,14 +1,11 @@
-<div class="dialog">
+<div class="tutDialog" *ngIf="data.type==DialogDataType.TUTORIAL; else other">
     <div class="aboveButton">
-        <div [ngSwitch]="data.type">
-            <h1 *ngSwitchCase="DialogDataType.ERROR">Error</h1>
-            <h1 *ngSwitchCase="DialogDataType.INFO">Information</h1>
-            <h1 *ngSwitchCase="DialogDataType.WARNING">Warning</h1>
-            <h1 *ngSwitchCase="DialogDataType.GAMEOVER">Game Over</h1>
-        </div>
+        <h1>TUTORIAL</h1>
         <hr>
-        <div class="content">
-            {{data.content}}
+        <div class="content" [innerHTML]="data.content">
+        </div>
+        <div class="image">
+            <img src="{{data.image}}">
         </div>
     </div>
     <div class="buttons">
@@ -16,3 +13,23 @@
         <div class="button" style="background-color: lightcoral;" [mat-dialog-close]="'Dismiss'">Dismiss</div>
     </div>
 </div>
+<ng-template #other>
+    <div class="dialog" >
+        <div class="aboveButton">
+            <div [ngSwitch]="data.type">
+                <h1 *ngSwitchCase="DialogDataType.ERROR">Error</h1>
+                <h1 *ngSwitchCase="DialogDataType.INFO">Information</h1>
+                <h1 *ngSwitchCase="DialogDataType.WARNING">Warning</h1>
+                <h1 *ngSwitchCase="DialogDataType.GAMEOVER">Game Over</h1>
+            </div>
+            <hr>
+            <div class="content">
+                {{data.content}}
+            </div>
+        </div>
+        <div class="buttons">
+            <div *ngIf="data.option == DialogDataOption.ACCEPT" class="button" style="background-color: lightgreen;"  [mat-dialog-close]="'Accept'">Accept</div>
+            <div class="button" style="background-color: lightcoral;" [mat-dialog-close]="'Dismiss'">Dismiss</div>
+        </div>
+    </div>
+</ng-template>

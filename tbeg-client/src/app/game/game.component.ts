@@ -16,6 +16,7 @@ declare var MathJax : any;
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit, OnDestroy {
+  
 
   gameSteps : Subscription;
   backSteps : Subscription;
@@ -30,6 +31,7 @@ export class GameComponent implements OnInit, OnDestroy {
   y : number = Number(this.progress.stateNames[1]);
   disabled1 : boolean = true;
   disabled2 : boolean = true;
+  tutorialStep : number;
   
   @ViewChild('selectedState') selectedState : MatButtonToggleGroup;
   @ViewChild('selectedPred') selectedPred : MatButtonToggleGroup;
@@ -45,35 +47,81 @@ export class GameComponent implements OnInit, OnDestroy {
   
 
   ngOnInit(): void {
-    MathJax.Hub.Typeset(() => {
-      this.signalR.listenToInfoStep();
-      this.signalR.listenToInfoText();
-      this.signalR.listenToStepBack();
-      this.gameSteps = this.signalR.gameSteps.subscribe((event : Event) => {
-        switch (event.step) {
-          case 0:
-            this.infoStep0(event); break;
-            case 1:
-            this.infoStep1(event); break;
-          case 2:
-            this.infoStep2(event); break;
-          case 3:
-            this.infoStep3(event); break;
-          case 4:
-            this.infoStep4(event); break;
-        }
-        this.highlightStep(this.actualStep);
-      });
-      this.backSteps = this.signalR.backSteps.subscribe((event : StepBackEvent) => this.stepBack(event));
-      this.info = this.signalR.info.subscribe((event : InfoEvent) => {
-        this.infoMessage(event);
-      });
-      this.signalR.initGame(
-        this.progress.selectedFunctor,
-        this.progress.stateNames,
-        this.progress.isSpoiler
-      )
+    if (this.progress.tutorial) {
+      MathJax.Hub.Typeset();
+      let data : DialogData = {
+        type: DialogDataType.TUTORIAL,
+        option: DialogDataOption.DISMISS,
+        content:  "Welcome back! This is the game screen, where you can play the bisimulation game. " + 
+                  "On the left side, you can see four steps. Step 1 and Step 3 are performed by the <b>Spoiler</b>. " +
+                  "Step 2 and Step 4 are performed by the <b>Duplicator</b>. More information is shown, when you click the notification icon in the according step. " + 
+                  " You chose the Duplicator role. " +
+                  "The colored step shows the actual step, where violet implies Spoiler and turquoise implies Duplicator. " +
+                  "<br><ol>" +
+                    "<li>In step 1 the Spoiler selects a state by clicking the according one in the selection box. Additionally he selects a predicate by clicking the states on the canvas.</li>" +
+                    "<li>In step 2 the Duplicator selects a predicate by clicking the states on the canvas.</li>" +
+                    "<li>In step 3 the Spoiler selects the predicate by clicking the according one in the selection box. Additionally he selects a state by clicking it on the canvas.</li>" +
+                    "<li>In step 4 the Duplicator selects a state by clicking it on the canvas.</li>" +
+                  "</ol>" +
+                  "On the canvas, some states are colored:" +
+                    "<ul>" +
+                      "<li>Outlined in violet: Selected state for Spoiler" +
+                      "<li>Outlined in turquoise: Selected state for Duplicator" +
+                      "<li>Filled with violet: Selected predicate Spoiler" +
+                      "<li>Filled with turquoise: Selected predicate for Spoiler" +
+                    "</ul>" +
+                  "At the bottom left corner you see three buttons:" +
+                  "<ol>" +
+                  "<li>Left button: Restart Game</li>" +
+                  "<li>Middle button: Take a step back</li>" +
+                  "<li>Right button: Confirm move</li>" +
+                  "</ol>" +
+                  "",
+      }
+      this.progress.lastData = data;
+      this.progress.lastWidth = '45vw'
+      this.dialog.open(DialogComponent, {
+        data: data,
+        width: '45vw'
+      }).afterClosed().subscribe(() => {
+        this.prepareGame();
+      })
+    }
+    else {
+      MathJax.Hub.Typeset(this.prepareGame);
+    }
+  }
+
+  private prepareGame = () => {
+
+    this.tutorialStep = 1;
+    this.signalR.listenToInfoStep();
+    this.signalR.listenToInfoText();
+    this.signalR.listenToStepBack();
+    this.gameSteps = this.signalR.gameSteps.subscribe((event : Event) => {
+      switch (event.step) {
+        case 0:
+          this.infoStep0(event); break;
+          case 1:
+          this.infoStep1(event); break;
+        case 2:
+          this.infoStep2(event); break;
+        case 3:
+          this.infoStep3(event); break;
+        case 4:
+          this.infoStep4(event); break;
+      }
+      this.highlightStep(this.actualStep);
     });
+    this.backSteps = this.signalR.backSteps.subscribe((event : StepBackEvent) => this.stepBack(event));
+    this.info = this.signalR.info.subscribe((event : InfoEvent) => {
+      this.infoMessage(event);
+    });
+    this.signalR.initGame(
+      this.progress.selectedFunctor,
+      this.progress.stateNames,
+      this.progress.isSpoiler
+    )
   }
 
   ngOnDestroy(): void {
@@ -102,13 +150,17 @@ export class GameComponent implements OnInit, OnDestroy {
   infoMessage(event : InfoEvent) {
 
     this.closeSnackbar();
-    var data : DialogData = {
+    let data : DialogData = {
       option : DialogDataOption.DISMISS,
       type : event.over ? DialogDataType.GAMEOVER : DialogDataType.ERROR,
       content : event.name
     }
     this.dialog.open(DialogComponent, {
       data: data,
+    }).afterClosed().subscribe(() => {
+      if (event.over && this.progress.tutorial) {
+        this.tutorialStepMessage();
+      };
     });
     if (!event.over) {
       this.disableControlButtons(false);
@@ -153,6 +205,8 @@ export class GameComponent implements OnInit, OnDestroy {
       }
       this.dialog.open(DialogComponent, {
         data: data
+      }).afterClosed().subscribe(() => {
+        if (this.progress.tutorial) this.tutorialStepMessage();
       })
       this.bindGraphToArray(1, false);
       this.disableControlButtons(false);
@@ -160,6 +214,53 @@ export class GameComponent implements OnInit, OnDestroy {
     }
     this.actualStep = 2;
   }
+
+  private tutorialStepMessage() {
+
+    if (this.tutorialStep == 1) {
+      var content = "You just saw a message from the server. It will notify you after each Step 1 (if it is the Spoiler). " + 
+                    "It just told you that your next move in Step 2 has to hold the equation, which you can see on the left side in Step 2. " +
+                    "<br><br>So our predicate has to hold (0,{(a,1),(b,1)}), which means the selected state (outlined in turquoise, so in our case 4) has to be a non-accepting state (which it is already). " + 
+                    "Additionally your predicate has to be atleast a selection, which contains the a - successor and the b - successor of the selected state (4). " + 
+                    "<br><br>So you need to <b>pick 5 and 6</b> and <b>confirm</b> the move.";
+    }
+    if (this.tutorialStep == 2) {
+      var content = "Ok, now it picked state 2 in Step 3. Now you should select a bisimilar state. Let's <b>pick 5</b>!";
+    }
+    if (this.tutorialStep == 3) {
+      var content = "Ok, now it picked state 2. And it picked 2,3,5 and 6 as a predicate. It also said that our predicate has to hold " + 
+                    "(1,{(a,1),(b,1)}. That means our selected state (5) has to be an accepting state (which it is already). Additionally the " + 
+                    "a - successor and b - successor of the selected state (5) have to be in our predicate. So we need to <b>pick 4 and 6</b>!";
+    }
+    if (this.tutorialStep == 4) {
+      var content = "Ok, now it picked state 2 again. We have to pick a bisimilar state here. Let's see what happens when we select state 4...";
+    }
+    if (this.tutorialStep == 5) {
+      var content = "Ok, now it picked state 2 ... again! And all the states for his predicate. The server said that our predicate has to hold " + 
+                    "(1,{(a, 1),(b, 1)}), which means our selected state has to be an accepting state. <br><br>Wait a second! We picked state 4, which is not an " + 
+                    "accepting state. So we can't fulfill this condition at all. We shouldn't have picked state 4. Thats your fault! Just <b>pick any states</b> " + 
+                    "and finish this game.";
+    }
+    if (this.tutorialStep == 6) {
+      var content = "We lost this game. But let's have a look. The server said that we lost this game because we didn't fulfill the condition. But 1 and 4 weren't " + 
+                    "behavioural equivalent at all. It also gave us a distinguishing formula. " + 
+                    "<br><br>Now you can restart this game, by clicking the button in the bottom left corner, and play this tutorial again. Or you can refresh this web app and play this game yourself without any 'help'.";
+    }
+
+    let data : DialogData = {
+      type: DialogDataType.TUTORIAL,
+      option: DialogDataOption.DISMISS,
+      content:  content,
+    };
+    this.progress.lastData = data;
+    this.progress.lastWidth = '45vw';
+    this.dialog.open(DialogComponent, {
+      data: data,
+      width: '45vw'
+    });
+  }
+
+
   infoStep2(event : Event) {
     this.disabled1 = true;
     this.unbindGraphToArray();
@@ -193,6 +294,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.bindGraphToArray(3, true);
       this.disableControlButtons(false);
       this.closeSnackbar();
+      if (this.progress.tutorial) this.tutorialStepMessage();
     }
     this.actualStep = 4;
   }
@@ -277,6 +379,7 @@ export class GameComponent implements OnInit, OnDestroy {
     else if (step == 3) selection = Number(this.selectedPred.value);
     else selection = 0;
     var states : Array<number> = this.selStates[step-1].map(state => Number(state.name)-1);
+    if (this.progress.tutorial && !this.validTutorialMove(states)) return;
     if (states.length > 0) {
       this.signalR.sendStep(this.progress.selectedFunctor, selection, states);
       this.disableControlButtons(true);
@@ -284,6 +387,49 @@ export class GameComponent implements OnInit, OnDestroy {
       this.resetSelection(step-1);
     }
     
+  }
+
+  private validTutorialMove(states : Array<number>) : boolean {
+    let valid = true;
+    let message = '';
+    if (this.tutorialStep == 1) {
+      if (states.length != 2 || !states.includes(4) || !states.includes(5)) {
+            message = 'You need to <b>select 5 and 6</b>!'
+            valid = false;
+          } 
+    }
+    if (this.tutorialStep == 2) {
+      if (!states.includes(4)) {
+        message = 'Please <b>select 5</b> for this tutorial!'
+        valid = false;
+      } 
+    }
+    if (this.tutorialStep == 3) {
+      if (states.length != 2 || !states.includes(3) || !states.includes(5)) {
+            message = 'You need to <b>select 4 and 6</b>!'
+            valid = false;
+          } 
+    }
+    if (this.tutorialStep == 4) {
+      if (!states.includes(3)) {
+            message = 'State 4 looks interesting... <b>Select state 4</b>!'
+            valid = false;
+          } 
+    }
+    if (!valid) {
+      let data : DialogData = {
+        type: DialogDataType.TUTORIAL,
+        option: DialogDataOption.DISMISS,
+        content:  message,
+      };
+      this.dialog.open(DialogComponent, {
+        data: data,
+        width: '25vw'
+      });
+      return false;
+    }
+    this.tutorialStep++;
+    return true;
   }
   
   backClick = () => {
@@ -311,6 +457,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.signalR.sendStepBack(this.progress.selectedFunctor);
     this.disableControlButtons(true);
     this.openSnackbar();
+    this.tutorialStep--;
   }
 
   resetClick = () => {
@@ -451,4 +598,6 @@ export class GameComponent implements OnInit, OnDestroy {
       data : data
     });
   }
+
+  
 }

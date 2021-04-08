@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Link, State } from 'src/app/graphModel';
+import { DialogData } from 'src/app/templates/dialog/dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,12 @@ export class AppProgressService {
   //TODO: set this to 0 later
   private _appProgress : number = 0;
   private maxProgress : number = 5;
+
+  //Tutorial properties
+  tutorial : boolean = false;
+  lastData : DialogData;
+  lastWidth: string;
+  lastHeight : string;
 
   availableFunctors : {value:string, viewValue:string}[] = new Array();
   selectedFunctor : string;

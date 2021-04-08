@@ -1,7 +1,14 @@
-<div [ngSwitch]="progress.appProgress">
-    <div *ngSwitchCase="3" id='drawGraphTitle' >Draw a graph!</div>
-    <div *ngSwitchCase="4" id='drawGraphTitle' >Setup your game!</div>
-    <div *ngSwitchCase="5" id='drawGraphTitle' >Play!</div>
+<div class="top">
+    <div style="flex: 1;"></div>
+    <div [ngSwitch]="progress.appProgress">
+        <div *ngSwitchCase="3" id='drawGraphTitle' >Draw a graph!</div>
+        <div *ngSwitchCase="4" id='drawGraphTitle' >Setup your game!</div>
+        <div *ngSwitchCase="5" id='drawGraphTitle' >Play!</div>
+    </div>
+    <div class="tutButtonArea">
+        <app-start *ngIf="this.progress.tutorial" text="TUTORIAL" [click]="lastTutData">Test</app-start>
+    </div>
+    
 </div>
 
 <div id="content">

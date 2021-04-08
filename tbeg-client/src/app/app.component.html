@@ -7,7 +7,10 @@
       <div *ngSwitchCase="0" id="loading">
         Loading ...
       </div>
-      <app-start [text]="'START'" *ngSwitchCase="1"></app-start>
+      <div class="buttonArea" *ngSwitchCase="1">
+        <app-start [text]="'START'"></app-start>
+        <app-start [text]="'TUTORIAL'" [click]="tutorial"></app-start>
+      </div>
     </div>
   </div>
   <ng-template #content>

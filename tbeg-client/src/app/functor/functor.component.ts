@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
@@ -10,7 +10,7 @@ import { DialogComponent, DialogData, DialogDataOption, DialogDataType } from '.
   templateUrl: './functor.component.html',
   styleUrls: ['./functor.component.css']
 })
-export class FunctorComponent implements OnInit, OnDestroy {
+export class FunctorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private functorListSub : Subscription;
   private validatorSub : Subscription;
@@ -42,12 +42,36 @@ export class FunctorComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    if (this.progress.tutorial) this.showTutMsg();
+  }
+
+  private showTutMsg = () => {
+    let data : DialogData = {
+      type: DialogDataType.TUTORIAL,
+      option: DialogDataOption.DISMISS,
+      content:  "A functor describes the branching type of a system. An example Powerset, which enables " + 
+                "non-determinism. " +
+                "Another example is DFA, which enables " + 
+                "determinism and accepting states. For the purpose of this tutorial, <b>choose DFA</b>.",
+      image: "assets/img/dfa_powerset.svg"
+    }
+    this.dialog.open(DialogComponent, {
+      data: data,
+      width: '40vw'
+    })
+  }
+
   ngOnDestroy() : void {
     this.signalR.stopGetValidator();
     this.validatorSub.unsubscribe();
   }
 
   public next = () => {
+    if (this.progress.tutorial && !(this.selected == 'DFA')) {
+      this.wrongFunctor();
+      return;
+    }
     this.progress.selectedFunctor = this.selected;
     this.signalR.askValidator(this.selected);
     this.signalR.getValidator();
@@ -67,6 +91,18 @@ export class FunctorComponent implements OnInit, OnDestroy {
     }
     this.dialog.open(DialogComponent, {
       data: data
+    })
+  }
+
+  private wrongFunctor() {
+    let data : DialogData = {
+      type: DialogDataType.TUTORIAL,
+      option: DialogDataOption.DISMISS,
+      content:  "For the purpose of this tutorial, please <b>choose DFA</b>!"
+    }
+    this.dialog.open(DialogComponent, {
+      data: data,
+      width: '30vw'
     })
   }
 }

@@ -45,4 +45,9 @@ export class AppComponent implements AfterViewInit  {
     });
     this.service.listenOnError();
   }
+
+  private tutorial() {
+    this.progress.tutorial = true;
+    this.progress.forward();
+  }
 }

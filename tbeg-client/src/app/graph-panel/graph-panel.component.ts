@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { AppProgressService } from '../services/appProgress/app-progress.service';
 import { SignalRService } from '../services/signalR/signal-r.service';
 import { State, Link} from '../graphModel'
@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogData, DialogDataType, DialogComponent, DialogDataOption } from '../templates/dialog/dialog.component';
 import { Subscription } from 'rxjs';
 import * as joint from 'jointjs';
+import { NoopScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 
 @Component({
@@ -14,7 +15,7 @@ import * as joint from 'jointjs';
   templateUrl: './graph-panel.component.html',
   styleUrls: ['./graph-panel.component.css']
 })
-export class GraphPanelComponent implements OnDestroy {
+export class GraphPanelComponent implements OnDestroy, AfterViewInit {
 
   initGameViewSub : Subscription;
 
@@ -39,8 +40,39 @@ export class GraphPanelComponent implements OnDestroy {
     if (this.initGameViewSub != null) this.initGameViewSub.unsubscribe();
   }
 
+  ngAfterViewInit() : void {
+    if (this.progress.tutorial) {
+        let data : DialogData = {
+            type: DialogDataType.TUTORIAL,
+            option: DialogDataOption.DISMISS,
+            content:  "Welcome to the graph editor! In the following you can see the instructions for creating the graph:" + 
+                      "<ul>" +
+                        "<li>Create State: Right click on the canvas and choose <b>Create State</b></li>" +
+                        "<li>Create Edge: <b>Select</b> the source state (left click) and right click on the target state and choose <b>Create Link</b></li>" +
+                        "<li>Change state/edge label: <b>Select</b> the state/edge (left click) and type the label in the <b>name</b> textfield on the left side</li>" +
+                        "<li>Delete state/edge: <b>Right click</b> the state/edge and choose <b>Delete State</b> or <b>Delete Link</b></li>" + 
+                        "<li>Clear selection: Just <b>click on an empty space</b> (This also applies to the following pages)</li>" + 
+                      "</ul>" + 
+                      "If you have multiple edges (e.g. a and b) with the same states as source and target, you have to draw one edge and give both labels together, but " + 
+                      "separated with a comma (e.g. \'a,b\'). " + 
+                      "Be aware that for specific functors you have to give values for all states and/or for all edges." + 
+                      " You can save this graph with <b>Save</b> and load graphs you saved previously with <b>Load</b>. " + 
+                      "\n\nIn the following you can see the last tutorial message by clicking on <b>Tutorial</b> on the top right corner." + 
+                      " Try to create the following graph with the instructions mentioned before. Please consider the label of the states and edges!",
+            image: "assets/img/dfa_example.svg",
+          }
+        let width = '45vw';
+        this.progress.lastData = data;
+        this.progress.lastWidth = width;
+        this.dialog.open(DialogComponent, {
+            data: data,
+            width: width,
+            scrollStrategy: new NoopScrollStrategy()
+        })
+    }
+  }
+
   startClick = () => {
-      
     if (State.allStates.length < 2) {
         var data : DialogData = {
             option: DialogDataOption.DISMISS,
@@ -86,6 +118,8 @@ export class GraphPanelComponent implements OnDestroy {
             }
         })
     })) return;
+
+    if (this.progress.tutorial && !this.checkTutGraph()) return;
 
     var states : Array<State> = State.allStates.sort( (a,b) => Number(a.name) - Number(b.name));
     var alphabet : Array<string> = new Array<string>();
@@ -272,6 +306,86 @@ export class GraphPanelComponent implements OnDestroy {
     this.dialog.open(DialogComponent, {
         data: data
     })
+  }
+
+  private checkTutGraph() {
+    let graphValid = true;
+    if (State.allStates.length != 6) {
+        var data : DialogData = {
+            option: DialogDataOption.DISMISS,
+            type : DialogDataType.TUTORIAL,
+            content: "The graphs are not identical. The graph you should draw contains 6 states. Your graph has " + 
+                    State.allStates.length + 
+                    " state(s). Click on <b>Tutorial</b> to see the graph you should draw."
+        };
+        graphValid = false;
+    }
+    if (graphValid && Link.allLinks.length != 10) {
+        var data : DialogData = {
+            option: DialogDataOption.DISMISS,
+            type : DialogDataType.TUTORIAL,
+            content: "The graphs are not identical. The graph you should draw contains 10 edges. Your graph has " + 
+                    Link.allLinks.length + 
+                    " edge(s). Please consider that you have to draw the \'a,b\' edges as one edge. Click on <b>Tutorial</b> to see the graph you should draw."
+        };
+        graphValid = false;
+    }
+
+    if (graphValid) {
+        let l = 0;
+        Link.allLinks.forEach(link => {
+            let l1 = link.source.name == '1' && link.target.name == '2' && link.name == 'a';
+            let l2 = link.source.name == '1' && link.target.name == '3' && link.name == 'b';
+            let l3 = link.source.name == '2' && link.target.name == '3' && link.name == 'a,b';
+            let l4 = link.source.name == '3' && link.target.name == '2' && link.name == 'a,b';
+            let l5 = link.source.name == '4' && link.target.name == '5' && link.name == 'a';
+            let l6 = link.source.name == '4' && link.target.name == '6' && link.name == 'b';
+            let l7 = link.source.name == '5' && link.target.name == '4' && link.name == 'a';
+            let l8 = link.source.name == '5' && link.target.name == '6' && link.name == 'b';
+            let l9 = link.source.name == '6' && link.target.name == '4' && link.name == 'b';
+            let l10 = link.source.name == '6' && link.target.name == '5' && link.name == 'a';
+            if (l1 || l2 || l3 || l4 || l5 || l6 || l7 || l8 || l9 || l10) l++;
+        })
+        if (l != 10) {
+            var data : DialogData = {
+                option: DialogDataOption.DISMISS,
+                type : DialogDataType.TUTORIAL,
+                content: "The graphs are not identical. Check the transitions. " + 
+                        "Click on <b>Tutorial</b> to see the graph you should draw."
+            };
+            graphValid = false;
+        }
+    }
+
+    if (graphValid) {
+        let s = 0;
+        State.allStates.forEach(state => {
+            let s1 = (state.name == '1') && (state.value == '0');
+            let s2 = (state.name == '2') && (state.value == '1');
+            let s3 = (state.name == '3') && (state.value == '1');
+            let s4 = (state.name == '4') && (state.value == '0');
+            let s5 = (state.name == '5') && (state.value == '1');
+            let s6 = (state.name == '6') && (state.value == '1');
+            if (s1 || s2 || s3 || s4 || s5 || s6) s++;
+        })
+        if (s != 6) {
+            var data : DialogData = {
+                option: DialogDataOption.DISMISS,
+                type : DialogDataType.TUTORIAL,
+                content: "The graphs are not identical. Check the values for your states. If you need help, click on the notification icon next to the \'value\' field. " + 
+                        "Click on <b>Tutorial</b> to see the graph you should draw."
+            };
+            graphValid = false;
+        }
+    }
+
+    if (!graphValid) {
+        this.dialog.open(DialogComponent, {
+            data : data,
+            width: '26vw'
+        });
+    }
+    return graphValid;
   }
 
 }

@@ -8,6 +8,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { ContextMenuComponent } from '../templates/context-menu/context-menu.component';
 import { State, Link } from '../graphModel'
 import { AppProgressService } from '../services/appProgress/app-progress.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../templates/dialog/dialog.component';
 
 @Component({
   selector: 'app-draw-graph',
@@ -34,12 +36,14 @@ export class DrawGraphComponent implements OnInit{
         function:Function
       }>;
 
-    signalR : SignalRService;
+    private signalR : SignalRService;
     progress : AppProgressService;
+    private dialog : MatDialog;
 
-    constructor(signalR : SignalRService, progress : AppProgressService) {
+    constructor(signalR : SignalRService, progress : AppProgressService, dialog : MatDialog) {
         this.signalR = signalR;
         this.progress = progress;
+        this.dialog = dialog
     }
   
 
@@ -351,7 +355,18 @@ export class DrawGraphComponent implements OnInit{
         return (list.length+1).toString();
     }
 
-    
+    lastTutData = () => {
+        let data = this.progress.lastData;
+        let width : string = this.progress.lastWidth;
+        let height = this.progress.lastHeight;
+        if (this.progress.lastData != null) {
+            this.dialog.open(DialogComponent, {
+                data: data,
+                width: width,
+                height: height
+              })
+        }
+    }
 
 }
 

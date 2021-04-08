@@ -21,8 +21,8 @@ export interface DialogData {
 
   type : DialogDataType,
   option: DialogDataOption,
-  content: string
-
+  content: string,
+  image?: string
 }
 
 export enum DialogDataType{
@@ -30,7 +30,8 @@ export enum DialogDataType{
   INFO,
   WARNING,
   ERROR,
-  GAMEOVER
+  GAMEOVER,
+  TUTORIAL
 
 }
 

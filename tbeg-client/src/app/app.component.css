@@ -21,6 +21,14 @@ body {
     align-items: center;
 }
 
+.buttonArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 30vw;
+}
+
+
 .bottomInfo {
     display: flex;
     justify-content: center;
