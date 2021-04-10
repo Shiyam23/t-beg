@@ -76,12 +76,12 @@ export class GameInitComponent implements OnInit, AfterViewInit{
                   "<ol>" +
                   "<li>Choose your role:" +
                     "<ul>" +
-                      "<li>Spoiler: Tries to show that there is no behavioral equivalence for the selected states</li>" +
-                      "<li>Duplicator: Tries to show that there is a behavioral equivalence for the selected states</li>" +
+                      "<li>Spoiler: Tries to show that the selected states are not behaviourally equivalent</li>" +
+                      "<li>Duplicator: Tries to show that the selected states are behaviourally equivalent</li>" +
                       "<li>For the purpose of this tutorial, <b>choose Duplicator</b>" +
                     "</ul>" +
                   "</li>" +
-                  "<li>Select the initial pair of states of which the behavioural equivalence should be checked. For this tutorial, <b>choose 1 and 4</b>"
+                  "<li>Select the initial pair of states for which the behavioural equivalence should be checked. For this tutorial, <b>choose 1 and 4</b>"
       }
       let width = '45vw';
       this.progress.lastData = data;

@@ -58,9 +58,9 @@ export class GameComponent implements OnInit, OnDestroy {
                   " You chose the Duplicator role. " +
                   "The colored step shows the actual step, where violet implies Spoiler and turquoise implies Duplicator. " +
                   "<br><ol>" +
-                    "<li>In step 1 the Spoiler selects a state by clicking the according one in the selection box. Additionally he selects a predicate by clicking the states on the canvas.</li>" +
+                    "<li>In step 1 the Spoiler selects a state by clicking it in the selection box. Additionally he selects a predicate by clicking the states on the canvas.</li>" +
                     "<li>In step 2 the Duplicator selects a predicate by clicking the states on the canvas.</li>" +
-                    "<li>In step 3 the Spoiler selects the predicate by clicking the according one in the selection box. Additionally he selects a state by clicking it on the canvas.</li>" +
+                    "<li>In step 3 the Spoiler selects the predicate by clicking it in the selection box. Additionally he selects a state by clicking it on the canvas.</li>" +
                     "<li>In step 4 the Duplicator selects a state by clicking it on the canvas.</li>" +
                   "</ol>" +
                   "On the canvas, some states are colored:" +
@@ -219,31 +219,31 @@ export class GameComponent implements OnInit, OnDestroy {
 
     if (this.tutorialStep == 1) {
       var content = "You just saw a message from the server. It will notify you after each Step 1 (if it is the Spoiler). " + 
-                    "It just told you that your next move in Step 2 has to hold the equation, which you can see on the left side in Step 2. " +
-                    "<br><br>So our predicate has to hold (0,{(a,1),(b,1)}), which means the selected state (outlined in turquoise, so in our case 4) has to be a non-accepting state (which it is already). " + 
-                    "Additionally your predicate has to be atleast a selection, which contains the a - successor and the b - successor of the selected state (4). " + 
+                    "It just told you that your next move in Step 2 has to be such that the inequation, which you can see on the left side in Step 2, has to be satisfied. " +
+                    "<br><br>So our predicate has to create a value which is at least(0,{(a,1),(b,1)}), which means that the selected state (outlined inturquoise, so in our case 4) has to be a non-accepting state (which it is already). " + 
+                    "Additionally your predicate has to be at least a selection, which contains all a-successors and all b-successor of the selected state (4). " + 
                     "<br><br>So you need to <b>pick 5 and 6</b> and <b>confirm</b> the move.";
     }
     if (this.tutorialStep == 2) {
       var content = "Ok, now it picked state 2 in Step 3. Now you should select a bisimilar state. Let's <b>pick 5</b>!";
     }
     if (this.tutorialStep == 3) {
-      var content = "Ok, now it picked state 2. And it picked 2,3,5 and 6 as a predicate. It also said that our predicate has to hold " + 
-                    "(1,{(a,1),(b,1)}. That means our selected state (5) has to be an accepting state (which it is already). Additionally the " + 
-                    "a - successor and b - successor of the selected state (5) have to be in our predicate. So we need to <b>pick 4 and 6</b>!";
+      var content = "Ok, now it picked state 2. And it picked 2,3,5 and 6 as a predicate. It also said that our predicate has to be such that the created " + 
+                    "value is at least (1,{(a,1),(b,1)}. That means our selected state (5) has to be an accepting state (which it is already). Additionally all " + 
+                    "a-successors and b-successors of the selected state (5) have to be in our predicate. So we need to <b>pick 4 and 6</b>!";
     }
     if (this.tutorialStep == 4) {
       var content = "Ok, now it picked state 2 again. We have to pick a bisimilar state here. Let's see what happens when we select state 4...";
     }
     if (this.tutorialStep == 5) {
-      var content = "Ok, now it picked state 2 ... again! And all the states for his predicate. The server said that our predicate has to hold " + 
-                    "(1,{(a, 1),(b, 1)}), which means our selected state has to be an accepting state. <br><br>Wait a second! We picked state 4, which is not an " + 
+      var content = "Ok, now it picked state 2 ... again! And all the states for his predicate. The server said that our predicate has to be such " + 
+                    "that the corresponding value is at least (1,{(a, 1),(b, 1)}), which means our selected state has to be an accepting state. <br><br>Wait a second! We picked state 4, which is not an " + 
                     "accepting state. So we can't fulfill this condition at all. We shouldn't have picked state 4. Thats your fault! Just <b>pick any states</b> " + 
                     "and finish this game.";
     }
     if (this.tutorialStep == 6) {
       var content = "We lost this game. But let's have a look. The server said that we lost this game because we didn't fulfill the condition. But 1 and 4 weren't " + 
-                    "behavioural equivalent at all. It also gave us a distinguishing formula. " + 
+                    "behaviourally equivalent at all. It also gave us a distinguishing formula. " + 
                     "<br><br>Now you can restart this game, by clicking the button in the bottom left corner, and play this tutorial again. Or you can refresh this web app and play this game yourself without any 'help'.";
     }
 

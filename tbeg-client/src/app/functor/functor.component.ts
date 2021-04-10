@@ -50,10 +50,10 @@ export class FunctorComponent implements OnInit, OnDestroy, AfterViewInit {
     let data : DialogData = {
       type: DialogDataType.TUTORIAL,
       option: DialogDataOption.DISMISS,
-      content:  "A functor describes the branching type of a system. An example Powerset, which enables " + 
+      content:  "A functor describes the branching type of a system. One example is the powerset functor, which specifies " + 
                 "non-determinism. " +
-                "Another example is DFA, which enables " + 
-                "determinism and accepting states. For the purpose of this tutorial, <b>choose DFA</b>.",
+                "Another example is the DFA functor, which specifies " + 
+                "determinism, labels and accepting states. For the purpose of this tutorial, <b>choose DFA</b>.",
       image: "assets/img/dfa_powerset.svg"
     }
     this.dialog.open(DialogComponent, {

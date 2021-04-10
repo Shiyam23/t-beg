@@ -77,7 +77,7 @@ export class GraphPanelComponent implements OnDestroy, AfterViewInit {
         var data : DialogData = {
             option: DialogDataOption.DISMISS,
             type : DialogDataType.ERROR,
-            content: "Graph cannot be empty! Atleast two States are expected."
+            content: "Graph cannot be empty! At least two States are expected."
         };
         this.dialog.open(DialogComponent, {
             data : data
